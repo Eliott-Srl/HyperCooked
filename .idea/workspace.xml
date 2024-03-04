@@ -20,11 +20,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c568b103-ff7f-4877-b7df-7c48fcbf42c6" name="Changes" comment="Real setup">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/HyperCooked.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/HyperCooked.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="c568b103-ff7f-4877-b7df-7c48fcbf42c6" name="Changes" comment="setup again" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -120,7 +116,7 @@
       <updated>1709567416932</updated>
       <workItem from="1709567418039" duration="743000" />
       <workItem from="1709568218434" duration="272000" />
-      <workItem from="1709568660753" duration="423000" />
+      <workItem from="1709568660753" duration="729000" />
     </task>
     <task id="LOCAL-00001" summary="Setup cmake">
       <option name="closed" value="true" />
@@ -138,7 +134,15 @@
       <option name="project" value="LOCAL" />
       <updated>1709568696282</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="setup again">
+      <option name="closed" value="true" />
+      <created>1709569358832</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1709569358832</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -149,9 +153,21 @@
     <isAutomaticFoundErrors value="true" />
     <isAutomaticReloadCMake value="true" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Setup cmake" />
     <MESSAGE value="Real setup" />
-    <option name="LAST_COMMIT_MESSAGE" value="Real setup" />
+    <MESSAGE value="setup again" />
+    <option name="LAST_COMMIT_MESSAGE" value="setup again" />
   </component>
 </project>
