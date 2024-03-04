@@ -1,0 +1,60 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.27"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "sqdsdq",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "sqdsdq::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-sqdsdq-Debug-a5e778e25ed8b5c7f661.json",
+					"name" : "sqdsdq",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/panth/OneDrive/perso/sup\u00e9rieur/ECE/Pr\u00e9pa1/info/sqdsdq/cmake-build-debug",
+		"source" : "C:/Users/panth/OneDrive/perso/sup\u00e9rieur/ECE/Pr\u00e9pa1/info/sqdsdq"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 6
+	}
+}
