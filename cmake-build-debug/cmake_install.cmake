@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/panth/OneDrive/perso/supérieur/ECE/Prépa1/info/sqdsdq
+# Install script for directory: C:/Users/panth/OneDrive/perso/superieur/ECE/Prepa1/info/HyperCooked
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/sqdsdq")
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/HyperCooked")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/panth/OneDrive/perso/supérieur/ECE/Prépa1/info/sqdsdq/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Users/panth/OneDrive/perso/superieur/ECE/Prepa1/info/HyperCooked/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

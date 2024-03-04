@@ -27,7 +27,7 @@
 					[
 						0
 					],
-					"name" : "sqdsdq",
+					"name" : "HyperCooked",
 					"targetIndexes" : 
 					[
 						0
@@ -38,9 +38,9 @@
 			[
 				{
 					"directoryIndex" : 0,
-					"id" : "sqdsdq::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-sqdsdq-Debug-a5e778e25ed8b5c7f661.json",
-					"name" : "sqdsdq",
+					"id" : "HyperCooked::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-HyperCooked-Debug-72eb9b65c632f4ef26a6.json",
+					"name" : "HyperCooked",
 					"projectIndex" : 0
 				}
 			]
@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "C:/Users/panth/OneDrive/perso/sup\u00e9rieur/ECE/Pr\u00e9pa1/info/sqdsdq/cmake-build-debug",
-		"source" : "C:/Users/panth/OneDrive/perso/sup\u00e9rieur/ECE/Pr\u00e9pa1/info/sqdsdq"
+		"build" : "C:/Users/panth/OneDrive/perso/superieur/ECE/Prepa1/info/HyperCooked/cmake-build-debug",
+		"source" : "C:/Users/panth/OneDrive/perso/superieur/ECE/Prepa1/info/HyperCooked"
 	},
 	"version" : 
 	{

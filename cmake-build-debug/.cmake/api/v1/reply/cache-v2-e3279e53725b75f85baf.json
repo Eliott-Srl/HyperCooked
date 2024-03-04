@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "c:/Users/panth/OneDrive/perso/sup\u00e9rieur/ECE/Pr\u00e9pa1/info/sqdsdq/cmake-build-debug"
+			"value" : "c:/Users/panth/OneDrive/perso/superieur/ECE/Prepa1/info/HyperCooked/cmake-build-debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -431,7 +431,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/panth/OneDrive/perso/sup\u00e9rieur/ECE/Pr\u00e9pa1/info/sqdsdq/cmake-build-debug/CMakeFiles/pkgRedirects"
+			"value" : "C:/Users/panth/OneDrive/perso/superieur/ECE/Prepa1/info/HyperCooked/cmake-build-debug/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -503,7 +503,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/Users/panth/OneDrive/perso/sup\u00e9rieur/ECE/Pr\u00e9pa1/info/sqdsdq"
+			"value" : "C:/Users/panth/OneDrive/perso/superieur/ECE/Prepa1/info/HyperCooked"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -515,7 +515,7 @@
 				}
 			],
 			"type" : "PATH",
-			"value" : "C:/Program Files (x86)/sqdsdq"
+			"value" : "C:/Program Files (x86)/HyperCooked"
 		},
 		{
 			"name" : "CMAKE_LINKER",
@@ -731,7 +731,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "sqdsdq"
+			"value" : "HyperCooked"
 		},
 		{
 			"name" : "CMAKE_RANLIB",
@@ -1126,19 +1126,7 @@
 			"value" : "FALSE"
 		},
 		{
-			"name" : "_CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "linker supports push/pop state"
-				}
-			],
-			"type" : "INTERNAL",
-			"value" : "TRUE"
-		},
-		{
-			"name" : "sqdsdq_BINARY_DIR",
+			"name" : "HyperCooked_BINARY_DIR",
 			"properties" : 
 			[
 				{
@@ -1147,10 +1135,10 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/panth/OneDrive/perso/sup\u00e9rieur/ECE/Pr\u00e9pa1/info/sqdsdq/cmake-build-debug"
+			"value" : "C:/Users/panth/OneDrive/perso/superieur/ECE/Prepa1/info/HyperCooked/cmake-build-debug"
 		},
 		{
-			"name" : "sqdsdq_IS_TOP_LEVEL",
+			"name" : "HyperCooked_IS_TOP_LEVEL",
 			"properties" : 
 			[
 				{
@@ -1162,7 +1150,7 @@
 			"value" : "ON"
 		},
 		{
-			"name" : "sqdsdq_SOURCE_DIR",
+			"name" : "HyperCooked_SOURCE_DIR",
 			"properties" : 
 			[
 				{
@@ -1171,7 +1159,19 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/panth/OneDrive/perso/sup\u00e9rieur/ECE/Pr\u00e9pa1/info/sqdsdq"
+			"value" : "C:/Users/panth/OneDrive/perso/superieur/ECE/Prepa1/info/HyperCooked"
+		},
+		{
+			"name" : "_CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "linker supports push/pop state"
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "TRUE"
 		}
 	],
 	"kind" : "cache",

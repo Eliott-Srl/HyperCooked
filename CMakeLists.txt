@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.27)
-project(sqdsdq C)
+project(HyperCooked C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(sqdsdq main.c)
+add_executable(HyperCooked main.c)
