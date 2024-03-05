@@ -1,6 +1,6 @@
 #ifndef HYPERCOOKED_COMMANDES_H
 #define HYPERCOOKED_COMMANDES_H
 
-
+void genereCommande();
 
 #endif //HYPERCOOKED_COMMANDES_H
