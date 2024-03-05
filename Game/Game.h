@@ -18,7 +18,7 @@ typedef struct {
     s_commande commandes[NB_COMMANDES_MAX];
     s_joueur joueurs[2];
     int score;
-    int timer;
+    int temps;
 } s_game;
 
 #endif //HYPERCOOKED_GAME_H
