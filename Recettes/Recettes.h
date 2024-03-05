@@ -30,6 +30,11 @@ typedef struct {
 } s_recette;
 
 typedef struct {
+    int x;
+    int y;
+} coo;
+
+typedef struct {
     s_recette recettes[NB_RECETTES_MAX];
 } s_game;
 
