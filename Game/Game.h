@@ -8,8 +8,8 @@ typedef struct {
     char nom[STRMAX];
     s_coo pos;
     int en_main;
-    s_ingredient_physique *main_ingredient;
-    //s_objet *main_ingredient1;
+    s_ingredient_physique *hand_ingredient;
+    //s_objet *hand_objet;
 } s_joueur;
 
 typedef struct {
