@@ -1,35 +1,51 @@
 #include "Recettes.h"
 
-void load() {
+s_recette *load() {
     int type = 0, nbRecettes = 0;
     char ligne[STRMAX], *p, ingredients[STRMAX], *i, *end;
-    s_recette *recette = NULL;
+    s_recette *pRecette = NULL, *recettes = NULL;
     FILE *fp = NULL;
 
     fp = fopen("../recettes.txt", "r");
-    if (fp == NULL) {
-        return;
+    if (!fp) {
+        perror("../recettes.txt");
+        abort();
     }
 
-    s_game *game = (s_game *) malloc(sizeof(s_game));
+    recettes = (s_recette *) malloc(sizeof(s_recette) * NB_RECETTES_MAX);
 
-    while (fgets(ligne, STRMAX, fp) != NULL || game < NB_RECETTES_MAX) {
-        recette = (s_recette *) malloc(sizeof(s_recette));
+    if (!recettes) {
+        fprintf(stderr, "Fatal: failed to allocate %zu bytes.\n", sizeof(s_recette)*NB_RECETTES_MAX);
+        abort();
+    }
 
+    while (fgets(ligne, STRMAX, fp) != NULL || nbRecettes < NB_RECETTES_MAX) {
         p = strtok(ligne, ";");
-        strcpy(recette->nom, p);
+        strcpy(recettes[nbRecettes].nom, p);
 
         p = strtok(NULL, ";");
         strcpy(ingredients, p);
 
         i = strtok("ingredients", " ");
         while(i) {
-            recette->ingredients[type] = strtol(i, &end, 10);
+            recettes[nbRecettes].ingredients[type] = strtol(i, &end, 10);
             type++;
         }
 
         nbRecettes++;
     }
+    fclose(fp);
 
-    free(game);
+    return recettes;
+}
+
+int compareIngredients(s_ingredient *ingredient1, s_ingredient_physique *ingredient2) {
+    if (ingredient1->nom == ingredient2->type.nom) {
+        return 1;
+    }
+    return 0;
+}
+
+void freeRecettes(s_recette *recettes) {
+    free(recettes);
 }

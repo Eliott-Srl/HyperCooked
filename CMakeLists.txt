@@ -6,4 +6,6 @@ set(CMAKE_C_STANDARD 11)
 add_executable(HyperCooked main.c
         types.h
         Recettes/Recettes.c
-        Recettes/Recettes.h)
+        Recettes/Recettes.h
+        Game/Game.c
+        Game/Game.h)
