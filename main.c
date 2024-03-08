@@ -2,6 +2,7 @@
 #include "Commandes/Commandes.h"
 
 int main() {
-     genereCommande();
+    s_game *game;
+    crearecettes(game);
     return 0;
 }

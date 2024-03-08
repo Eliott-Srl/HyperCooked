@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "../types.h"
 
 #define NB_RECETTES_MAX 10
@@ -13,7 +14,9 @@ typedef enum {
     SALADE,
     PAIN,
     TOMATE,
-    STEAK
+    STEAK,
+    OEUF,
+    POTATO,
 } e_ingredients;
 
 typedef enum {
@@ -21,7 +24,7 @@ typedef enum {
     SAIGNANT,
     CUIT,
     TROPCUIT,
-    CRAME
+    CRAME,
 } e_cuisson;
 
 typedef struct {
@@ -36,8 +39,10 @@ typedef struct {
 
 typedef struct {
     s_recette recettes[NB_RECETTES_MAX];
+    int nbRecettes;
 } s_game;
 
 void load();
+void crearecettes(s_game *game);
 
 #endif //HYPERCOOKED_RECETTES_H
