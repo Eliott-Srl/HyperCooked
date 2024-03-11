@@ -55,6 +55,5 @@ void crearecettes(s_game *game) {
             case POTATO:
                 printf("Pomme de terre \n");
         }
-        printf("%d", recettes[choix].ingredients[i]);
     }
 }
