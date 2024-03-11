@@ -1,5 +1,2 @@
-Hamburger;0 13434 1 1;
-Hamburger;1 13434 1 1;
-Hamburger;1 13434 1 1;
-Hamburger;1 13434 1 1;
-Hamburger;1 13434 1 1;
+Hamburger;0 1 1 1;
+ratatouille;1 1 1 1;

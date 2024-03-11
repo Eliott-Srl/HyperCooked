@@ -9,6 +9,9 @@ add_executable(HyperCooked main.c
         Recettes/Recettes.h
         Game/Game.c
         Game/Game.h
+        Commandes/Commandes.c
+        Commandes/Commandes.h
         resource.rc)
 
 target_link_libraries(HyperCooked -lalleg44)
+
