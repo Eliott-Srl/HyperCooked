@@ -2,23 +2,40 @@
 #define HYPERCOOKED_MEUBLES_H
 
 
-#define HAUTEUR 20
-#define LARGEUR 12
+#define HAUTEUR 12
+#define LARGEUR 20
 
 
 typedef enum {
+    SOL,
+    PLAN_DE_TRAVAIL,
+    PLANCHE_A_DECOUPER,
+    COMPTOIR,
+    COFFRE,
+    PLAQUE_A_CUISSON,
+    POUBELLE
+} e_meubles;
+
+typedef enum {
+    NONE,
     POELE,
     MARMITE,
-    PLAN_DE_TRAVAIL,
     ASSIETTE,
-    EXTINCTEUR,
-}e_meubles;
+    EXTINCTEUR
+} e_objet;
 
 typedef struct {
-    e_meubles matrice[12][20];
-}s_matrice;
+    e_meubles type_meuble;
+    e_objet type_objet;
+} s_meuble;
 
-void afficherMatrice(int tab[HAUTEUR][LARGEUR]);
+typedef struct {
+s_meuble matrice[HAUTEUR][LARGEUR];
+} s_matrice;
 
+
+
+void afficherMatrice(s_matrice *tab);
+void cacatoutmou(s_matrice *matrice_dynamique);
 
 #endif //HYPERCOOKED_MEUBLES_H
