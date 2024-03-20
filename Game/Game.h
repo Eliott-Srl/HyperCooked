@@ -1,7 +1,8 @@
 #ifndef HYPERCOOKED_GAME_H
 #define HYPERCOOKED_GAME_H
 
-#include "../recettes/Recettes.h"
+#include "../Recettes/Recettes.h"
+#include "../Commandes/Commandes.h"
 
 typedef struct {
     s_color couleur;
