@@ -6,6 +6,7 @@
 #include <string.h>
 #include <time.h>
 #include "../types.h"
+#include "../Game/Game.h"
 
 #define NB_RECETTES_MAX 10
 #define NB_INGREDIENTS_MAX 10
@@ -36,11 +37,6 @@ typedef struct {
     char nom[STRMAX];
     s_ingredient ingredients[NB_INGREDIENTS_MAX];
 } s_recette;
-
-typedef struct {
-    int timer;
-    s_recette recette;
-} s_commande;
 
 typedef struct {
     s_ingredient type;
