@@ -36,6 +36,7 @@ s_meuble matrice[HAUTEUR][LARGEUR];
 
 
 void afficherMatrice(s_matrice *tab);
+
 void cacatoutmou(s_matrice *matrice_dynamique);
 
 #endif //HYPERCOOKED_MEUBLES_H

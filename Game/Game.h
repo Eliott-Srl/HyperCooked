@@ -21,4 +21,32 @@ typedef struct {
     int temps;
 } s_game;
 
+// Structure représentant un personnage
+typedef struct {
+    int x; // Position x du personnage
+    int y; // Position y du personnage
+    int largeur; // Largeur du personnage
+    int hauteur; // Hauteur du personnage
+} Personnage;
+
+// Structure représentant un meuble
+typedef struct {
+    TypeMeuble type; // Type du meuble
+    int x; // Position x du meuble
+    int y; // Position y du meuble
+    int largeur; // Largeur du meuble
+    int hauteur; // Hauteur du meuble
+} Meuble;
+
+void creationJoueurs();
+
+void collision ();
+
+void deplacerPersonnage(Personnage *personnage, int dx, int dy, Meuble meubles[], int nbMeubles, Personnage autresPersonnages[], int nbAutresPersonnages);
+
+
+void afficherMatrice(int *tab);
+
+
+
 #endif //HYPERCOOKED_GAME_H
