@@ -2,7 +2,7 @@
 
 s_recette *load() {
     int type = 0, nbRecettes = 0;
-    char ligne[STRMAX], *p, ingredients[STRMAX], *i, *end;
+    char ligne[STRMAX], *p, ingredients[STRMAX], *i, *end, *j;
     s_recette *pRecette = NULL, *recettes = NULL;
     FILE *fp = NULL;
 
@@ -26,13 +26,14 @@ s_recette *load() {
         p = strtok(NULL, ";");
         strcpy(ingredients, p);
 
-        i = strtok("ingredients", " ");
+        i = strtok("ingredients", ",");
         while(i) {
-            s_ingredient *a = &recettes[nbRecettes].ingredients[type];
-            a->nom = strtol(i, &end, 10);
-            // TODO: Gérer si le type de cuisson et si c'est coupable
-            a->coupe = 0;
-            a->cuit = 0;
+            j = strtok("ingredients", " ");
+            while (j){
+                recettes[nbRecettes].ingredients[type].nom = strtol(j, &end, 10);
+                recettes[nbRecettes].ingredients[type].cuisson = strtol(j, &end, 10);
+                recettes[nbRecettes].ingredients[type].coupable = strtol(j, &end, 10);
+            }
             type++;
         }
 
@@ -53,6 +54,7 @@ int compareIngredients(s_ingredient *ingredient1, s_ingredient_physique *ingredi
 void freeRecettes(s_recette *recettes) {
     free(recettes);
 }
+
 void crearecettes(s_game *game) {
     int j,  choix = rand()%game->nbRecettes;
     s_recette recettes[NB_RECETTES_MAX];

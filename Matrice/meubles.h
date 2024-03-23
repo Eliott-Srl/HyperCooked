@@ -1,6 +1,7 @@
 #ifndef HYPERCOOKED_MEUBLES_H
 #define HYPERCOOKED_MEUBLES_H
 
+
 #define HAUTEUR 12
 #define LARGEUR 20
 
