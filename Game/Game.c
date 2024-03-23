@@ -57,7 +57,7 @@ int collisions(int x1, int y1, int l1, int h1, int x2, int y2, int l2, int h2) {
             x1 + l1 > x2 &&
             y1 < y2 + h2 &&
             y1 + h1 > y2);
-    }
+}
 
 // Fonction pour déplacer un personnage tout en évitant les collisions avec les meubles
 void deplacerPersonnage(Personnage *personnage, int dx, int dy, Meuble meubles[], int nbMeubles, Personnage autresPersonnages[], int nbAutresPersonnages) {
@@ -123,6 +123,8 @@ int verificationDeLaRecette(s_game* game, s_objet* plat, s_commande* commandeFin
                 && plat->nourriture[j].coupe == commandeFind->recette.ingredients[0].coupe
                 && plat->nourriture[j].cuit == commandeFind->recette.ingredients[0].cuit) {
                     a++;
+                } else {
+                    break;
                 }
             }
 
