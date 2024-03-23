@@ -1,10 +1,10 @@
 #ifndef HYPERCOOKED_MEUBLES_H
 #define HYPERCOOKED_MEUBLES_H
 
-
 #define HAUTEUR 12
 #define LARGEUR 20
 
+#include "../Recettes/Recettes.h"
 
 typedef enum {
     SOL,
@@ -21,21 +21,31 @@ typedef enum {
     POELE,
     MARMITE,
     ASSIETTE,
-    EXTINCTEUR
+    EXTINCTEUR,
+    STOCKEUR
 } e_objet;
+
+typedef enum {
+    SANS = 0,
+    UN_SLOT = 1,
+    TROIS_SLOTS = 3,
+    RECETTE = 10
+} e_stockage;
+
+typedef struct {
+    e_objet type;
+    s_ingredient nourriture[10];
+    e_stockage stockageMax;
+    int nbStockes;
+} s_objet;
 
 typedef struct {
     e_meubles type_meuble;
-    e_objet type_objet;
+    s_objet objet;
+    void (*action)();
 } s_meuble;
 
-typedef struct {
-s_meuble matrice[HAUTEUR][LARGEUR];
-} s_matrice;
-
-
-
-void afficherMatrice(s_matrice *tab);
-void cacatoutmou(s_matrice *matrice_dynamique);
+void afficherMatrice(s_meuble tab[HAUTEUR][LARGEUR]);
+void cacatoutmou(s_meuble matrice_dynamique[HAUTEUR][LARGEUR]);
 
 #endif //HYPERCOOKED_MEUBLES_H

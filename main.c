@@ -1,10 +1,15 @@
 #include "Recettes/Recettes.h"
 #include "Commandes/Commandes.h"
+#include "allegro.h"
+
+int rgbToAllegroColor(s_color color) {
+    return makecol(color.r, color.g, color.b);
+}
 
 int main() {
-    s_matrice *a = (s_matrice *) malloc(sizeof(s_matrice));
+    allegro_init();
 
-    cacatoutmou(a);
-    afficherMatrice(a);
-     return 0;
-} END_OF_MAIN();
+
+
+    return 0;
+} END_OF_MAIN()

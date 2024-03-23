@@ -28,7 +28,11 @@ s_recette *load() {
 
         i = strtok("ingredients", " ");
         while(i) {
-            recettes[nbRecettes].ingredients[type] = strtol(i, &end, 10);
+            s_ingredient *a = &recettes[nbRecettes].ingredients[type];
+            a->nom = strtol(i, &end, 10);
+            // TODO: Gérer si le type de cuisson et si c'est coupable
+            a->coupe = 0;
+            a->cuit = 0;
             type++;
         }
 

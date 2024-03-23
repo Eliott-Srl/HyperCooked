@@ -22,19 +22,22 @@ typedef enum {
 
 typedef enum {
     NON,
-    MARMITE,
-    POELE
+    A_LA_MARMITE,
+    A_LA_POELE
 } e_cuisson;
 
 typedef struct {
     e_ingredients nom;
     e_cuisson cuisson;
+    int cuit;
     int coupable;
+    int coupe;
 } s_ingredient;
 
 typedef struct {
     char nom[STRMAX];
     s_ingredient ingredients[NB_INGREDIENTS_MAX];
+    int nbIngredients;
 } s_recette;
 
 typedef struct {
@@ -45,8 +48,6 @@ typedef struct {
 typedef struct {
     s_ingredient type;
     int en_main;
-    s_coo pos;
-    int coupe;
     // here we need to add a pointer to the texture
 } s_ingredient_physique;
 
