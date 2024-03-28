@@ -25,6 +25,7 @@ typedef struct {
     s_commande commandes[NB_COMMANDES_MAX];
     int nbCommandes;
     s_meuble matrice[HAUTEUR][LARGEUR];
+    int taille;
     s_joueur joueurs[2];
     int score;
     int temps;

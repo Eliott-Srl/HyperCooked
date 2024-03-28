@@ -35,7 +35,7 @@ void timer(){
         while (elapsed_time <= 90 && score < 150) {
             deplacement = 0;
 
-            afficherMatrice(int *tab);
+            afficherMatrice(&tab);
 
             // Obtenir le temps actuel
             current_time = time(NULL);
@@ -51,64 +51,35 @@ void timer(){
 
 
 
-// Fonction pour détecter les collisions entre deux objets
-int collisions(int x1, int y1, int l1, int h1, int x2, int y2, int l2, int h2) {
-    return (x1 < x2 + l2 &&
-            x1 + l1 > x2 &&
-            y1 < y2 + h2 &&
-            y1 + h1 > y2);
-}
 
 // Fonction pour déplacer un personnage tout en évitant les collisions avec les meubles
-void deplacerPersonnage(Personnage *personnage, int dx, int dy, Meuble meubles[], int nbMeubles, Personnage autresPersonnages[], int nbAutresPersonnages) {
+void deplacerPersonnage(s_game *game, s_joueur *joueur,int dx, int dy) {
     // Nouvelles positions potentielles
-    int newX = personnage->x + dx;
-    int newY = personnage->y + dy;
+    int newX = joueur->pos.x + dx;
+    int newY = joueur->pos.y + dy;
 
     // Vérifier les collisions avec les meubles
-    for (int i = 0; i < nbMeubles; i++) {
-        if (collisions(newX, newY, personnage->largeur, personnage->hauteur, meubles[i].x, meubles[i].y, meubles[i].largeur, meubles[i].hauteur)) {
-            // Il y a une collision, ne pas bouger
-            return;
-        }
+    if (game->matrice[newX/game->taille][newY/game->taille].type_meuble != SOL) {
+        // Il y a une collision, ne pas bouger
+        return;
+    }
+
+    s_joueur *autre_joueur = NULL;
+    if (game->joueurs[0].nom == joueur->nom) {
+        autre_joueur = &game->joueurs[1];
+    } else {
+        autre_joueur = &game->joueurs[0];
     }
 
     // Vérifier les collisions avec les autres personnages
-    for (int i = 0; i < nbAutresPersonnages; i++) {
-        if (collisions(newX, newY, personnage->largeur, personnage->hauteur, autresPersonnages[i].x, autresPersonnages[i].y, autresPersonnages[i].largeur, autresPersonnages[i].hauteur)) {
-            // Il y a une collision avec un autre personnage, ne pas bouger
-            return;
-        }
+    if (newX == autre_joueur->pos.x && newY == autre_joueur->pos.y) {
+        // Il y a une collision avec un autre personnage, ne pas bouger
+        return;
     }
 
     // Déplacer le personnage aux nouvelles positions
-    personnage->x = newX;
-    personnage->y = newY;
-}
-
-void Collision () {
-
-    // Exemple de deux personnages et quelques meubles
-    Personnage joueur1 = {10, 10, 20, 20};
-    Personnage joueur2 = {30, 30, 20, 20};
-    Meuble meubles[] = {
-            {PLAN_DE_TRAVAIL, 25, 25, 30, 5},
-            {COFFRE, 40, 15, 10, 10},
-            {COMPTOIR, 60, 20, 5, 15},
-            {POUBELLE, 10, 50, 8, 8}
-    };
-    int nbMeubles = sizeof(*meubles) / sizeof(meubles[0]);
-
-    // Déplacer joueur1
-    deplacerPersonnage(&joueur1, 5, 5, meubles, nbMeubles, &joueur2, 1);
-
-    // Déplacer joueur2
-    deplacerPersonnage(&joueur2, -5, -5, meubles, nbMeubles, &joueur1, 1);
-
-    // Afficher les positions des joueurs après déplacement
-    printf("Position joueur1 : (%d, %d)\n", joueur1.x, joueur1.y);
-    printf("Position joueur2 : (%d, %d)\n", joueur2.x, joueur2.y);
-
+    joueur->pos.x = newX;
+    joueur->pos.y = newY;
 }
 
 
