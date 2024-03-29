@@ -1,13 +1,12 @@
 #include "Game.h"
 #include <time.h>
 #include "../Matrice/meubles.h"
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "../Commandes/Commandes.h"
 
 void creationJoueurs() {
-
         char nom[50];
         char couleur[20];
 
@@ -19,38 +18,27 @@ void creationJoueurs() {
         scanf("%19s", couleur); // %19s limite la saisie à 19 caractères pour éviter le dépassement de mémoire
 
         printf("Vous avez créé un personnage nommé %s avec la couleur %s.\n", nom, couleur);
-
-
 }
 
-void timer(){
-        int seconde = 90;
-        int score = 0;
+int timer(){
+    int seconde = 90;
+    int score = 0;
 
-        // Obtenir le temps actuel
-        time_t start_time = time(NULL);
-        time_t current_time = 0;
-        int elapsed_time = 0, deplacement = 0;
+    // Obtenir le temps actuel
+    time_t start_time = time(NULL);
+    time_t current_time = 0;
+    int elapsed_time = 0, deplacement = 0;
 
-        while (elapsed_time <= 90 && score < 150) {
-            deplacement = 0;
+    deplacement = 0;
 
-            afficherMatrice(&tab);
+    afficherMatrice(&tab);
 
-            // Obtenir le temps actuel
-            current_time = time(NULL);
+    // Obtenir le temps actuel
+    current_time = time(NULL);
 
-            // Calculer le temps écoulé en secondes
-            elapsed_time = difftime(current_time, start_time);
-            printf("Il reste %d \n", 90 - elapsed_time);
-        }
-
+    // Calculer le temps écoulé en secondes
+    elapsed_time = difftime(current_time, start_time);
 }
-
-
-
-
-
 
 // Fonction pour déplacer un personnage tout en évitant les collisions avec les meubles
 void deplacerPersonnage(s_game *game, s_joueur *joueur,int dx, int dy) {
@@ -81,7 +69,6 @@ void deplacerPersonnage(s_game *game, s_joueur *joueur,int dx, int dy) {
     joueur->pos.x = newX;
     joueur->pos.y = newY;
 }
-
 
 int verificationDeLaRecette(s_game* game, s_objet* plat, s_commande* commandeFind) {
     int a;

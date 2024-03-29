@@ -50,5 +50,6 @@ typedef struct {
 s_recette *load();
 void freeRecettes(s_recette *recettes);
 void crearecettes(s_game *game);
+void compareIngredients(s_ingredient *ingredient1, s_ingredient_physique *ingredient2);
 
 #endif //HYPERCOOKED_RECETTES_H

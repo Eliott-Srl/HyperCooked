@@ -31,4 +31,10 @@ typedef struct {
     int temps;
 } s_game;
 
+void deplacerPersonnage(s_game *game, s_joueur *joueur,int dx, int dy);
+void creationJoueurs();
+int timer();
+void Collision();
+int verificationDeLaRecette(s_game* game, s_objet* plat, s_commande* commandeFind);
+
 #endif //HYPERCOOKED_GAME_H

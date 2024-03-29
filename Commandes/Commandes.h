@@ -8,13 +8,6 @@ typedef struct {
     s_recette recette;
 } s_commande;
 
-void genereCommande(){
-    int choix_recette;
-    s_recette recette;
-
-    srand(time(NULL));
-
-    choix_recette = rand() % NB_INGREDIENTS_MAX;
-}
+void genereCommande();
 
 #endif //HYPERCOOKED_COMMANDES_H
