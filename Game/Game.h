@@ -3,6 +3,7 @@
 
 #include "../Recettes/Recettes.h"
 #include "../Matrice/meubles.h"
+#include "../Commandes/Commandes.h"
 
 typedef enum {
     NOTHING,

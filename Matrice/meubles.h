@@ -6,6 +6,8 @@
 #define LARGEUR 20
 
 #include "../Recettes/Recettes.h"
+#include "../Commandes/Commandes.h"
+#include "../Game/Game.h"
 
 typedef enum {
     SOL,

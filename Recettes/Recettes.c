@@ -3,8 +3,10 @@
 s_recette *load() {
     int type = 0, nbRecettes = 0;
     char ligne[STRMAX], *p, ingredients[STRMAX], *i, *end, *j;
-    s_recette *pRecette = NULL, *recettes = NULL;
+    s_recette *pRecette = NULL, *recettes = NULL, stckrecette[NB_RECETTES_MAX];
     FILE *fp = NULL;
+
+    char *base = "0123456789";
 
     fp = fopen("../recettes.txt", "r");
     if (!fp) {
@@ -20,28 +22,31 @@ s_recette *load() {
     }
 
     while (fgets(ligne, STRMAX, fp) != NULL || nbRecettes < NB_RECETTES_MAX) {
+        if (strchr(base, *p) != NULL) {
+            strncat(stckrecette, p, 1);
+        }
+
         p = strtok(ligne, ";");
-        strcpy(recettes[nbRecettes].nom, p);
+        strcpy(stckrecette[nbRecettes].nom, p);
 
         p = strtok(NULL, ";");
-        strcpy(ingredients, p);
+        strcpy(stckrecette[nbRecettes].ingredients, p);
 
         i = strtok("ingredients", ",");
         while(i) {
-            j = strtok("ingredients", " ");
+            j = strtok("caractéristiques", " ");
             while (j){
-                recettes[nbRecettes].ingredients[type].nom = strtol(j, &end, 10);
-                recettes[nbRecettes].ingredients[type].cuisson = strtol(j, &end, 10);
-                recettes[nbRecettes].ingredients[type].coupable = strtol(j, &end, 10);
+                stckrecette[nbRecettes].ingredients[type].nom = strtol(j, &end, 10);
+                stckrecette[nbRecettes].ingredients[type].cuisson = strtol(j, &end, 10);
+                stckrecette[nbRecettes].ingredients[type].coupable = strtol(j, &end, 10);
             }
             type++;
         }
-
         nbRecettes++;
     }
     fclose(fp);
 
-    return recettes;
+    return stckrecette;
 }
 
 int compareIngredients(s_ingredient *ingredient1, s_ingredient_physique *ingredient2) {
@@ -56,7 +61,7 @@ void freeRecettes(s_recette *recettes) {
 }
 
 void crearecettes(s_game *game) {
-    int j,  choix = rand()%game->nbRecettes;
+    int j,  choix = rand()%game->nb_recettes;
     s_recette recettes[NB_RECETTES_MAX];
     e_ingredients ingredients[NB_INGREDIENTS_MAX];
 
