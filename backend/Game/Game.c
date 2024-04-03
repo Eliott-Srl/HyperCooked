@@ -1,10 +1,6 @@
 #include "Game.h"
 #include <time.h>
-#include "../Matrice/meubles.h"
-
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 
 void creationJoueurs() {
     char nom[50];
