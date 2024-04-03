@@ -25,6 +25,7 @@ int collisions(int x1, int y1, int l1, int h1, int x2, int y2, int l2, int h2);
 #include "Game/Game.h"
 void deplacerPersonnage(s_game game, s_joueur *joueur, int dx, int dy);
 void genereCommande();
+int timer();
 
 #include "Matrice/meubles.h"
 void afficherMatrice(s_meuble tab[HAUTEUR][LARGEUR]);
