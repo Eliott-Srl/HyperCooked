@@ -5,14 +5,18 @@ set(CMAKE_C_STANDARD 11)
 
 add_executable(HyperCooked main.c
         resource.rc
-        types.h
-        Recettes/Recettes.c
-        Recettes/Recettes.h
-        Game/Game.c
-        Game/Game.h
-        Commandes/Commandes.c
-        Commandes/Commandes.h
-        Matrice/Meubles.c
-        Matrice/Meubles.h)
+        backend/Commandes/Recettes.c
+        backend/Commandes/Recettes.h
+        backend/Game/Game.c
+        backend/Game/Game.h
+        backend/Commandes/Commandes.c
+        backend/Commandes/Commandes.h
+        backend/Matrice/Meubles.c
+        backend/Matrice/Meubles.h
+        backend/backend.h
+        allezgros/Allezgros.c
+        allezgros/Allezgros.h
+        backend/Utils/Utils.c
+        backend/Utils/Utils.h)
 
 target_link_libraries(${PROJECT_NAME} -lalleg44)
