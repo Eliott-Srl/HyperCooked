@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "../types.h"
+#include "../backend.h"
 #include "../Game/Game.h"
 
 #define NB_RECETTES_MAX 10
@@ -46,9 +46,5 @@ typedef struct {
     int en_main;
     // here we need to add a pointer to the texture
 } s_ingredient_physique;
-
-s_recette *load();
-void freeRecettes(s_recette *recettes);
-void crearecettes(s_game *game);
 
 #endif //HYPERCOOKED_RECETTES_H

@@ -12,7 +12,7 @@ void afficherMatrice(s_matrice *tab) {
     }
 }
 
-void cacatoutmou(s_matrice *matrice_dynamique) {
+void initialiserMatrice(s_meuble matrice_dynamique[12][20]) {
     FILE *fichier;
     char ligne[128];
 

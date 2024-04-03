@@ -1,10 +1,5 @@
-#include "Recettes/Recettes.h"
-#include "Commandes/Commandes.h"
-#include "allegro.h"
-
-int rgbToAllegroColor(s_color color) {
-    return makecol(color.r, color.g, color.b);
-}
+#include "backend/Commandes/Recettes.h"
+#include "allezgros/Allezgros.h"
 
 int main() {
     allegro_init();

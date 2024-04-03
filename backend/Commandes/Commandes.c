@@ -1,7 +1,5 @@
 #include "Commandes.h"
-#include <stdlib.h>
-#include <stdio.h>
-
+#include "../backend.h"
 
 void genereCommande(){
     int i, choix_recette;

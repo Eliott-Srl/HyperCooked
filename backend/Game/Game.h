@@ -1,9 +1,9 @@
 #ifndef HYPERCOOKED_GAME_H
 #define HYPERCOOKED_GAME_H
 
-#include "../Recettes/Recettes.h"
+#include "../Commandes/Recettes.h"
 #include "../Matrice/meubles.h"
-#include "../Commandes/Commandes.h"
+#include "../backend.h"
 
 typedef enum {
     NOTHING,
@@ -15,6 +15,7 @@ typedef struct {
     s_color couleur;
     char nom[STRMAX];
     s_coo pos;
+    int dimensions;
     int en_main;
     s_ingredient_physique hand_ingredient;
     s_objet hand_objet;

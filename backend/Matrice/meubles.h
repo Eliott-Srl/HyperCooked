@@ -1,13 +1,10 @@
 #ifndef HYPERCOOKED_MEUBLES_H
 #define HYPERCOOKED_MEUBLES_H
 
-
 #define HAUTEUR 12
 #define LARGEUR 20
 
-#include "../Recettes/Recettes.h"
-#include "../Commandes/Commandes.h"
-#include "../Game/Game.h"
+#include "../backend.h"
 
 typedef enum {
     SOL,
@@ -47,8 +44,5 @@ typedef struct {
     s_objet objet;
     void (*action)();
 } s_meuble;
-
-void afficherMatrice(s_meuble tab[HAUTEUR][LARGEUR]);
-void cacatoutmou(s_meuble matrice_dynamique[HAUTEUR][LARGEUR]);
 
 #endif //HYPERCOOKED_MEUBLES_H
