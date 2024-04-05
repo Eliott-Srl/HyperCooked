@@ -1,12 +1,12 @@
 #ifndef HYPERCOOKED_BACKEND_H
 #define HYPERCOOKED_BACKEND_H
 
-#include "Game/Game.h"
-#include "Commandes/Recettes.h"
-#include "Matrice/meubles.h"
-#include "Commandes/Commandes.h"
-
 #define STRMAX 120
+#define HAUTEUR 12
+#define LARGEUR 20
+#define NB_RECETTES_MAX 10
+#define NB_INGREDIENTS_MAX 10
+#define NB_COMMANDES_MAX 5
 
 typedef struct {
     int x;
@@ -19,22 +19,117 @@ typedef struct {
     int b;
 } s_color;
 
+typedef enum {
+    SALADE,
+    PAIN,
+    TOMATE,
+    STEAK,
+    OEUF,
+    POTATO,
+} e_ingredients;
+
+typedef enum {
+    NON,
+    A_LA_MARMITE,
+    A_LA_POELE
+} e_cuisson;
+
+typedef struct {
+    e_ingredients nom;
+    e_cuisson cuisson;
+    int cuit;
+    int coupable;
+    int coupe;
+} s_ingredient;
+
+typedef struct {
+    char nom[STRMAX];
+    s_ingredient ingredients[NB_INGREDIENTS_MAX];
+    int nbIngredients;
+} s_recette;
+
+typedef struct {
+    int timer;
+    int satisfaction; //satisfaction du client de 1 à 5 -> utile pour calculer le score
+    s_recette recette;
+} s_commande;
+
+typedef struct {
+    s_ingredient type;
+    int en_main;
+    // here we need to add a pointer to the texture
+} s_ingredient_physique;
+
+typedef enum {
+    SOL,
+    PLAN_DE_TRAVAIL,
+    PLANCHE_A_DECOUPER,
+    COMPTOIR,
+    COFFRE,
+    PLAQUE_A_CUISSON,
+    POUBELLE
+} e_meubles;
+
+typedef enum {
+    NONE,
+    POELE,
+    MARMITE,
+    ASSIETTE,
+    EXTINCTEUR,
+    STOCKEUR
+} e_objet;
+
+typedef enum {
+    SANS = 0,
+    UN_SLOT = 1,
+    TROIS_SLOTS = 3,
+    RECETTE = 10
+} e_stockage;
+
+typedef struct {
+    e_objet type;
+    s_ingredient nourriture[10];
+    e_stockage stockageMax;
+    int nbStockes;
+} s_objet;
+
+typedef struct {
+    e_meubles type_meuble;
+    s_objet objet;
+    void (*action)();
+} s_meuble;
+
+
+typedef enum {
+    NOTHING,
+    INGREDIENT,
+    OBJET
+} e_typeEnMain;
+
+typedef struct {
+    s_color couleur;
+    char nom[STRMAX];
+    s_coo pos;
+    int dimensions;
+    int en_main;
+    s_ingredient_physique hand_ingredient;
+    s_objet hand_objet;
+} s_joueur;
+
+typedef struct {
+    s_recette recettes[NB_RECETTES_MAX];
+    int nb_recettes;
+    s_commande commandes[NB_COMMANDES_MAX];
+    int nbCommandes;
+    s_meuble matrice[HAUTEUR][LARGEUR];
+    s_joueur joueurs[2];
+    int score;
+    int temps;
+} s_game;
+
 #include "Utils/Utils.h"
-int collisions(int x1, int y1, int l1, int h1, int x2, int y2, int l2, int h2);
-
-#include "Game/Game.h"
-void deplacerPersonnage(s_game game, s_joueur *joueur, int dx, int dy);
-void genereCommande();
-int timer();
-
 #include "Matrice/meubles.h"
-void afficherMatrice(s_meuble tab[HAUTEUR][LARGEUR]);
-void initialiserMatrice(s_meuble matrice_dynamique[12][20]);
-
 #include "Commandes/Recettes.h"
-s_recette *load();
-void freeRecettes(s_recette *recettes);
-void crearecettes(s_game *game);
-int verificationDeLaRecette(s_game* game, s_objet* plat, s_commande* commandeFind);
+#include "Game/Game.h"
 
 #endif //HYPERCOOKED_BACKEND_H

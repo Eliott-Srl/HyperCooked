@@ -19,7 +19,7 @@ int timer() {
 }
 
 // Fonction pour déplacer un personnage tout en évitant les collisions avec les meubles
-void deplacerPersonnage(s_game game, s_joueur *joueur, int dx, int dy) {
+void deplacerPersonnage(s_game* game, s_joueur* joueur, int dx, int dy) {
     int tailleCase = 10;
     // Nouvelles positions potentielles
     int newX = joueur->pos.x + dx;
@@ -37,10 +37,10 @@ void deplacerPersonnage(s_game game, s_joueur *joueur, int dx, int dy) {
 
     s_joueur *autre_joueur;
     // Vérifier les collisions avec les autres personnages
-    if (game.joueurs[0].couleur == joueur->couleur) {
-        autre_joueur = &game.joueurs[1];
+    if (game->joueurs[0].couleur.r == joueur->couleur.r && game->joueurs[0].couleur.g == joueur->couleur.g && game->joueurs[0].couleur.b == joueur->couleur.b) {
+        autre_joueur = &game->joueurs[1];
     } else {
-        autre_joueur = &game.joueurs[0];
+        autre_joueur = &game->joueurs[0];
     }
 
     if (collisions(newX, newY, joueur->dimensions, joueur->dimensions, autre_joueur->pos.x, autre_joueur->pos.y, autre_joueur->dimensions, autre_joueur->dimensions)) {

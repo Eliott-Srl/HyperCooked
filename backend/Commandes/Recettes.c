@@ -1,6 +1,6 @@
 #include "Recettes.h"
 
-s_recette *load() {
+void loadRecipes(s_game* game) {
     int type = 0, nbRecettes = 0;
     char ligne[STRMAX], *p, ingredients[STRMAX], *i, *end, *j;
     s_recette *pRecette = NULL, *recettes = NULL, stckrecette[NB_RECETTES_MAX];

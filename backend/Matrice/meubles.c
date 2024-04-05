@@ -1,23 +1,20 @@
 #include "meubles.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
-void afficherMatrice(s_matrice *tab) {
+void afficherMatrice(s_meuble matrice[HAUTEUR][LARGEUR]) {
     for (int h = 0; h < HAUTEUR; h++) {
         for (int l = 0; l < LARGEUR; l++) {
-            printf("%d ", tab->matrice[h][l].type_objet);
+            printf("%d ", matrice[h][l].type_meuble);
         }
         printf("\n");
     }
 }
 
-void initialiserMatrice(s_meuble matrice_dynamique[12][20]) {
+void initialiserMatrice(s_meuble matrice_dynamique[12][20], const char* file) {
     FILE *fichier;
     char ligne[128];
 
     // Ouvrir le fichier en mode lecture
-    fichier = fopen("map1.txt", "r");
+    fichier = fopen(file, "r");
 
     char *base = "0123456789";
 
@@ -33,16 +30,29 @@ void initialiserMatrice(s_meuble matrice_dynamique[12][20]) {
             if (strchr(base, *p) != NULL) {
                 strncat(nombre, p, 1);
             } else if (*p == ' ') {
-                matrice_dynamique->matrice[y][x].type_meuble = atoi(nombre);
-                matrice_dynamique->matrice[y][x].type_objet = NONE;
+                matrice_dynamique[y][x].type_meuble = atoi(nombre);
+                matrice_dynamique[y][x].objet.type = NONE;
+                matrice_dynamique[y][x].objet.nbStockes = 0;
+                matrice_dynamique[y][x].objet.stockageMax = 0;
                 a = 1;
                 nombre[0] = '\0';
             } else if (*p == ';') {
                 if (a == 0) {
-                    matrice_dynamique->matrice[y][x].type_meuble = atoi(nombre);
-                    matrice_dynamique->matrice[y][x].type_objet = NONE;
+                    matrice_dynamique[y][x].type_meuble = atoi(nombre);
+                    matrice_dynamique[y][x].objet.type = NONE;
+                    matrice_dynamique[y][x].objet.nbStockes = 0;
+                    matrice_dynamique[y][x].objet.stockageMax = 0;
                 } else {
-                    matrice_dynamique->matrice[y][x].type_objet = atoi(nombre);
+                    matrice_dynamique[y][x].objet.type = atoi(nombre);
+
+                    if(atoi(nombre) == POELE || atoi(nombre) == ASSIETTE) {
+                        matrice_dynamique[y][x].objet.stockageMax = 1;
+                    } else if(atoi(nombre) == MARMITE) {
+                        matrice_dynamique[y][x].objet.stockageMax = 3;
+                    } else {
+                        matrice_dynamique[y][x].objet.stockageMax = 0;
+                    }
+
                     a = 0;
                 }
                 nombre[0] = '\0';
