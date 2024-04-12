@@ -117,19 +117,25 @@ typedef struct {
 } s_joueur;
 
 typedef struct {
-    s_recette recettes[NB_RECETTES_MAX];
-    int nb_recettes;
     s_commande commandes[NB_COMMANDES_MAX];
     int nbCommandes;
+    int temps;
+    int score;
+} s_partie;
+
+typedef struct {
     s_meuble matrice[HAUTEUR][LARGEUR];
     s_joueur joueurs[2];
-    int score;
-    int temps;
+    s_partie *partie;
+    int nb_partie;
+    s_recette recettes[NB_RECETTES_MAX];
+    int nb_recettes;
 } s_game;
 
 #include "Utils/Utils.h"
 #include "Matrice/meubles.h"
 #include "Commandes/Recettes.h"
 #include "Game/Game.h"
+#include "allezgros/Allezgros.h"
 
 #endif //HYPERCOOKED_BACKEND_H
