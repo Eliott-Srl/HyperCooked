@@ -14,8 +14,8 @@ add_executable(HyperCooked main.c
         backend/Matrice/Meubles.c
         backend/Matrice/Meubles.h
         backend/backend.h
-        allezgros/Allezgros.c
-        allezgros/Allezgros.h
+        backend/allezgros/Allezgros.c
+        backend/allezgros/Allezgros.h
         backend/Utils/Utils.c
         backend/Utils/Utils.h)
 
