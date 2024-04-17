@@ -9,7 +9,7 @@
 
 void loadRecipes(s_game* game);
 void freeRecettes(s_recette *recettes);
-void crearecettes(s_game *game);
+void newRecette(s_game *game);
 int verificationDeLaRecette(s_game* game, s_objet* plat, s_commande* commandeFind);
 
 #endif //HYPERCOOKED_RECETTES_H

@@ -50,7 +50,6 @@ typedef struct {
 
 typedef struct {
     int timer;
-    int satisfaction; //satisfaction du client de 1 à 5 -> utile pour calculer le score
     s_recette recette;
 } s_commande;
 
@@ -126,8 +125,8 @@ typedef struct {
 typedef struct {
     s_meuble matrice[HAUTEUR][LARGEUR];
     s_joueur joueurs[2];
-    s_partie *partie;
-    int nb_partie;
+    s_partie partie;
+    int partie_actuelle;
     s_recette recettes[NB_RECETTES_MAX];
     int nb_recettes;
 } s_game;

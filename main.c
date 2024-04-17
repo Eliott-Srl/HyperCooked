@@ -1,5 +1,4 @@
 #include "backend/backend.h"
-#include <conio.h>
 #include <dirent.h>
 
 int main() {
@@ -33,7 +32,9 @@ int main() {
     }
     blit(loading_screen, screen, 0, 0, 0, 0, width, height);
 
-    get_graphic()->cursor = load_bitmap("cursor.bmp", NULL);
+    textprintf_centre_ex(screen, font, width/2, height/2, makecol(255, 255, 255), -1, "Loading");
+
+    get_graphic()->cursor = load_bitmap("./res/img/cursor.bmp", NULL);
 
     if (!get_graphic()->cursor) {
         allegro_message("Erreur de chargement de l'image");
@@ -41,7 +42,7 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    get_graphic()->pointer = load_bitmap("pointer.bmp", NULL);
+    get_graphic()->pointer = load_bitmap("./res/img/pointer.bmp", NULL);
 
     if (!get_graphic()->pointer) {
         allegro_message("Erreur de chargement de l'image");
@@ -59,7 +60,7 @@ int main() {
         while ((dir = readdir(d)) != NULL) {
             printf("%s\n", dir->d_name);
             if (startsWith(dir->d_name, "map") && endsWith(dir->d_name, ".txt")) {
-                strcpy(maps[map_index], dir->d_name);
+                maps[map_index] = dir->d_name;
                 map_index++;
             }
         }
@@ -74,92 +75,48 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    game->nb_partie = 0;
     game->nb_recettes = 0;
-    // Fin de l'écran de chargement
+    loadRecipes(game);
+
+    rest(1000);
 
     for (int i = 0; i < map_index + 1; i++) {
-        int dx = 0;
-        int dy = 0;
         char input;
-        int eltiempo = 0;
-        int tempsDuJeux = 0;
-        int perso = 0;
+        int timeBegin = 0;
+        int timeSinceLastRecette = 0;
+        int timeSinceBegin = 0;
         char filename[STRMAX];
 
-        s_partie *partie = realloc(game->partie, game->nb_partie + 1);
-
-        if (!partie) {
-            allegro_message("Erreur d'allocation");
-            allegro_exit();
-            exit(EXIT_FAILURE);
-        }
-
-        partie->score = 0;
-        partie->temps = 0;
-        game->partie[game->nb_partie] = *partie;
-        game->nb_partie++;
+        game->partie.score = 0;
+        game->partie.temps = 0;
 
         sprintf(filename, "/maps/%s", maps[i]);
+
         initialiserMatrice(game->matrice, filename); // créer un fichier ou les meubles apparais
+
+        clear(screen);
+        // Fin de l'écran de chargement
+
         afficherMatrice(game->matrice); // afficher la matrice
 
         // Créer les joueurs
-        loadRecipes(game);
 
         // Gérer le timer
-        tempsDuJeux = timer();
-        while (tempsDuJeux <= 90) {
-            if(tempsDuJeux - eltiempo > 20){
-                crearecettes(game); // crée une recette depuis la structure
-                eltiempo = tempsDuJeux; //
+        timeBegin = timeSinceLastRecette = time(0);
+        do {
+            timeSinceBegin = time(0);
+
+            // Toutes les 20 secondes, il y a une nouvelle recette qui est rendu disponible
+            if (timeSinceBegin - timeSinceLastRecette > 20) {
+                newRecette(game);
+                timeSinceLastRecette = time(0);
             }
 
-            input = getch();
+            deplacerPersonnages(game);
+            // afficherMatrice(game->matrice);
 
-            switch (input) {
-                case 'z' :
-                    dy++;
-                    perso = 0;
-                    break;
-                case 's' :
-                    dy--;
-                    perso = 0;
-                    break;
-                case 'q' :
-                    dx--;
-                    perso = 0;
-                    break;
-                case 'd' :
-                    dx++;
-                    perso = 0;
-                    break;
-                case 75 :// Flèche gauche
-                    dx--;
-                    perso = 1;
-                    break;
-                case 77 :// Flèche droite
-                    dx++;
-                    perso = 1;
-                    break;
-                case 72 :// Flèche haut
-                    dy++;
-                    perso = 1;
-                    break;
-                case 80 :// Flèche bas
-                    dy--;
-                    perso = 1;
-                    break;
-            }
-
-
-
-            deplacerPersonnage(game, &game->joueurs[perso], dx, dy);
-            afficherMatrice(game->matrice);
-            printf("Il reste %d \n", 90 - tempsDuJeux);
-        }
-
-        printf("Vous avez perdu, looooooseerrrr !!!");
+            // printf("Il reste %d \n", 90 - (timeSinceBegin - timeBegin));
+        } while (timeSinceBegin - timeBegin <= 90);
     }
 
     return 0;

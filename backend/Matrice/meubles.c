@@ -9,7 +9,7 @@ void afficherMatrice(s_meuble matrice[HAUTEUR][LARGEUR]) {
     }
 }
 
-void initialiserMatrice(s_meuble matrice_dynamique[12][20], const char* file) {
+void initialiserMatrice(s_meuble matrice_dynamique[HAUTEUR][LARGEUR], const char* file) {
     FILE *fichier;
     char ligne[128];
 

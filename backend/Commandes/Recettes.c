@@ -1,6 +1,7 @@
 #include "Recettes.h"
 
 void loadRecipes(s_game* game) {
+    /*
     int type = 0, nbRecettes = 0;
     char ligne[STRMAX], *p, ingredients[STRMAX], *i, *end, *j;
     s_recette *pRecette = NULL, *recettes = NULL, stckrecette[NB_RECETTES_MAX];
@@ -47,6 +48,7 @@ void loadRecipes(s_game* game) {
     fclose(fp);
 
     return stckrecette;
+     */
 }
 
 int compareIngredients(s_ingredient *ingredient1, s_ingredient_physique *ingredient2) {
@@ -60,41 +62,23 @@ void freeRecettes(s_recette *recettes) {
     free(recettes);
 }
 
-void crearecettes(s_game *game) {
-    int j,  choix = rand()%game->nb_recettes;
-    s_recette recettes[NB_RECETTES_MAX];
-    e_ingredients ingredients[NB_INGREDIENTS_MAX];
-
-    printf("la recette est %s ", recettes[choix].nom);
-
-    for(int i = 0 ; i < NB_INGREDIENTS_MAX ; i++){
-        switch (ingredients[i]) {
-            case SALADE:
-                printf("Salade \n");
-            case PAIN:
-                printf("Pain \n");
-            case STEAK:
-                printf("Steak \n");
-            case TOMATE:
-                printf("Tomate \n");
-            case OEUF:
-                printf("Oeuf \n");
-            case POTATO:
-                printf("Pomme de terre \n");
-        }
-    }
+void newRecette(s_game* game) {
+    int choix = rand() % (game->nb_recettes - 1);
+    game->partie.commandes[game->partie.nbCommandes].recette = game->recettes[choix];
+    printf("Nouvelle recette: %s\n", game->partie.commandes[game->partie.nbCommandes].recette.nom);
+    game->partie.nbCommandes++;
 }
 
 int verificationDeLaRecette(s_game* game, s_objet* plat, s_commande* commandeFind) {
     int a;
-    for (int i = 0; i < game->nbCommandes; i++) {
-        *commandeFind = game->commandes[i];
+    for (int i = 0; i < game->partie.nbCommandes; i++) {
+        *commandeFind = game->partie.commandes[i];
         if (commandeFind->recette.nbIngredients == plat->nbStockes) {
             a = 0;
             for (int j = 0; j < plat->nbStockes; j++) {
-                if(plat->nourriture[j].nom == commandeFind->recette.ingredients[0].nom
-                   && plat->nourriture[j].coupe == commandeFind->recette.ingredients[0].coupe
-                   && plat->nourriture[j].cuit == commandeFind->recette.ingredients[0].cuit) {
+                if(plat->nourriture[j].nom == commandeFind->recette.ingredients[a].nom
+                   && plat->nourriture[j].coupe == commandeFind->recette.ingredients[a].coupe
+                   && plat->nourriture[j].cuit == commandeFind->recette.ingredients[a].cuit) {
                     a++;
                 } else {
                     break;
