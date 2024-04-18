@@ -14,6 +14,14 @@ int rgbToAllegroColor(s_color color) {
     return makecol(color.r, color.g, color.b);
 }
 
+void hc_blit(BITMAP *source) {
+    if (p_graphic->fs) {
+       blit(source, screen, 0, 0, 0, 0, FS_WIDTH, FS_HEIGHT);
+    } else {
+        blit(source, screen, 0, 0, 0, 0, WIDTH, HEIGHT);
+    }
+}
+
 int boutonsHovered() {
     int count = graphic->nombre_boutons;
     for (int i = 0; i < count; i++) {
@@ -69,6 +77,49 @@ s_bouton *boutonfill_center(BITMAP *bmp, const FONT *f, int x, int y, int h, int
     graphic->nombre_boutons++;
     graphic->boutons = boutons;
     return &graphic->boutons[graphic->nombre_boutons];
+}
+
+// https://www.yaronet.com/topics/165128-c-retransmission-dune-liste-darguments-variables
+void hc_textprintf_centre_h(BITMAP *bmp, int y, const FONT *f, int color, int bg, const char *format, ...) {
+    va_list ap;
+    char s_format[STRMAX];
+    va_start(ap, format);
+    vsprintf(s_format, format, ap);
+    va_end(ap);
+
+    if (p_graphic->fs) {
+        textprintf_centre_ex(bmp, f, FS_WIDTH / 2, y, color, bg, "%s", s_format);
+    } else {
+        textprintf_centre_ex(bmp, f, WIDTH/2, y, color, bg, "%s", s_format);
+    }
+}
+
+void hc_textprintf_centre_v(BITMAP *bmp, int x, const FONT *f, int color, int bg, const char *format, ...) {
+    va_list ap;
+    char s_format[STRMAX];
+    va_start(ap, format);
+    vsprintf(s_format, format, ap);
+    va_end(ap);
+
+    if (p_graphic->fs) {
+        textprintf_centre_ex(bmp, f, x, FS_HEIGHT / 2, color, bg, "%s", s_format);
+    } else {
+        textprintf_centre_ex(bmp, f, x, HEIGHT/2, color, bg, "%s", s_format);
+    }
+}
+
+void hc_textprintf_centre_hv(BITMAP *bmp, const FONT *f, int color, int bg, const char *format, ...) {
+    va_list ap;
+    char s_format[STRMAX];
+    va_start(ap, format);
+    vsprintf(s_format, format, ap);
+    va_end(ap);
+
+    if (p_graphic->fs) {
+        textprintf_centre_ex(bmp, f, FS_WIDTH / 2, FS_HEIGHT / 2, color, bg, "%s", s_format);
+    } else {
+        textprintf_centre_ex(bmp, f, WIDTH/2, HEIGHT/2, color, bg, "%s", s_format);
+    }
 }
 
 void clear_boutons() {

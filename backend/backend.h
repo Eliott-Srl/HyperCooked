@@ -8,7 +8,23 @@
 #define NB_INGREDIENTS_MAX 10
 #define NB_COMMANDES_MAX 5
 
-typedef struct {
+#define WIDTH 800
+#define HEIGHT 600
+
+#ifdef WIN64
+#include <winuser.h>
+#define FS_WIDTH GetSystemMetrics(SM_CXFULLSCREEN)
+#define FS_HEIGHT GetSystemMetrics(SM_CYFULLSCREEN)
+#endif
+
+#ifndef WIN64
+#define FS_WIDTH 1920;
+#define FS_HEIGHT 1080;
+#endif
+
+#include "allegro.h"
+
+typedef struct s_coo {
     int x;
     int y;
 } s_coo;

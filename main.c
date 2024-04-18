@@ -4,6 +4,7 @@
 int main() {
     int width = 800;
     int height = 600;
+
     allegro_init();
     set_window_title("The best game ever");
 
@@ -11,7 +12,7 @@ int main() {
     install_keyboard();
 
     set_color_depth(desktop_color_depth());
-    if(set_gfx_mode(GFX_AUTODETECT_WINDOWED,width, height, 0, 0) != 0) {
+    if(set_gfx_mode(GFX_AUTODETECT_WINDOWED,WIDTH, HEIGHT, 0, 0) != 0) {
         allegro_message("Pb de mode graphique");
         allegro_exit();
         exit(EXIT_FAILURE);
@@ -20,19 +21,27 @@ int main() {
     // écran de chargement ici
     s_graphic *graphic = (s_graphic *) malloc(sizeof(s_graphic));
     set_graphic(graphic);
-    get_graphic()->width = width;
-    get_graphic()->height = height;
+    graphic->fs = 0;
+    graphic->buffer = create_bitmap(WIDTH, HEIGHT);
 
-    BITMAP *loading_screen = load_bitmap("./res/img/loading_screen.bmp", NULL);
+    if (!graphic->buffer) {
+        allegro_message("Erreur de création du buffer");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
 
-    if (!loading_screen) {
+    graphic->fs_buffer = create_bitmap(FS_WIDTH, FS_HEIGHT);
+
+    graphic->loading_screen = load_bitmap("./res/img/homme.bmp", NULL);
+
+    if (!graphic->loading_screen) {
         allegro_message("Erreur de chargement de l'image");
         allegro_exit();
         exit(EXIT_FAILURE);
     }
-    blit(loading_screen, screen, 0, 0, 0, 0, width, height);
 
-    textprintf_centre_ex(screen, font, width/2, height/2, makecol(255, 255, 255), -1, "Loading");
+    hc_textprintf_centre_hv(graphic->loading_screen, font, makecol(255, 255, 255), -1, "Loading...");
+    hc_blit(graphic->loading_screen);
 
     get_graphic()->cursor = load_bitmap("./res/img/cursor.bmp", NULL);
 
@@ -117,6 +126,7 @@ int main() {
 
             // printf("Il reste %d \n", 90 - (timeSinceBegin - timeBegin));
         } while (timeSinceBegin - timeBegin <= 90);
+            hc_blit(graphic->loading_screen);
     }
 
     return 0;
