@@ -1,49 +1,55 @@
 #ifndef HYPERCOOKED_ALLEZGROS_H
 #define HYPERCOOKED_ALLEZGROS_H
 
-#include "../backend.h"
-#include "allegro.h"
 #include <stdio.h>
+#include "../backend.h"
 
-typedef struct {
-    int h;                          // Hauteur
-    int w;                          // Largeur
-    int color;                      // Couleur ( utilise makecol() )
-    int x;                          // Position X du centre
-    int y;                          // Position Y du centre
-    int fill;                       // Si le rectangle est rempli ou non
-} s_rectangle;
-
-typedef struct {
-    BITMAP *bmp;                    // Image sur laquelle on dessine
-    s_rectangle rectangle;          // Instance de s_rectangle
-    void (*callback)();             // Pointeur de fonction qui sera appelée
-    char *text;                     // Texte affiché sur l'écran
-    int text_color;                 // Couleur du texte affiché
-} s_bouton;
-
-typedef struct {
-    BITMAP *background;             // Fond du menu
-    int menu_opened;                // Booléen qui indique l'état d'ouverture du menu
-} s_menu;
-
-typedef struct {
-    BITMAP *cursor;
-    BITMAP *pointer;
-    int width;
-    int height;
-    s_bouton *boutons;
-    int nombre_boutons;
-} s_graphic;
-
+// Retourne la structure globale qui contient toutes les infos pour l'affichage
 s_graphic *get_graphic();
+
+// Set l'adresse de la sutructure graphique sur new_graphic
 void set_graphic(s_graphic* new_graphic);
+
+// Transforme une couleur de la structure couleur en une couleur d'Allegro
 int rgbToAllegroColor(s_color color);
+
+// Affiche le buffer adapté avec la bonne taille
+void hc_blit(BITMAP *source);
+
+// Divise l'espace horizontale entre startX et endX en n parts égales
 void divideScreenVertically(int *coos, int n, int startX, int endX);
+
+// Retourne un booléen qui dit si la souris se trouve sur un des boutons customs
 int boutonsHovered();
-s_rectangle rectfill_center(BITMAP *bmp, int x, int y, int h, int w, int color);
-s_bouton *boutonfill_center(BITMAP *bmp, const FONT *f, int x, int y, int h, int w, const char *text_contained, void (*callback)(), int color, int background);
+
+/* Crée un rectangle dont:
+ * - x et y sont les coordonées du centre
+ * - color est la couleur du rectangle*/
+s_rectangle hc_rectfill_center(BITMAP *bmp, int x, int y, int h, int w, int color);
+
+/* Crée un bouton custom interactif dont:
+ * - x et y sont les coordonnées du centre
+ * - h et w seront respectivement la hauteur et la largeur
+ * - text_contained sera le texte afficher sur le bouton
+ * - callback sera la fonction appelé quand on clique dessus
+ * - color sera la couleur du texte
+ * - background sera la couleur du bouton*/
+s_bouton *hc_boutonfill_center(BITMAP *bmp,const FONT *f, int x, int y, int h, int w, const char *text_contained,
+                               void (*callback)(), int color, int background);
+// Crée un texte aligné sur l'axe horizontale et dont y est la distance depuis le haut de l'écran
+void hc_textprintf_centre_h(BITMAP *bmp, int y, const FONT *f, int color, int bg, const char *format, ...);
+
+// Crée un texte aligné sur l'axe verticale et dont x est la distance depuis la gauche de l'écran
+void hc_textprintf_centre_v(BITMAP *bmp, int x, const FONT *f, int color, int bg, const char *format, ...);
+
+// Crée un texte aligné sur l'axe horizontale et verticale
+void hc_textprintf_centre_hv(BITMAP *bmp, const FONT *f, int color, int bg, const char *format, ...);
+
+// Supprime tous les boutons customs
 void clear_boutons();
+
+// Prends une capture d'écran
+// Ne fonctionne pas
 void screenshot();
 
 #endif //HYPERCOOKED_ALLEZGROS_H

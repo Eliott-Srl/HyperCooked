@@ -43,17 +43,17 @@ int main() {
     hc_textprintf_centre_hv(graphic->loading_screen, font, makecol(255, 255, 255), -1, "Loading...");
     hc_blit(graphic->loading_screen);
 
-    get_graphic()->cursor = load_bitmap("./res/img/cursor.bmp", NULL);
+    graphic->cursor = load_bitmap("./res/img/cursor.bmp", NULL);
 
-    if (!get_graphic()->cursor) {
+    if (!graphic->cursor) {
         allegro_message("Erreur de chargement de l'image");
         allegro_exit();
         exit(EXIT_FAILURE);
     }
 
-    get_graphic()->pointer = load_bitmap("./res/img/pointer.bmp", NULL);
+    graphic->pointer = load_bitmap("./res/img/pointer.bmp", NULL);
 
-    if (!get_graphic()->pointer) {
+    if (!graphic->pointer) {
         allegro_message("Erreur de chargement de l'image");
         allegro_exit();
         exit(EXIT_FAILURE);
@@ -96,8 +96,7 @@ int main() {
         int timeSinceBegin = 0;
         char filename[STRMAX];
 
-        game->partie.score = 0;
-        game->partie.temps = 0;
+        reinitialiserPartie(game);
 
         sprintf(filename, "/maps/%s", maps[i]);
 
@@ -124,9 +123,12 @@ int main() {
             deplacerPersonnages(game);
             // afficherMatrice(game->matrice);
 
-            // printf("Il reste %d \n", 90 - (timeSinceBegin - timeBegin));
-        } while (timeSinceBegin - timeBegin <= 90);
+                    elapsedTime = timeSinceBegin - timeBegin;
+                }
+            } while (elapsedTime <= 90 || (etatJeu != DANS_MENU_JEU && etatJeu != PLAYING));
+        } else if (etatJeu == LOADING) {
             hc_blit(graphic->loading_screen);
+        }
     }
 
     return 0;
