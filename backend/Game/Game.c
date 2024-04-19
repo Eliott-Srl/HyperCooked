@@ -2,122 +2,160 @@
 #include <time.h>
 #include <stdio.h>
 
-int timer() {
-    int seconde = 90;
-    int score = 0;
+volatile int counter = 0;
 
-    // Obtenir le temps actuel
-    time_t start_time = time(NULL);
-    time_t current_time = 0;
-    int elapsed_time = 0;
+void timer_handler() {
+    counter++;
+} END_OF_FUNCTION(timer_handler)
 
-    // Obtenir le temps actuel
-    current_time = time(NULL);
+s_game *getGame() {
+    static s_game *game;
 
-    // Calculer le temps écoulé en secondes
-    elapsed_time = difftime(current_time, start_time);
+    if (!game) {
+        game = (s_game *) malloc(sizeof(s_game));
+    }
+
+    return game;
 }
 
-// Fonction pour déplacer un personnage tout en évitant les collisions avec les meubles
-void deplacerPersonnage(s_game* game, s_joueur* joueur, int dx, int dy) {
-    int tailleCase = 10;
-    // Nouvelles positions potentielles
-    int newX = joueur->pos.x + dx;
-    int newY = joueur->pos.y + dy;
+void hc_init() {
+    allegro_init();
+    set_window_title("The best game ever");
 
-    // Vérifier les collisions avec les meubles
-    for (int i = 0; i < HAUTEUR; i++) {
-        for (int j = 0; j < LARGEUR; j++) {
-            if (collisions(newX, newY, joueur->dimensions, joueur->dimensions, i * tailleCase, j * tailleCase, tailleCase, tailleCase)) {
-                // Il y a une collision, ne pas bouger
-                return;
+    install_mouse();
+    install_keyboard();
+    install_timer();
+
+    set_color_depth(desktop_color_depth());
+    if(set_gfx_mode(GFX_AUTODETECT_WINDOWED,WIDTH, HEIGHT, 0, 0) != 0) {
+        allegro_message("Pb de mode graphique");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    // écran de chargement ici
+    s_graphic *graphic = getGraphic();
+    graphic->loadingScreen = load_bitmap("./res/img/homme.bmp", NULL);
+
+    if (!graphic->loadingScreen) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    hc_textprintf_centre_hv(graphic->loadingScreen, font, makecol(255, 255, 255), -1, "Loading...");
+    hc_blit(graphic->loadingScreen);
+
+    graphic->fsLoadingScreen = load_bitmap("./res/img/homme.bmp", NULL);
+
+    if (!graphic->fsLoadingScreen) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    graphic->fs = 0;
+    graphic->tailleCase = 10;          // à redéfinir, je ne suis pas sûr de ça
+    graphic->fsTailleCase = 20;       // à redéfinir, je ne suis pas sûr de ça non plus
+    graphic->buffer = create_bitmap(WIDTH, HEIGHT);
+
+    if (!graphic->buffer) {
+        allegro_message("Erreur de création du buffer");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    graphic->fsBuffer = create_bitmap(FS_WIDTH, FS_HEIGHT);
+
+    if (!graphic->fsBuffer) {
+        allegro_message("Erreur de création du buffer");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+
+    graphic->cursor = load_bitmap("./res/img/cursor.bmp", NULL);
+
+    if (!graphic->cursor) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    graphic->pointer = load_bitmap("./res/img/pointer.bmp", NULL);
+
+    if (!graphic->pointer) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    LOCK_VARIABLE(counter);
+    LOCK_FUNCTION(timer_handler);
+
+    s_game *game = getGame();
+
+    if (!game) {
+        allegro_message("Erreur d'allocation");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    game->nbRecettes = 0;
+    game->etatJeu = LOADING;
+
+    loadRecipes();
+}
+
+int loadingMaps(char *maps[NB_MAPS_MAX]) {
+    int map_index = 0;
+
+    // Récupération des maps
+    struct dirent *dir;
+    DIR *d = opendir("./maps/");
+    if (d) {
+        while ((dir = readdir(d)) != NULL) {
+            // printf("%s\n", dir->d_name);
+            if (startsWith(dir->d_name, "map") && endsWith(dir->d_name, ".txt")) {
+                maps[map_index] = dir->d_name;
+                map_index++;
             }
         }
+        closedir(d);
     }
 
-    s_joueur *autre_joueur;
-    // Vérifier les collisions avec les autres personnages
-    if (game->joueurs[0].couleur.r == joueur->couleur.r && game->joueurs[0].couleur.g == joueur->couleur.g && game->joueurs[0].couleur.b == joueur->couleur.b) {
-        autre_joueur = &game->joueurs[1];
-    } else {
-        autre_joueur = &game->joueurs[0];
-    }
-
-    if (collisions(newX, newY, joueur->dimensions, joueur->dimensions, autre_joueur->pos.x, autre_joueur->pos.y, autre_joueur->dimensions, autre_joueur->dimensions)) {
-        // Il y a une collision avec un autre personnage, ne pas bouger
-        return;
-    }
-
-    // Déplacer le personnage aux nouvelles positions
-    joueur->pos.x = newX;
-    joueur->pos.y = newY;
+    return map_index;
 }
 
-void neFaitRien(s_game* game, s_joueur* joueur) {
-    return;
-}
+void jeu(int niveau) {
+    s_game *game = getGame();
+    int recettes_crees = 0;
+    install_int_ex(timer_handler, SECS_TO_TIMER(1));
+    afficherMatrice(game->matrice); // afficher la matrice
 
-void planDeTravail(s_game* game, s_joueur* joueur, int i, int j) {
-    if (joueur->en_main == OBJET) {
-        game->matrice[i][j].objet = joueur->hand_objet;
-        joueur->en_main = NOTHING;
-    }
-}
+    do {
+        if (game->etatJeu == DANS_MENU_JEU) {
+            // TODO: Menu Jeu
+        } else if (game->etatJeu == PLAYING) {
+            // Toutes les 20 secondes, il y a une nouvelle recette qui est rendu disponible
+            if (counter > (recettes_crees + 1) * 20) {
+                newRecette();
+                recettes_crees++;
+            }
 
-void plancheADecouper(s_game* game, s_joueur* joueur, int i, int j) {
-    if (joueur->en_main == INGREDIENT) {
-        game->matrice[i][j].objet.nourriture[0] = joueur->hand_ingredient.type;
-        joueur->en_main = NOTHING;
-    }
-}
-
-void comptoir(s_game* game, s_joueur* joueur, int i, int j) {
-    if (joueur->en_main == OBJET) {
-        s_commande commandFind;
-        int good = verificationDeLaRecette(game, &joueur->hand_objet, &commandFind);
-        joueur->en_main = NOTHING;
-        if (good) {
-            // TODO: Calculate score
-        } else {
-            printf("La commande n'était pas bonne");
+            deplacerPersonnages();
+            // afficherMatrice(game->matrice);
+            hc_
         }
-    }
+    } while (counter <= 90 || (game->etatJeu != DANS_MENU_JEU && game->etatJeu != PLAYING));
 }
 
-void coffre(s_game* game, s_joueur* joueur, int i, int j) {
-    if (joueur->en_main == NOTHING) {
-        joueur->en_main = INGREDIENT;
-        joueur->hand_ingredient.en_main = 1;
-        joueur->hand_ingredient.type.cuit = NON;
-        joueur->hand_ingredient.type.coupe = 0;
-        joueur->hand_ingredient.type.nom = game->matrice[i][j].objet.nourriture[0].nom;
-        joueur->hand_ingredient.type.coupable = game->matrice[i][j].objet.nourriture[0].coupable;
-        joueur->hand_ingredient.type.cuisson = game->matrice[i][j].objet.nourriture[0].cuisson;
+void reinitialiserPartie() {
+    for (int i = 0; i < NB_COMMANDES_MAX; i++) {
+        getGame()->partie.commandes[i].recette.nbIngredients = 0;
+        getGame()->partie.commandes[i].timer = 0;
     }
-}
-
-void plaqueDeCuisson(s_game* game, s_joueur* joueur, int i, int j) {
-    if (joueur->en_main == INGREDIENT) {
-        if (game->matrice[i][j].objet.type == MARMITE && game->matrice[i][j].objet.nbStockes < game->matrice[i][j].objet.stockageMax) {
-            game->matrice[i][j].objet.nourriture[game->matrice[i][j].objet.nbStockes] = joueur->hand_ingredient.type;
-            joueur->en_main = NONE;
-        } else if (game->matrice[i][j].objet.type == POELE && game->matrice[i][j].objet.nbStockes < 1) {
-            game->matrice[i][j].objet.nourriture[game->matrice[i][j].objet.nbStockes] = joueur->hand_ingredient.type;
-            joueur->en_main = NONE;
-        }
-    } else if (joueur->en_main == OBJET) {
-        if (game->matrice[i][j].objet.type == NONE) {
-            game->matrice[i][j].objet = joueur->hand_objet;
-            joueur->en_main = NONE;
-        }
-    }
-}
-
-void poubelle(s_game* game, s_joueur* joueur, int i, int j) {
-    if (joueur->en_main == INGREDIENT) {
-        joueur->en_main = NONE;
-    } else if (joueur->en_main == OBJET) {
-        joueur->hand_objet.nbStockes = 0;
-        joueur->en_main = NONE;
-    }
+    getGame()->partie.nbCommandes = 0;
+    getGame()->partie.score = 0;
+    getGame()->partie.temps = 0;
 }
