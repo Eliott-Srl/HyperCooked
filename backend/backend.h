@@ -185,6 +185,7 @@ typedef struct s_graphic {
 #include "Commandes/Recettes.h"
 #include "Commandes/Commandes.h"
 #include "Game/Game.h"
+#include "Game/Actions.h"
 #include "allezgros/Allezgros.h"
 
 #endif //HYPERCOOKED_BACKEND_H

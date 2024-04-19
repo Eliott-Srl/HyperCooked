@@ -1,13 +1,12 @@
 #include "Allezgros.h"
 
-s_graphic* p_graphic;
+s_graphic* getGraphic() {
+    static s_graphic *graphic;
+    if (!graphic) {
+        graphic = (s_graphic*) malloc(sizeof(s_graphic));
+    }
 
-s_graphic* get_graphic() {
-    return p_graphic;
-}
-
-void set_graphic(s_graphic* new_graphic) {
-    p_graphic = new_graphic;
+    return graphic;
 }
 
 int rgbToAllegroColor(s_color color) {
@@ -15,7 +14,7 @@ int rgbToAllegroColor(s_color color) {
 }
 
 void hc_blit(BITMAP *source) {
-    if (p_graphic->fs) {
+    if (getGraphic()->fs) {
        blit(source, screen, 0, 0, 0, 0, FS_WIDTH, FS_HEIGHT);
     } else {
         blit(source, screen, 0, 0, 0, 0, WIDTH, HEIGHT);
@@ -23,12 +22,12 @@ void hc_blit(BITMAP *source) {
 }
 
 int boutonsHovered() {
-    int count = p_graphic->nombre_boutons;
+    int count = getGraphic()->nombreBoutons;
     for (int i = 0; i < count; i++) {
-        if (mouse_x > p_graphic->boutons[i].rectangle.x - p_graphic->boutons[i].rectangle.w / 2
-         && mouse_x < p_graphic->boutons[i].rectangle.x + p_graphic->boutons[i].rectangle.w / 2
-         && mouse_y > p_graphic->boutons[i].rectangle.y - p_graphic->boutons[i].rectangle.h / 2
-         && mouse_y < p_graphic->boutons[i].rectangle.y + p_graphic->boutons[i].rectangle.h / 2) {
+        if (mouse_x > getGraphic()->boutons[i].rectangle.x - getGraphic()->boutons[i].rectangle.w / 2
+         && mouse_x < getGraphic()->boutons[i].rectangle.x + getGraphic()->boutons[i].rectangle.w / 2
+         && mouse_y > getGraphic()->boutons[i].rectangle.y - getGraphic()->boutons[i].rectangle.h / 2
+         && mouse_y < getGraphic()->boutons[i].rectangle.y + getGraphic()->boutons[i].rectangle.h / 2) {
             return 1;
         }
     }
@@ -58,7 +57,7 @@ s_rectangle hc_rectfill_center(BITMAP *bmp, int x, int y, int h, int w, int colo
 }
 
 s_bouton *hc_boutonfill_center(BITMAP *bmp, const FONT *f, int x, int y, int h, int w, const char *text_contained, void (*callback)(), int color, int background) {
-    s_bouton *boutons = (s_bouton *) realloc(p_graphic->boutons, (p_graphic->nombre_boutons + 1) * sizeof(s_bouton*));
+    s_bouton *boutons = (s_bouton *) realloc(getGraphic()->boutons, (getGraphic()->nombreBoutons + 1) * sizeof(s_bouton*));
 
     if (boutons == NULL) {
         allegro_message("Erreur de reallocation de la mémoire");
@@ -66,17 +65,17 @@ s_bouton *hc_boutonfill_center(BITMAP *bmp, const FONT *f, int x, int y, int h, 
         exit(EXIT_FAILURE);
     }
 
-    boutons[p_graphic->nombre_boutons].bmp = bmp;
-    boutons[p_graphic->nombre_boutons].rectangle = hc_rectfill_center(bmp, x, y, h, w, background);
-    boutons[p_graphic->nombre_boutons].callback = callback;
-    boutons[p_graphic->nombre_boutons].text = (char *) text_contained;
-    boutons[p_graphic->nombre_boutons].text_color = color;
+    boutons[getGraphic()->nombreBoutons].bmp = bmp;
+    boutons[getGraphic()->nombreBoutons].rectangle = hc_rectfill_center(bmp, x, y, h, w, background);
+    boutons[getGraphic()->nombreBoutons].callback = callback;
+    boutons[getGraphic()->nombreBoutons].text = (char *) text_contained;
+    boutons[getGraphic()->nombreBoutons].textColor = color;
 
     textout_centre_ex(bmp, f, text_contained, x, y, color, -1);
 
-    p_graphic->nombre_boutons++;
-    p_graphic->boutons = boutons;
-    return &p_graphic->boutons[p_graphic->nombre_boutons];
+    getGraphic()->nombreBoutons++;
+    getGraphic()->boutons = boutons;
+    return &getGraphic()->boutons[getGraphic()->nombreBoutons];
 }
 
 // https://www.yaronet.com/topics/165128-c-retransmission-dune-liste-darguments-variables
@@ -123,12 +122,12 @@ void hc_textprintf_centre_hv(BITMAP *bmp, const FONT *f, int color, int bg, cons
 }
 
 void clear_boutons() {
-    for (int i = 0; i < p_graphic->nombre_boutons; i++) {
-        free(p_graphic->boutons + i);
+    for (int i = 0; i < getGraphic()->nombreBoutons; i++) {
+        free(getGraphic()->boutons + i);
     }
 
-    p_graphic->nombre_boutons = 0;
-    s_bouton *boutons = realloc(p_graphic->boutons, sizeof(s_bouton *));
+    getGraphic()->nombreBoutons = 0;
+    s_bouton *boutons = realloc(getGraphic()->boutons, sizeof(s_bouton *));
 
     if (boutons == NULL) {
         allegro_message("Erreur de reallocation de la mémoire");
@@ -136,7 +135,7 @@ void clear_boutons() {
         exit(EXIT_FAILURE);
     }
 
-    p_graphic->boutons = boutons;
+    getGraphic()->boutons = boutons;
 }
 
 void screenshot() {

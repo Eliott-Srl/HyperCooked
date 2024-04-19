@@ -5,7 +5,7 @@
 #include "../backend.h"
 
 // Retourne la structure globale qui contient toutes les infos pour l'affichage
-s_graphic *get_graphic();
+s_graphic *getGraphic();
 
 // Set l'adresse de la sutructure graphique sur new_graphic
 void set_graphic(s_graphic* new_graphic);

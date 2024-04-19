@@ -1,6 +1,7 @@
 #include "Recettes.h"
 
-void loadRecipes(s_game* game) {
+void loadRecipes() {
+    s_game *game = getGame();
     /*
     int type = 0, nbRecettes = 0;
     char ligne[STRMAX], *p, ingredients[STRMAX], *i, *end, *j;
@@ -55,17 +56,17 @@ void freeRecettes(s_recette *recettes) {
     free(recettes);
 }
 
-void newRecette(s_game* game) {
-    int choix = rand() % (game->nb_recettes - 1);
-    game->partie.commandes[game->partie.nbCommandes].recette = game->recettes[choix];
-    printf("Nouvelle recette: %s\n", game->partie.commandes[game->partie.nbCommandes].recette.nom);
-    game->partie.nbCommandes++;
+void newRecette(s_graphic* graphic) {
+    int choix = rand() % (getGame()->nbRecettes - 1);
+    getGame()->commandes[getGame()->nbCommandes].recette = getGame()->recettes[choix];
+    printf("Nouvelle recette: %s\n", getGame()->commandes[getGame()->nbCommandes].recette.nom);
+    getGame()->nbCommandes++;
 }
 
-int verificationDeLaRecette(s_game* game, s_objet* plat, s_commande* commandeFind) {
+int verificationDeLaRecette(s_objet* plat, s_commande* commandeFind) {
     int a;
-    for (int i = 0; i < game->partie.nbCommandes; i++) {
-        *commandeFind = game->partie.commandes[i];
+    for (int i = 0; i < getGame()->nbCommandes; i++) {
+        *commandeFind = getGame()->commandes[i];
         if (commandeFind->recette.nbIngredients == plat->nbStockes) {
             a = 0;
             for (int j = 0; j < plat->nbStockes; j++) {
