@@ -86,11 +86,7 @@ void hc_textprintf_centre_h(BITMAP *bmp, int y, const FONT *f, int color, int bg
     vsprintf(s_format, format, ap);
     va_end(ap);
 
-    if (p_graphic->fs) {
-        textprintf_centre_ex(bmp, f, FS_WIDTH / 2, y, color, bg, "%s", s_format);
-    } else {
-        textprintf_centre_ex(bmp, f, WIDTH/2, y, color, bg, "%s", s_format);
-    }
+    textprintf_centre_ex(bmp, f, getCorrectWidth() / 2, y, color, bg, "%s", s_format);
 }
 
 void hc_textprintf_centre_v(BITMAP *bmp, int x, const FONT *f, int color, int bg, const char *format, ...) {
@@ -100,11 +96,7 @@ void hc_textprintf_centre_v(BITMAP *bmp, int x, const FONT *f, int color, int bg
     vsprintf(s_format, format, ap);
     va_end(ap);
 
-    if (p_graphic->fs) {
-        textprintf_centre_ex(bmp, f, x, FS_HEIGHT / 2, color, bg, "%s", s_format);
-    } else {
-        textprintf_centre_ex(bmp, f, x, HEIGHT/2, color, bg, "%s", s_format);
-    }
+    textprintf_centre_ex(bmp, f, x,  getCorrectHeight() / 2, color, bg, "%s", s_format);
 }
 
 void hc_textprintf_centre_hv(BITMAP *bmp, const FONT *f, int color, int bg, const char *format, ...) {
@@ -114,11 +106,28 @@ void hc_textprintf_centre_hv(BITMAP *bmp, const FONT *f, int color, int bg, cons
     vsprintf(s_format, format, ap);
     va_end(ap);
 
-    if (p_graphic->fs) {
-        textprintf_centre_ex(bmp, f, FS_WIDTH / 2, FS_HEIGHT / 2, color, bg, "%s", s_format);
-    } else {
-        textprintf_centre_ex(bmp, f, WIDTH/2, HEIGHT/2, color, bg, "%s", s_format);
-    }
+    textprintf_centre_ex(bmp, f, getCorrectWidth() / 2, getCorrectHeight() / 2, color, bg, "%s", s_format);
+}
+
+int getCorrectHeight() {
+    return (getGraphic()->fs ? FS_HEIGHT : HEIGHT);
+}
+
+int getCorrectWidth() {
+    return (getGraphic()->fs ? FS_WIDTH : WIDTH);
+}
+
+int getCorrectCaseSize() {
+    return (getGraphic()->fs ? getGraphic()->fsTailleCase : getGraphic()->tailleCase);
+}
+
+BITMAP *getCorrectBufferMenu() {
+    // return (getGraphic()->fs ? getGraphic()->fsBuffer : getGraphic()->buffer);
+    // TODO: Menu
+}
+
+BITMAP *getCorrectBufferJeu() {
+    return (getGraphic()->fs ? getGraphic()->fsBuffer : getGraphic()->buffer);
 }
 
 void clear_boutons() {
