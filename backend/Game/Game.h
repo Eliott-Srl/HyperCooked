@@ -2,9 +2,13 @@
 #define HYPERCOOKED_GAME_H
 
 #include "../backend.h"
+#include <dirent.h>
 
-void deplacerPersonnage(s_game* game, s_joueur* joueur, int dx, int dy);
+s_game *getGame();
+void hc_init();
+int loadingMaps(char *maps[NB_MAPS_MAX]);
+void jeu(int niveau);
+void reinitialiserPartie();
 void genereCommande();
-int timer();
 
 #endif //HYPERCOOKED_GAME_H

@@ -3,7 +3,7 @@
 void afficherMatrice(s_meuble matrice[HAUTEUR][LARGEUR]) {
     for (int h = 0; h < HAUTEUR; h++) {
         for (int l = 0; l < LARGEUR; l++) {
-            printf("%d ", matrice[h][l].type_meuble);
+            printf("%d ", matrice[h][l].typeMeuble);
         }
         printf("\n");
     }
@@ -30,7 +30,7 @@ void initialiserMatrice(s_meuble matrice_dynamique[HAUTEUR][LARGEUR], const char
             if (strchr(base, *p) != NULL) {
                 strncat(nombre, p, 1);
             } else if (*p == ' ') {
-                matrice_dynamique[y][x].type_meuble = atoi(nombre);
+                matrice_dynamique[y][x].typeMeuble = atoi(nombre);
                 matrice_dynamique[y][x].objet.type = NONE;
                 matrice_dynamique[y][x].objet.nbStockes = 0;
                 matrice_dynamique[y][x].objet.stockageMax = 0;
@@ -38,7 +38,7 @@ void initialiserMatrice(s_meuble matrice_dynamique[HAUTEUR][LARGEUR], const char
                 nombre[0] = '\0';
             } else if (*p == ';') {
                 if (a == 0) {
-                    matrice_dynamique[y][x].type_meuble = atoi(nombre);
+                    matrice_dynamique[y][x].typeMeuble = atoi(nombre);
                     matrice_dynamique[y][x].objet.type = NONE;
                     matrice_dynamique[y][x].objet.nbStockes = 0;
                     matrice_dynamique[y][x].objet.stockageMax = 0;

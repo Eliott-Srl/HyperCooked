@@ -51,13 +51,6 @@ void loadRecipes(s_game* game) {
      */
 }
 
-int compareIngredients(s_ingredient *ingredient1, s_ingredient_physique *ingredient2) {
-    if (ingredient1->nom == ingredient2->type.nom) {
-        return 1;
-    }
-    return 0;
-}
-
 void freeRecettes(s_recette *recettes) {
     free(recettes);
 }

@@ -17,6 +17,8 @@ add_executable(HyperCooked main.c
         backend/allezgros/Allezgros.c
         backend/allezgros/Allezgros.h
         backend/Utils/Utils.c
-        backend/Utils/Utils.h)
+        backend/Utils/Utils.h
+        backend/Game/Actions.c
+        backend/Game/Actions.h)
 
 target_link_libraries(${PROJECT_NAME} -lalleg44)
