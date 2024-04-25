@@ -187,7 +187,7 @@ void jeu(int niveau) {
         } else if (game->etatJeu == PLAYING) {
             // Toutes les 20 secondes, il y a une nouvelle recette qui est rendu disponible
             if (counter > (recettes_crees + 1) * 20) {
-                newRecette();
+                newCommande();
                 recettes_crees++;
             }
 
