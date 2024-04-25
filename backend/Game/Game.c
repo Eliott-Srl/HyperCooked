@@ -64,6 +64,7 @@ void hc_init() {
     graphic->fs_height = fs_height;
     graphic->tailleCase = 40;         // à redéfinir, je ne suis pas sûr de ça
     graphic->fsTailleCase = 60;       // à redéfinir, je ne suis pas sûr de ça non plus
+    graphic->ratio = graphic->fsTailleCase / graphic->tailleCase;
 
     hc_textprintf_centre_hv(graphic->ressources.loadingScreen, font, makecol(255, 255, 255), -1, "Loading...");
     blit(graphic->ressources.loadingScreen, screen, 0, 0, 0, 0, WIDTH, HEIGHT);
@@ -163,8 +164,6 @@ void initialisePlayers(s_color c_player1, const char *n_player1, s_color c_playe
     for (int i = 0; i < 2; i++) {
         getGame()->joueurs[i].pos.x = WIDTH / 2 + ((i * 2 - 1) * getCorrectCaseSize());
         getGame()->joueurs[i].pos.y = HEIGHT / 2;
-        getGame()->joueurs[i].fs_pos.x = getGraphic()->fs_width / 2 + ((i * 2 - 1) * getCorrectCaseSize());
-        getGame()->joueurs[i].fs_pos.y = getGraphic()->fs_height / 2;
         getGame()->joueurs[i].en_main = NOTHING;
     }
 
@@ -203,6 +202,12 @@ void jeu(int niveau) {
         if (key[KEY_F11]) {
             getGraphic()->fs = !getGraphic()->fs;
             set_gfx_mode(getGraphic()->fs ? GFX_AUTODETECT_FULLSCREEN : GFX_AUTODETECT_WINDOWED, getGraphic()->fs ? getGraphic()->fs_width : WIDTH, getGraphic()->fs ? getGraphic()->fs_height : HEIGHT, 0, 0);
+            for (int i = 0; i < 2; i++) {
+                getGame()->joueurs[i].pos.x = (getGraphic()->fs ? getGame()->joueurs[i].pos.x * getGraphic()->ratio : getGame()->joueurs[i].pos.x / getGraphic()->ratio);
+                printf("a");
+                getGame()->joueurs[i].pos.y = (getGraphic()->fs ? getGame()->joueurs[i].pos.y * getGraphic()->ratio : getGame()->joueurs[i].pos.y / getGraphic()->ratio);
+                printf("b");
+            }
         }
     } while (counter <= 90 || (game->etatJeu != DANS_MENU_JEU && game->etatJeu != PLAYING));
 }

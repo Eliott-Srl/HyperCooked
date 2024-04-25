@@ -115,7 +115,6 @@ typedef struct s_joueur {
     s_color couleur;                             // Couleur du joueur
     char nom[STRMAX];                            // Nom du joueur
     s_coo pos;                                   // Position x et y du joueur
-    s_coo fs_pos;                                // Position du joueur en mode plein écran
     s_ingredient handIngredient;                 // Nourriture dans la main du joueur
     s_objet handObjet;                           // Objet dans la main du joueur
     e_typeEnMain en_main;                        // Indique ce qu'il y a dans la main du joueur
@@ -167,6 +166,7 @@ typedef struct s_ressources {
 typedef struct s_graphic {
     int fs_width;                                // Largeur de l'écran
     int fs_height;                               // Hauteur de l'écran
+    int ratio;                                   // Ratio de la matrice
     int fs;                                      // Booléen qui indique si le jeu est en plein écran
     int menu;                                    // Booléen qui indique si le menu pendant la partie est ouvert
     int tailleCase;                              // Taille d'une case de la matrice
