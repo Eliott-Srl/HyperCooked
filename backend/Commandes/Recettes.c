@@ -2,10 +2,10 @@
 
 void loadRecipes() {
     s_game *game = getGame();
-    /*
-    int type = 0, nbRecettes = 0;
-    char ligne[STRMAX], *p, ingredients[STRMAX], *i, *end, *j;
-    s_recette *pRecette = NULL, *recettes = NULL, stckrecette[NB_RECETTES_MAX];
+
+    int nbRecettes = 0;
+    char ligne[STRMAX], *p, ingredients[STRMAX], *end, *s;
+    s_recette *pRecette = NULL;
     FILE *fp = NULL;
 
     char *base = "0123456789";
@@ -16,51 +16,35 @@ void loadRecipes() {
         abort();
     }
 
-    recettes = (s_recette *) malloc(sizeof(s_recette) * NB_RECETTES_MAX);
-
-    if (!recettes) {
-        fprintf(stderr, "Fatal: failed to allocate %zu bytes.\n", sizeof(s_recette)*NB_RECETTES_MAX);
-        abort();
-    }
-
     while (fgets(ligne, STRMAX, fp) != NULL || nbRecettes < NB_RECETTES_MAX) {
-        if (strchr(base, *p) != NULL) {
-            strncat(stckrecette, p, 1);
-        }
+        p = strtok(ligne, ";");
+        strcpy(game->recettes[nbRecettes].nom, p);
 
         p = strtok(ligne, ";");
-        strcpy(stckrecette[nbRecettes].nom, p);
 
-        p = strtok(NULL, ";");
-        strcpy(stckrecette[nbRecettes].ingredients, p);
-
-        i = strtok("ingredients", ",");
-        while(i) {
-            j = strtok("caractéristiques", " ");
-            while (j){
-                stckrecette[nbRecettes].ingredients[type].nom = strtol(j, &end, 10);
-                stckrecette[nbRecettes].ingredients[type].cuisson = strtol(j, &end, 10);
-                stckrecette[nbRecettes].ingredients[type].coupable = strtol(j, &end, 10);
+        for(int i = 1; i <= 3; i++){
+            p = strtok(p, ",");
+            for(int j = 1; j <= 3; j++){
+                p = strtok(p, " ");
+                switch (j) {
+                    case 1:
+                        game->recettes[nbRecettes].ingredients[NB_INGREDIENTS_MAX].nom = strtol(ligne, &end, 10);
+                        break;
+                    case 2:
+                        game->recettes[nbRecettes].ingredients[NB_INGREDIENTS_MAX].cuit = strtol(ligne, &end, 10);
+                        break;
+                    case 3:
+                        game->recettes[nbRecettes].ingredients[NB_INGREDIENTS_MAX].coupable = strtol(ligne, &end, 10);
+                        break;
+                }
             }
-            type++;
         }
-        nbRecettes++;
     }
     fclose(fp);
-
-    return stckrecette;
-     */
 }
 
 void freeRecettes(s_recette *recettes) {
     free(recettes);
-}
-
-void newRecette(s_graphic* graphic) {
-    int choix = rand() % (getGame()->nbRecettes - 1);
-    getGame()->commandes[getGame()->nbCommandes].recette = getGame()->recettes[choix];
-    printf("Nouvelle recette: %s\n", getGame()->commandes[getGame()->nbCommandes].recette.nom);
-    getGame()->nbCommandes++;
 }
 
 int verificationDeLaRecette(s_objet* plat, s_commande* commandeFind) {
