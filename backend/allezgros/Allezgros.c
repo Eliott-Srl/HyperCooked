@@ -15,7 +15,7 @@ int rgbToAllegroColor(s_color color) {
 
 void hc_blit(BITMAP *source) {
     if (getGraphic()->fs) {
-       blit(source, screen, 0, 0, 0, 0, FS_WIDTH, FS_HEIGHT);
+       blit(source, screen, 0, 0, 0, 0, getGraphic()->fs_width, getGraphic()->fs_height);
     } else {
         blit(source, screen, 0, 0, 0, 0, WIDTH, HEIGHT);
     }
@@ -109,25 +109,71 @@ void hc_textprintf_centre_hv(BITMAP *bmp, const FONT *f, int color, int bg, cons
     textprintf_centre_ex(bmp, f, getCorrectWidth() / 2, getCorrectHeight() / 2, color, bg, "%s", s_format);
 }
 
+void hc_clear_buffers() {
+    switch (getGame()->etatJeu) {
+        case LOADING:
+            break;
+        case PLAYING:
+            if (getGraphic()->fs) {
+                clear(getGraphic()->ressources.fsBuffer);
+            } else {
+                clear(getGraphic()->ressources.buffer);
+            }
+            break;
+        case DANS_MENU:
+            if (getGraphic()->fs) {
+                clear(getGraphic()->ressources.fsMainMenuBuffer);
+            } else {
+                clear(getGraphic()->ressources.mainMenuBuffer);
+            }
+            break;
+        case DANS_MENU_JEU:
+            if (getGraphic()->fs) {
+                clear(getGraphic()->ressources.fsMenuBuffer);
+            } else {
+                clear(getGraphic()->ressources.menuBuffer);
+            }
+            break;
+    }
+}
+
 int getCorrectHeight() {
-    return (getGraphic()->fs ? FS_HEIGHT : HEIGHT);
+    return (getGraphic()->fs ? getGraphic()->fs_height : HEIGHT);
 }
 
 int getCorrectWidth() {
-    return (getGraphic()->fs ? FS_WIDTH : WIDTH);
+    return (getGraphic()->fs ? getGraphic()->fs_width : WIDTH);
 }
 
 int getCorrectCaseSize() {
     return (getGraphic()->fs ? getGraphic()->fsTailleCase : getGraphic()->tailleCase);
 }
 
-BITMAP *getCorrectBufferMenu() {
-    // return (getGraphic()->fs ? getGraphic()->fsBuffer : getGraphic()->buffer);
-    // TODO: Menu
+BITMAP *getCorrectBuffer() {
+    switch (getGame()->etatJeu) {;
+        case LOADING:
+            return (getGraphic()->fs ? getGraphic()->ressources.fsLoadingScreen : getGraphic()->ressources.loadingScreen);
+        case PLAYING:
+            return (getGraphic()->fs ? getGraphic()->ressources.fsBuffer : getGraphic()->ressources.buffer);
+        case DANS_MENU:
+            return (getGraphic()->fs ? getGraphic()->ressources.fsMainMenuBuffer : getGraphic()->ressources.mainMenuBuffer);
+        case DANS_MENU_JEU:
+            return (getGraphic()->fs ? getGraphic()->ressources.fsMenuBuffer : getGraphic()->ressources.menuBuffer);
+    }
 }
 
-BITMAP *getCorrectBufferJeu() {
-    return (getGraphic()->fs ? getGraphic()->fsBuffer : getGraphic()->buffer);
+void coverBufferWithImage(BITMAP *buffer, BITMAP *image, int s_w, int s_h) {
+    int tailleEntierX = buffer->w / s_w;
+    int offsetX = (s_w - (buffer->w - tailleEntierX * s_w)) / 2;
+
+    int tailleEntierY = buffer->h / s_h;
+    int offsetY = (s_h - (buffer->h - tailleEntierY * s_h)) / 2;;
+
+    for (int j = 0; j < tailleEntierY + 1; j++) {
+        for (int i = 0; i < tailleEntierX + 1; i++) {
+            stretch_sprite(buffer, image, i * s_w - offsetX, j * s_h - offsetY, s_w, s_h);
+        }
+    }
 }
 
 void clear_boutons() {

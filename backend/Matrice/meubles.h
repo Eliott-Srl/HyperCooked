@@ -8,7 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-void afficherMatrice(s_meuble tab[HAUTEUR][LARGEUR]);
-void initialiserMatrice(s_meuble matrice_dynamique[HAUTEUR][LARGEUR], const char* file);
+void afficherMatrice();
+void initialiserMatrice(const char* file);
+void hc_afficher_matrice();
 
 #endif //HYPERCOOKED_MEUBLES_H

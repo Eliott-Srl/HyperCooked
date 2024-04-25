@@ -6,7 +6,7 @@ int main() {
     char* maps[NB_MAPS_MAX];
     int nbMaps = loadingMaps(maps);
 
-    rest(1000);
+    rest(10000);
 
     for (int i = 0; i < nbMaps + 1; i++) {
         reinitialiserPartie();
@@ -14,20 +14,21 @@ int main() {
         char filename[STRMAX];
         sprintf(filename, "/maps/%s", maps[i]);
 
-        initialiserMatrice(getGame()->matrice, filename); // créer un fichier ou les meubles apparais
-
-        getGame()->etatJeu = DANS_MENU;
-
-        clear(screen);
-        // Fin de l'écran de chargement
+        initialiserMatrice(filename); // créer un fichier ou les meubles apparais
 
         getGame()->etatJeu = PLAYING;
+        // Fin de l'écran de chargement
+
+        s_color j1 = {255, 0, 0}, j2 = {0,0, 255};
+        initialisePlayers(j1, "Stephane", j2, "Bernard");
+
         if (getGame()->etatJeu == DANS_MENU) {
             // Créer les joueurs
+            getGame()->etatJeu = PLAYING;
         } else if (getGame()->etatJeu == PLAYING) {
             jeu(i + 1);
         } else if (getGame()->etatJeu == LOADING) {
-            hc_blit(getGraphic()->loadingScreen);
+            hc_blit(getGraphic()->ressources.loadingScreen);
         }
     }
 

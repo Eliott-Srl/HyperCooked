@@ -1,56 +1,57 @@
 #include "meubles.h"
 
-void afficherMatrice(s_meuble matrice[HAUTEUR][LARGEUR]) {
+void afficherMatrice() {
     for (int h = 0; h < HAUTEUR; h++) {
         for (int l = 0; l < LARGEUR; l++) {
-            printf("%d ", matrice[h][l].typeMeuble);
+            printf("%d ", getGame()->matrice[h][l].typeMeuble);
         }
         printf("\n");
     }
 }
 
-void initialiserMatrice(s_meuble matrice_dynamique[HAUTEUR][LARGEUR], const char* file) {
+void initialiserMatrice(const char* file) {
     FILE *fichier;
     char ligne[128];
+    s_game *game = getGame();
 
     // Ouvrir le fichier en mode lecture
     fichier = fopen(file, "r");
 
     char *base = "0123456789";
 
-    int x = 0;
+    int x;
     int y = 0;
     // Parcourir le fichier caractère par caractère
     while (fgets(ligne, 128, fichier) != NULL) {
         char *p = ligne;
         int a = 0;
-        x=0;
+        x = 0;
         char nombre[128] = "";
         while(*p != '\n' && *p != '\0') {
             if (strchr(base, *p) != NULL) {
                 strncat(nombre, p, 1);
             } else if (*p == ' ') {
-                matrice_dynamique[y][x].typeMeuble = atoi(nombre);
-                matrice_dynamique[y][x].objet.type = NONE;
-                matrice_dynamique[y][x].objet.nbStockes = 0;
-                matrice_dynamique[y][x].objet.stockageMax = 0;
+                game->matrice[y][x].typeMeuble = strtol(nombre, NULL, 10);
+                game->matrice[y][x].objet.type = NONE;
+                game->matrice[y][x].objet.nbStockes = 0;
+                game->matrice[y][x].objet.stockageMax = 0;
                 a = 1;
                 nombre[0] = '\0';
             } else if (*p == ';') {
                 if (a == 0) {
-                    matrice_dynamique[y][x].typeMeuble = atoi(nombre);
-                    matrice_dynamique[y][x].objet.type = NONE;
-                    matrice_dynamique[y][x].objet.nbStockes = 0;
-                    matrice_dynamique[y][x].objet.stockageMax = 0;
+                    game->matrice[y][x].typeMeuble = strtol(nombre, NULL, 10);
+                    game->matrice[y][x].objet.type = NONE;
+                    game->matrice[y][x].objet.nbStockes = 0;
+                    game->matrice[y][x].objet.stockageMax = 0;
                 } else {
-                    matrice_dynamique[y][x].objet.type = atoi(nombre);
+                    game->matrice[y][x].objet.type = strtol(nombre, NULL, 10);
 
-                    if(atoi(nombre) == POELE || atoi(nombre) == ASSIETTE) {
-                        matrice_dynamique[y][x].objet.stockageMax = 1;
-                    } else if(atoi(nombre) == MARMITE) {
-                        matrice_dynamique[y][x].objet.stockageMax = 3;
+                    if(strtol(nombre, NULL, 10) == POELE || strtol(nombre, NULL, 10) == ASSIETTE) {
+                        game->matrice[y][x].objet.stockageMax = 1;
+                    } else if(strtol(nombre, NULL, 10) == MARMITE) {
+                        game->matrice[y][x].objet.stockageMax = 3;
                     } else {
-                        matrice_dynamique[y][x].objet.stockageMax = 0;
+                        game->matrice[y][x].objet.stockageMax = 0;
                     }
 
                     a = 0;
@@ -65,6 +66,11 @@ void initialiserMatrice(s_meuble matrice_dynamique[HAUTEUR][LARGEUR], const char
         y++;
     }
 
+    afficherMatrice();
+
     fclose(fichier);  // Fermer le fichier après avoir trouvé un espace
 }
 
+void hc_afficher_matrice() {
+    // TODO: Charles tu vas bosser ici
+}

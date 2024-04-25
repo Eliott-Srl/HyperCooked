@@ -12,17 +12,6 @@
 #define WIDTH 800
 #define HEIGHT 600
 
-#ifdef WIN64
-#include <winuser.h>
-#define FS_WIDTH GetSystemMetrics(SM_CXFULLSCREEN)
-#define FS_HEIGHT GetSystemMetrics(SM_CYFULLSCREEN)
-#endif
-
-#ifndef WIN64
-#define FS_WIDTH 1920;
-#define FS_HEIGHT 1080;
-#endif
-
 #include "allegro.h"
 
 typedef struct s_coo {                           // Structure pour des vecteurs, des coordonnées
@@ -111,73 +100,80 @@ typedef struct s_objet {
 } s_objet;
 
 typedef struct s_meuble {
-    e_meubles typeMeuble;                       // Type du meuble
-    s_objet objet;                              // L'objet sur le meuble ( objet ou null )
-    void (*action)();                           // Fonction appelée quand on interagit avec le meuble
+    e_meubles typeMeuble;                        // Type du meuble
+    s_objet objet;                               // L'objet sur le meuble ( objet ou null )
+    void (*action)();                            // Fonction appelée quand on interagit avec le meuble
 } s_meuble;
 
-typedef enum e_typeEnMain {                     // Inqique le contenu de la main du joueur
+typedef enum e_typeEnMain {                      // Inqique le contenu de la main du joueur
     NOTHING,                                
     INGREDIENT,
     OBJET
 } e_typeEnMain;
 
 typedef struct s_joueur {
-    s_color couleur;                            // Couleur du joueur
-    char nom[STRMAX];                           // Nom du joueur
-    s_coo pos;                                  // Position x et y du joueur
-    int dimensions;                             // Largeur et hauteur du joueur
-    s_ingredient handIngredient;                // Nourriture dans la main du joueur
-    s_objet handObjet;                          // Objet dans la main du joueur 
-    e_typeEnMain en_main;                       // Indique ce qu'il y a dans la main du joueur
+    s_color couleur;                             // Couleur du joueur
+    char nom[STRMAX];                            // Nom du joueur
+    s_coo pos;                                   // Position x et y du joueur
+    s_coo fs_pos;                                // Position du joueur en mode plein écran
+    s_ingredient handIngredient;                 // Nourriture dans la main du joueur
+    s_objet handObjet;                           // Objet dans la main du joueur
+    e_typeEnMain en_main;                        // Indique ce qu'il y a dans la main du joueur
 } s_joueur;
 
 typedef struct s_game {
-    s_meuble matrice[HAUTEUR][LARGEUR];         // Matrice qui contient tous les meubles et leurs infos
-    s_joueur joueurs[2];                        // Tableau qui contient les infos sur les deux joueurs
-    s_recette recettes[NB_RECETTES_MAX];        // Tableau des recettes disponibles
-    int nbRecettes;                             // Nombre de recettes disponibles
-    e_etat_jeu etatJeu;                         // L'état du jeu: LOADING, PLAYING, MENU
-    s_commande commandes[NB_COMMANDES_MAX];     // Tableau de commande qui contient les commandes en cours
-    int nbCommandes;                            // Nombre de commandes en cours
-    int score;                                  // Le score jusqu'ici
+    s_meuble matrice[HAUTEUR][LARGEUR];          // Matrice qui contient tous les meubles et leurs infos
+    s_joueur joueurs[2];                         // Tableau qui contient les infos sur les deux joueurs
+    s_recette recettes[NB_RECETTES_MAX];         // Tableau des recettes disponibles
+    int nbRecettes;                              // Nombre de recettes disponibles
+    e_etat_jeu etatJeu;                          // L'état du jeu: LOADING, PLAYING, MENU
+    s_commande commandes[NB_COMMANDES_MAX];      // Tableau de commande qui contient les commandes en cours
+    int nbCommandes;                             // Nombre de commandes en cours
+    int score;                                   // Le score jusqu'ici
 } s_game;
 
 /*############### ALLEZGROS ###############*/   
 typedef struct s_rectangle {
-    int h;                                      // Hauteur
-    int w;                                      // Largeur
-    int color;                                  // Couleur ( utilise makecol() )
-    int x;                                      // Position X du centre
-    int y;                                      // Position Y du centre
-    int fill;                                   // Si le rectangle est rempli ou non
+    int h;                                       // Hauteur
+    int w;                                       // Largeur
+    int color;                                   // Couleur ( utilise makecol() )
+    int x;                                       // Position X du centre
+    int y;                                       // Position Y du centre
+    int fill;                                    // Si le rectangle est rempli ou non
 } s_rectangle;
 
 typedef struct s_bouton {
-    BITMAP *bmp;                                // Image sur laquelle on dessine
-    s_rectangle rectangle;                      // Instance de s_rectangle
-    void (*callback)();                         // Pointeur de fonction qui sera appelée
-    char *text;                                 // Texte affiché sur l'écran
-    int textColor;                              // Couleur du texte affiché
+    BITMAP *bmp;                                 // Image sur laquelle on dessine
+    s_rectangle rectangle;                       // Instance de s_rectangle
+    void (*callback)();                          // Pointeur de fonction qui sera appelée
+    char *text;                                  // Texte affiché sur l'écran
+    int textColor;                               // Couleur du texte affiché
 } s_bouton;
 
-typedef struct s_menu {
-    BITMAP *background;                         // Fond du menu
-    int menuOpened;                             // Booléen qui indique l'état d'ouverture du menu
-} s_menu;
+typedef struct s_ressources {
+    BITMAP *loadingScreen;                       // BITMAP qui contient le loading screen
+    BITMAP *fsLoadingScreen;                     // BITMAP qui contient le loading screen en plein écran
+    BITMAP *buffer;                              // BITMAP pour le jeu
+    BITMAP *fsBuffer;                            // BITMAP pour le jeu en plein écran
+    BITMAP *mainMenuBuffer;                      // BITMAP pour le menu
+    BITMAP *fsMainMenuBuffer;                    // BITMAP pour le menu en plein écran
+    BITMAP *menuBuffer;                          // BITMAP pour le menu pendant la partie
+    BITMAP *fsMenuBuffer;                        // BITMAP pour le menu pendant la partie en plein écran
+    BITMAP *cursor;                              // Sprite du curseur
+    BITMAP *pointer;                             // Sprite du pointeur
+    BITMAP *player;                              // Sprite du joueur
+} s_ressources;
 
 typedef struct s_graphic {
-    int fs;                                     // Booléen qui indique si le jeu est en plein écran
-    BITMAP *buffer;                             // BITMAP pour le double buffering
-    BITMAP *fsBuffer;                           // BITMAP pour le double buffering en plein écran
-    BITMAP *loadingScreen;                      // BITMAP qui contient le loading screen
-    BITMAP *fsLoadingScreen;                    // BITMAP qui contient le loading screen en plein écran
-    BITMAP *cursor;                             // Sprite du curseur
-    BITMAP *pointer;                            // Sprite du pointeur
-    int tailleCase;                             // Taille d'une case de la matrice
-    int fsTailleCase;                           // Taille d'une case de la matrice en fullscreen
-    s_bouton *boutons;                          // Liste des boutons customs
-    int nombreBoutons;                          // Nombre de boutons customs
+    int fs_width;                                // Largeur de l'écran
+    int fs_height;                               // Hauteur de l'écran
+    int fs;                                      // Booléen qui indique si le jeu est en plein écran
+    int menu;                                    // Booléen qui indique si le menu pendant la partie est ouvert
+    int tailleCase;                              // Taille d'une case de la matrice
+    int fsTailleCase;                            // Taille d'une case de la matrice en fullscreen
+    s_bouton *boutons;                           // Liste des boutons customs
+    int nombreBoutons;                           // Nombre de boutons customs
+    s_ressources ressources;                     // Structure qui contient les pointeurs de toutes les ressources
 } s_graphic;
 
 #include "Utils/Utils.h"

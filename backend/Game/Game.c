@@ -12,7 +12,7 @@ s_game *getGame() {
     static s_game *game;
 
     if (!game) {
-        game = (s_game *) malloc(sizeof(s_game));
+        game = (s_game *) calloc(1, sizeof(s_game));
     }
 
     return game;
@@ -21,10 +21,6 @@ s_game *getGame() {
 void hc_init() {
     allegro_init();
     set_window_title("The best game ever");
-
-    install_mouse();
-    install_keyboard();
-    install_timer();
 
     set_color_depth(desktop_color_depth());
     if(set_gfx_mode(GFX_AUTODETECT_WINDOWED,WIDTH, HEIGHT, 0, 0) != 0) {
@@ -35,56 +31,92 @@ void hc_init() {
 
     // écran de chargement ici
     s_graphic *graphic = getGraphic();
-    graphic->loadingScreen = load_bitmap("./res/img/homme.bmp", NULL);
 
-    if (!graphic->loadingScreen) {
+    graphic->ressources.loadingScreen = create_bitmap(WIDTH, HEIGHT);
+
+    if (!graphic->ressources.loadingScreen) {
         allegro_message("Erreur de chargement de l'image");
         allegro_exit();
         exit(EXIT_FAILURE);
     }
 
-    hc_textprintf_centre_hv(graphic->loadingScreen, font, makecol(255, 255, 255), -1, "Loading...");
-    hc_blit(graphic->loadingScreen);
+    // On doit trouver une meilleure image de fond
+    BITMAP *background = load_bitmap("./res/img/homme.bmp", NULL);
 
-    graphic->fsLoadingScreen = load_bitmap("./res/img/homme.bmp", NULL);
-
-    if (!graphic->fsLoadingScreen) {
+    if (!background) {
         allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    coverBufferWithImage(graphic->ressources.loadingScreen, background, 32, 32);
+
+    int fs_width, fs_height;
+
+    if (get_desktop_resolution(&fs_width, &fs_height) != 0) {
+        allegro_message("Pb graphique");
         allegro_exit();
         exit(EXIT_FAILURE);
     }
 
     graphic->fs = 0;
-    graphic->tailleCase = 10;          // à redéfinir, je ne suis pas sûr de ça
-    graphic->fsTailleCase = 20;       // à redéfinir, je ne suis pas sûr de ça non plus
-    graphic->buffer = create_bitmap(WIDTH, HEIGHT);
+    graphic->fs_width = fs_width;
+    graphic->fs_height = fs_height;
+    graphic->tailleCase = 40;         // à redéfinir, je ne suis pas sûr de ça
+    graphic->fsTailleCase = 60;       // à redéfinir, je ne suis pas sûr de ça non plus
 
-    if (!graphic->buffer) {
-        allegro_message("Erreur de création du buffer");
-        allegro_exit();
-        exit(EXIT_FAILURE);
-    }
+    hc_textprintf_centre_hv(graphic->ressources.loadingScreen, font, makecol(255, 255, 255), -1, "Loading...");
+    blit(graphic->ressources.loadingScreen, screen, 0, 0, 0, 0, WIDTH, HEIGHT);
 
-    graphic->fsBuffer = create_bitmap(FS_WIDTH, FS_HEIGHT);
+    install_timer();
+    install_mouse();
+    install_keyboard();
 
-    if (!graphic->fsBuffer) {
-        allegro_message("Erreur de création du buffer");
-        allegro_exit();
-        exit(EXIT_FAILURE);
-    }
+    graphic->ressources.fsLoadingScreen = create_bitmap(fs_width, fs_height);
 
-
-    graphic->cursor = load_bitmap("./res/img/cursor.bmp", NULL);
-
-    if (!graphic->cursor) {
+    if (!graphic->ressources.fsLoadingScreen) {
         allegro_message("Erreur de chargement de l'image");
         allegro_exit();
         exit(EXIT_FAILURE);
     }
 
-    graphic->pointer = load_bitmap("./res/img/pointer.bmp", NULL);
+    coverBufferWithImage(graphic->ressources.fsLoadingScreen, background, 32, 32);
 
-    if (!graphic->pointer) {
+    graphic->ressources.buffer = create_bitmap(WIDTH, HEIGHT);
+
+    if (!graphic->ressources.buffer) {
+        allegro_message("Erreur de création du buffer");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    graphic->ressources.fsBuffer = create_bitmap(graphic->fs_width, graphic->fs_height);
+
+    if (!graphic->ressources.fsBuffer) {
+        allegro_message("Erreur de création du buffer");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    graphic->ressources.cursor = load_bitmap("./res/img/cursor.bmp", NULL);
+
+    if (!graphic->ressources.cursor) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    graphic->ressources.pointer = load_bitmap("./res/img/pointer.bmp", NULL);
+
+    if (!graphic->ressources.pointer) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    graphic->ressources.player = load_bitmap("./res/img/homme.bmp", NULL);
+
+    if (!graphic->ressources.player) {
         allegro_message("Erreur de chargement de l'image");
         allegro_exit();
         exit(EXIT_FAILURE);
@@ -127,13 +159,30 @@ int loadingMaps(char *maps[NB_MAPS_MAX]) {
     return map_index;
 }
 
+void initialisePlayers(s_color c_player1, const char *n_player1, s_color c_player2, const char *n_player2) {
+    for (int i = 0; i < 2; i++) {
+        getGame()->joueurs[i].pos.x = WIDTH / 2 + ((i * 2 - 1) * getCorrectCaseSize());
+        getGame()->joueurs[i].pos.y = HEIGHT / 2;
+        getGame()->joueurs[i].fs_pos.x = getGraphic()->fs_width / 2 + ((i * 2 - 1) * getCorrectCaseSize());
+        getGame()->joueurs[i].fs_pos.y = getGraphic()->fs_height / 2;
+        getGame()->joueurs[i].en_main = NOTHING;
+    }
+
+    getGame()->joueurs[0].couleur = c_player1;
+    strcpy(getGame()->joueurs[0].nom, n_player1);
+
+    getGame()->joueurs[1].couleur = c_player2;
+    strcpy(getGame()->joueurs[1].nom, n_player2);
+}
+
 void jeu(int niveau) {
     s_game *game = getGame();
     int recettes_crees = 0;
     install_int_ex(timer_handler, SECS_TO_TIMER(1));
-    afficherMatrice(game->matrice); // afficher la matrice
 
     do {
+        hc_clear_buffers();
+
         if (game->etatJeu == DANS_MENU_JEU) {
             // TODO: Menu Jeu
         } else if (game->etatJeu == PLAYING) {
@@ -144,18 +193,25 @@ void jeu(int niveau) {
             }
 
             deplacerPersonnages();
-            // afficherMatrice(game->matrice);
-            hc_
+            hc_afficher_matrice();
+        }
+
+        textprintf_ex(getCorrectBuffer(), font, 10, 10, makecol(255, 255, 255), -1, "j1: x: %03d, y: %03d", getGame()->joueurs[0].pos.x, getGame()->joueurs[0].pos.y);
+        textprintf_ex(getCorrectBuffer(), font, 10, 30, makecol(255, 255, 255), -1, "j2: x: %03d, y: %03d", getGame()->joueurs[1].pos.x, getGame()->joueurs[1].pos.y);
+        hc_blit(getCorrectBuffer());
+
+        if (key[KEY_F11]) {
+            getGraphic()->fs = !getGraphic()->fs;
+            set_gfx_mode(getGraphic()->fs ? GFX_AUTODETECT_FULLSCREEN : GFX_AUTODETECT_WINDOWED, getGraphic()->fs ? getGraphic()->fs_width : WIDTH, getGraphic()->fs ? getGraphic()->fs_height : HEIGHT, 0, 0);
         }
     } while (counter <= 90 || (game->etatJeu != DANS_MENU_JEU && game->etatJeu != PLAYING));
 }
 
 void reinitialiserPartie() {
     for (int i = 0; i < NB_COMMANDES_MAX; i++) {
-        getGame()->partie.commandes[i].recette.nbIngredients = 0;
-        getGame()->partie.commandes[i].timer = 0;
+        getGame()->commandes[i].recette.nbIngredients = 0;
+        getGame()->commandes[i].timer = 0;
     }
-    getGame()->partie.nbCommandes = 0;
-    getGame()->partie.score = 0;
-    getGame()->partie.temps = 0;
+    getGame()->nbCommandes = 0;
+    getGame()->score = 0;
 }

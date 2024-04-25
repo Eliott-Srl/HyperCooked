@@ -45,6 +45,9 @@ void hc_textprintf_centre_v(BITMAP *bmp, int x, const FONT *f, int color, int bg
 // Crée un texte aligné sur l'axe horizontale et verticale
 void hc_textprintf_centre_hv(BITMAP *bmp, const FONT *f, int color, int bg, const char *format, ...);
 
+// En appelant cette fonction on clear le bon buffer en fonction de l'état du jeu et du mode plein écran
+void hc_clear_buffers();
+
 // Retourne la hauteur appropriée en fonction du mode plein écran
 int getCorrectHeight();
 
@@ -54,11 +57,11 @@ int getCorrectWidth();
 // Retourne la taille d'une case appropriée en fonction du mode plein écran
 int getCorrectCaseSize();
 
-// Retourne le bitmap du menu approprié en fonction du mode plein écran
-BITMAP *getCorrectBufferMenu();
+// Retourne le buffer correct en fonction du mode plein écran et de l'état du jeu
+BITMAP *getCorrectBuffer();
 
-// Retourne le bitmap du buffer approprié en fonction du mode plein écran
-BITMAP *getCorrectBufferJeu();
+// Couvre buffer avec image en répétant verticalement et horizontalement
+void coverBufferWithImage(BITMAP *buffer, BITMAP *image, int s_w, int s_h);
 
 // Supprime tous les boutons customs
 void clear_boutons();
