@@ -7,5 +7,6 @@
 #include "time.h"
 
 void newCommande();
+void AfficherCommande();
 
 #endif //HYPERCOOKED_COMMANDES_H
