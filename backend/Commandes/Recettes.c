@@ -39,6 +39,7 @@ void loadRecipes() {
                 }
             }
         }
+        nbRecettes++;
     }
     fclose(fp);
 }
