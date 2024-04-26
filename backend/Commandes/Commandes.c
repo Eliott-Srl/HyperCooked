@@ -11,13 +11,9 @@ void newCommande() {
 
 void AfficherCommande() {
     int coos[3]= {27,45,32};
-    int done = 0;
     int posLig1 = 10, posCol1 = 10; // Position de départ
-    int LargeurRectangle = 75, LongueurRectangle = 90;
+    int LargeurRectangle = 150, LongueurRectangle = 220;
     int EspaceHorizontalEntreLesRectangle = 30;
-    int EspaceVerticaleEntreLesRectangle = 20;
-    int nombredeRectteMax = 5;
-
 
     for ( int i = 0; i < getGame()->nbCommandes; i++) {
         int posLig2 = posLig1 + (i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle));
@@ -48,5 +44,4 @@ void AfficherCommande() {
             }
         }
     }
-  rest(10);
 }
