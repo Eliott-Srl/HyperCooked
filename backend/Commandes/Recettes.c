@@ -9,6 +9,7 @@ void loadRecipes() {
     FILE *fp = NULL;
 
     char *base = "0123456789";
+    char nombre[128] = "";
 
     fp = fopen("recettes.txt", "r");
     if (!fp) {
@@ -22,7 +23,7 @@ void loadRecipes() {
 
         p = strtok(ligne, ";");
 
-        if (strchr(base, *p) != NULL) {
+        if (strchr(base, *p) == NULL) {
             strncat(nombre, p, 1);
         } else {
             for(int i = 1; i <= 3; i++){
@@ -31,13 +32,13 @@ void loadRecipes() {
                     p = strtok(p, " ");
                     switch (j) {
                         case 1:
-                            game->recettes[nbRecettes].ingredients[NB_INGREDIENTS_MAX].nom = strtol(ligne, &end, 10);
+                            game->recettes[nbRecettes].ingredients[i].nom = strtol(ligne, &end, 10);
                             break;
                         case 2:
-                            game->recettes[nbRecettes].ingredients[NB_INGREDIENTS_MAX].cuit = strtol(ligne, &end, 10);
+                            game->recettes[nbRecettes].ingredients[i].cuit = strtol(ligne, &end, 10);
                             break;
                         case 3:
-                            game->recettes[nbRecettes].ingredients[NB_INGREDIENTS_MAX].coupable = strtol(ligne, &end, 10);
+                            game->recettes[nbRecettes].ingredients[i].coupable = strtol(ligne, &end, 10);
                             break;
                     }
                 }
