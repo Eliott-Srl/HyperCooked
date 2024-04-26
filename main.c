@@ -6,7 +6,7 @@ int main() {
     char* maps[NB_MAPS_MAX];
     int nbMaps = loadingMaps(maps);
 
-    rest(10000);
+    rest(100);
 
     for (int i = 0; i < nbMaps + 1; i++) {
         reinitialiserPartie();

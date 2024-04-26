@@ -163,6 +163,20 @@ typedef struct s_ressources {
     BITMAP *player;                              // Sprite du joueur
 } s_ressources;
 
+typedef struct s_textures {
+    BITMAP *SOL;                                 // BITMAP pour le sol
+    BITMAP *COMPTOIR;                            // BITMAP pour le comptoir
+    BITMAP *COFFFRE;                             // BITMAP pour le coffre
+    BITMAP *POUBELLE;                            // BITMAP pour la poubelle
+    BITMAP *PLANCHE_A_DECOUPER;
+    BITMAP *PLAN_DE_TRAVAIL;
+    BITMAP *PLAQUE_A_CUISSON;
+    BITMAP *POELE;
+    BITMAP *MARMITE;
+    BITMAP *ASSIETTE;
+    BITMAP *EXTINCTEUR;
+} s_textures;
+
 typedef struct s_graphic {
     int fs_width;                                // Largeur de l'écran
     int fs_height;                               // Hauteur de l'écran
@@ -174,6 +188,7 @@ typedef struct s_graphic {
     s_bouton *boutons;                           // Liste des boutons customs
     int nombreBoutons;                           // Nombre de boutons customs
     s_ressources ressources;                     // Structure qui contient les pointeurs de toutes les ressources
+    s_textures textures;
 } s_graphic;
 
 #include "Utils/Utils.h"

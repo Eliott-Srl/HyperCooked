@@ -71,6 +71,28 @@ void initialiserMatrice(const char* file) {
     fclose(fichier);  // Fermer le fichier après avoir trouvé un espace
 }
 
+
+
 void hc_afficher_matrice() {
     // TODO: Charles tu vas bosser ici
+    for(int h = 0; h < HAUTEUR; h++) {
+        for(int l = 0; l < LARGEUR; l++) {
+            if (getGame()->matrice[h][l].typeMeuble == SOL) {
+                draw_sprite(getCorrectBuffer(), getGraphic()->textures.SOL, h*getCorrectCaseSize(), l*getCorrectCaseSize());
+            }
+            if (getGame()->matrice[h][l].typeMeuble == COMPTOIR) {
+                getGraphic()->textures.COMPTOIR;
+                //draw_sprite();
+            }
+            if (getGame()->matrice[h][l].typeMeuble == SOL) {
+                getGraphic()->textures.COFFFRE;
+            }
+            if (getGame()->matrice[h][l].typeMeuble == SOL) {
+                getGraphic()->textures.POUBELLE;
+            }
+        }
+    }
+    getGame()->matrice[0][0].typeMeuble == SOL;
+
+    //getCorrectCaseSize();
 }

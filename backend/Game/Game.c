@@ -123,6 +123,14 @@ void hc_init() {
         exit(EXIT_FAILURE);
     }
 
+    graphic->textures.SOL = load_bitmap("./res/img/sol.bmp", NULL);
+
+    if (!graphic->textures.SOL) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
     LOCK_VARIABLE(counter);
     LOCK_FUNCTION(timer_handler);
 
