@@ -11,6 +11,7 @@ void newCommande() {
 
 void AfficherCommande() {
 
+    BITMAP *tiket = load_bitmap("Ticket de commande.bmp",NULL);
    if (getGraphic()->fs == 0) {
        int coos[3]= {27,45,32};
        int posLig1 = 10, posCol1 = 10; // Position de départ
@@ -18,8 +19,6 @@ void AfficherCommande() {
        int EspaceHorizontalEntreLesRectangle = 30;
 
        for ( int i = 0; i < getGame()->nbCommandes; i++) {
-           int posLig2 = posLig1 + (i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle));
-           int posCol2 = posCol1;
            int xLogo = 54 + (i* (LargeurRectangle + EspaceHorizontalEntreLesRectangle) );
 
            if (strcmp(getGame()->commandes[0].recette.nom, "Hamburger") == 0) {
@@ -28,7 +27,7 @@ void AfficherCommande() {
                circlefill(getCorrectBuffer(), xLogo, 42 , 25, makecol(50,20,100));
            }
 
-           rectfill(getCorrectBuffer(), posLig2, posCol2, posLig2 + LargeurRectangle, posCol1 + LongueurRectangle, makecol(10, 180, 50)); // Dessiner la première balle
+           stretch_sprite(getCorrectBuffer(),tiket,20,480,110,140);
 
            for (int j = 0;  coos[j]< getGame()->commandes[i].recette.nbIngredients; i++) {
                if (getGame()->commandes[i].recette.ingredients[i].nom == SALADE) {
@@ -46,7 +45,7 @@ void AfficherCommande() {
                }
            }
        }
-   } else (getGraphic()->fs == 1){
+   } else if (getGraphic()->fs == 1) {
         int coos[3]= {27,45,32};
         int posLig1 = 10, posCol1 = 10; // Position de départ
         int LargeurRectangle = 150, LongueurRectangle = 220;
