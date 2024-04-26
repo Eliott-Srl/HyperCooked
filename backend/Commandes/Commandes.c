@@ -14,7 +14,7 @@ void AfficherCommande() {
    if (getGraphic()->fs == 0) {
        int coos[3]= {27,45,32};
        int posLig1 = 10, posCol1 = 10; // Position de départ
-       int LargeurRectangle = 90, LongueurRectangle = 120;
+       int LargeurRectangle = 90, LongueurRectangle = 105;
        int EspaceHorizontalEntreLesRectangle = 30;
 
        for ( int i = 0; i < getGame()->nbCommandes; i++) {
