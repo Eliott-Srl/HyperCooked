@@ -10,9 +10,9 @@ void loadRecipes() {
 
     char *base = "0123456789";
 
-    fp = fopen("../recettes.txt", "r");
+    fp = fopen("recettes.txt", "r");
     if (!fp) {
-        perror("../recettes.txt");
+        perror("recettes.txt");
         abort();
     }
 
@@ -22,20 +22,24 @@ void loadRecipes() {
 
         p = strtok(ligne, ";");
 
-        for(int i = 1; i <= 3; i++){
-            p = strtok(p, ",");
-            for(int j = 1; j <= 3; j++){
-                p = strtok(p, " ");
-                switch (j) {
-                    case 1:
-                        game->recettes[nbRecettes].ingredients[NB_INGREDIENTS_MAX].nom = strtol(ligne, &end, 10);
-                        break;
-                    case 2:
-                        game->recettes[nbRecettes].ingredients[NB_INGREDIENTS_MAX].cuit = strtol(ligne, &end, 10);
-                        break;
-                    case 3:
-                        game->recettes[nbRecettes].ingredients[NB_INGREDIENTS_MAX].coupable = strtol(ligne, &end, 10);
-                        break;
+        if (strchr(base, *p) != NULL) {
+            strncat(nombre, p, 1);
+        } else {
+            for(int i = 1; i <= 3; i++){
+                p = strtok(p, ",");
+                for(int j = 1; j <= 3; j++){
+                    p = strtok(p, " ");
+                    switch (j) {
+                        case 1:
+                            game->recettes[nbRecettes].ingredients[NB_INGREDIENTS_MAX].nom = strtol(ligne, &end, 10);
+                            break;
+                        case 2:
+                            game->recettes[nbRecettes].ingredients[NB_INGREDIENTS_MAX].cuit = strtol(ligne, &end, 10);
+                            break;
+                        case 3:
+                            game->recettes[nbRecettes].ingredients[NB_INGREDIENTS_MAX].coupable = strtol(ligne, &end, 10);
+                            break;
+                    }
                 }
             }
         }

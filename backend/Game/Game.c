@@ -194,13 +194,14 @@ void jeu(int niveau) {
             // TODO: Menu Jeu
         } else if (game->etatJeu == PLAYING) {
             // Toutes les 20 secondes, il y a une nouvelle recette qui est rendu disponible
+            hc_afficher_matrice();
+            deplacerPersonnages();
+
             if (counter > (recettes_crees + 1) * 20) {
                 newCommande();
                 recettes_crees++;
             }
 
-            hc_afficher_matrice();
-            deplacerPersonnages();
         }
 
         textprintf_ex(getCorrectBuffer(), font, 10, 10, makecol(255, 255, 255), -1, "j1: x: %03d, y: %03d", getGame()->joueurs[0].pos.x, getGame()->joueurs[0].pos.y);

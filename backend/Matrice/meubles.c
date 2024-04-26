@@ -18,6 +18,7 @@ void initialiserMatrice(const char* file) {
     fichier = fopen(file, "r");
 
     char *base = "0123456789";
+    char nombre[128] = "";
 
     int x;
     int y = 0;
@@ -27,8 +28,9 @@ void initialiserMatrice(const char* file) {
         int a = 0;
         x = 0;
         char nombre[128] = "";
+
         while(*p != '\n' && *p != '\0') {
-            if (strchr(base, *p) != NULL) {
+            if (strchr(base, *p) == NULL) {
                 strncat(nombre, p, 1);
             } else if (*p == ' ') {
                 game->matrice[y][x].typeMeuble = strtol(nombre, NULL, 10);
