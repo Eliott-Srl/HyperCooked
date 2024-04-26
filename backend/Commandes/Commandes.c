@@ -10,37 +10,75 @@ void newCommande() {
 
 
 void AfficherCommande() {
-    int coos[3]= {27,45,32};
-    int posLig1 = 10, posCol1 = 10; // Position de départ
-    int LargeurRectangle = 150, LongueurRectangle = 220;
-    int EspaceHorizontalEntreLesRectangle = 30;
 
-    for ( int i = 0; i < getGame()->nbCommandes; i++) {
-        int posLig2 = posLig1 + (i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle));
-        int posCol2 = posCol1;
-        int xLogo = 47 + (i* (LargeurRectangle + EspaceHorizontalEntreLesRectangle) );
+   if (getGraphic()->fs == 0) {
+       int coos[3]= {27,45,32};
+       int posLig1 = 10, posCol1 = 10; // Position de départ
+       int LargeurRectangle = 90, LongueurRectangle = 120;
+       int EspaceHorizontalEntreLesRectangle = 30;
 
-        if (strcmp(getGame()->commandes[0].recette.nom, "Hamburger") == 0) {
-            circlefill(getCorrectBuffer(), xLogo, 32, 20, makecol(50, 20, 100));
-        } else if (strcmp(getGame()->commandes[0].recette.nom, "Soupe") == 0) {
-            circlefill(getCorrectBuffer(), xLogo, 32, 20, makecol(50, 20, 100));
-        }
+       for ( int i = 0; i < getGame()->nbCommandes; i++) {
+           int posLig2 = posLig1 + (i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle));
+           int posCol2 = posCol1;
+           int xLogo = 54 + (i* (LargeurRectangle + EspaceHorizontalEntreLesRectangle) );
 
-        rectfill(getCorrectBuffer(), posLig2, posCol2, posLig2 + LargeurRectangle, posCol1 + LongueurRectangle, makecol(10, 180, 50)); // Dessiner la première balle
+           if (strcmp(getGame()->commandes[0].recette.nom, "Hamburger") == 0) {
+               circlefill(getCorrectBuffer(), xLogo, 42 , 25, makecol(50,20,100));
+           } else if (strcmp(getGame()->commandes[0].recette.nom, "Soupe") == 0) {
+               circlefill(getCorrectBuffer(), xLogo, 42 , 25, makecol(50,20,100));
+           }
 
-        for (int j = 0;  coos[j]< getGame()->commandes[i].recette.nbIngredients; i++) {
-            if (getGame()->commandes[i].recette.ingredients[i].nom == SALADE) {
-                circlefill(getCorrectBuffer(), coos[j] + i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle) , 70, 10, makecol(50, 180, 200));
-            } else if (getGame()->commandes[i].recette.ingredients[i].nom == PAIN) {
-                circlefill(getCorrectBuffer(), coos[j]+ i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle), 70, 10, makecol(50, 180, 200));
-            } else if (getGame()->commandes[i].recette.ingredients[i].nom == TOMATE) {
-                circlefill(getCorrectBuffer(), coos[j]+ i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle), 70, 10, makecol(50, 180, 200));
-            } else if (getGame()->commandes[i].recette.ingredients[i].nom == STEAK) {
-                circlefill(getCorrectBuffer(), coos[j]+ i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle), 70, 10, makecol(50, 180, 200));
-            } else if (getGame()->commandes[i].recette.ingredients[i].nom == OEUF) {
-                circlefill(getCorrectBuffer(), coos[j]+ i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle), 70, 10, makecol(50, 180, 200));
-            } else if (getGame()->commandes[i].recette.ingredients[i].nom == POTATO) {
-                circlefill(getCorrectBuffer(), coos[j]+ i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle), 70, 10, makecol(50, 180, 200));
+           rectfill(getCorrectBuffer(), posLig2, posCol2, posLig2 + LargeurRectangle, posCol1 + LongueurRectangle, makecol(10, 180, 50)); // Dessiner la première balle
+
+           for (int j = 0;  coos[j]< getGame()->commandes[i].recette.nbIngredients; i++) {
+               if (getGame()->commandes[i].recette.ingredients[i].nom == SALADE) {
+                   circlefill(getCorrectBuffer(), coos[j] + i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle) , 70, 10, makecol(50, 180, 200));
+               } else if (getGame()->commandes[i].recette.ingredients[i].nom == PAIN) {
+                   circlefill(getCorrectBuffer(), coos[j]+ i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle), 70, 10, makecol(50, 180, 200));
+               } else if (getGame()->commandes[i].recette.ingredients[i].nom == TOMATE) {
+                   circlefill(getCorrectBuffer(), coos[j]+ i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle), 70, 10, makecol(50, 180, 200));
+               } else if (getGame()->commandes[i].recette.ingredients[i].nom == STEAK) {
+                   circlefill(getCorrectBuffer(), coos[j]+ i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle), 70, 10, makecol(50, 180, 200));
+               } else if (getGame()->commandes[i].recette.ingredients[i].nom == OEUF) {
+                   circlefill(getCorrectBuffer(), coos[j]+ i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle), 70, 10, makecol(50, 180, 200));
+               } else if (getGame()->commandes[i].recette.ingredients[i].nom == POTATO) {
+                   circlefill(getCorrectBuffer(), coos[j]+ i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle), 70, 10, makecol(50, 180, 200));
+               }
+           }
+       }
+   } else (getGraphic()->fs == 1){
+        int coos[3]= {27,45,32};
+        int posLig1 = 10, posCol1 = 10; // Position de départ
+        int LargeurRectangle = 150, LongueurRectangle = 220;
+        int EspaceHorizontalEntreLesRectangle = 30;
+
+        for ( int i = 0; i < getGame()->nbCommandes; i++) {
+            int posLig2 = posLig1 + (i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle));
+            int posCol2 = posCol1;
+            int xLogo = 47 + (i* (LargeurRectangle + EspaceHorizontalEntreLesRectangle) );
+
+            if (strcmp(getGame()->commandes[0].recette.nom, "Hamburger") == 0) {
+                circlefill(getCorrectBuffer(), xLogo, 32, 20, makecol(50, 20, 100));
+            } else if (strcmp(getGame()->commandes[0].recette.nom, "Soupe") == 0) {
+                circlefill(getCorrectBuffer(), xLogo, 32, 20, makecol(50, 20, 100));
+            }
+
+            rectfill(getCorrectBuffer(), posLig2, posCol2, posLig2 + LargeurRectangle, posCol1 + LongueurRectangle, makecol(10, 180, 50)); // Dessiner la première balle
+
+            for (int j = 0;  coos[j]< getGame()->commandes[i].recette.nbIngredients; i++) {
+                if (getGame()->commandes[i].recette.ingredients[i].nom == SALADE) {
+                    circlefill(getCorrectBuffer(), coos[j] + i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle) , 70, 10, makecol(50, 180, 200));
+                } else if (getGame()->commandes[i].recette.ingredients[i].nom == PAIN) {
+                    circlefill(getCorrectBuffer(), coos[j]+ i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle), 70, 10, makecol(50, 180, 200));
+                } else if (getGame()->commandes[i].recette.ingredients[i].nom == TOMATE) {
+                    circlefill(getCorrectBuffer(), coos[j]+ i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle), 70, 10, makecol(50, 180, 200));
+                } else if (getGame()->commandes[i].recette.ingredients[i].nom == STEAK) {
+                    circlefill(getCorrectBuffer(), coos[j]+ i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle), 70, 10, makecol(50, 180, 200));
+                } else if (getGame()->commandes[i].recette.ingredients[i].nom == OEUF) {
+                    circlefill(getCorrectBuffer(), coos[j]+ i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle), 70, 10, makecol(50, 180, 200));
+                } else if (getGame()->commandes[i].recette.ingredients[i].nom == POTATO) {
+                    circlefill(getCorrectBuffer(), coos[j]+ i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle), 70, 10, makecol(50, 180, 200));
+                }
             }
         }
     }
