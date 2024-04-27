@@ -62,9 +62,9 @@ void hc_init() {
     graphic->fs = 0;
     graphic->fs_width = fs_width;
     graphic->fs_height = fs_height;
-    graphic->tailleCase = 40;         // à redéfinir, je ne suis pas sûr de ça
-    graphic->fsTailleCase = 60;       // à redéfinir, je ne suis pas sûr de ça non plus
-    graphic->ratio = graphic->fsTailleCase / graphic->tailleCase;
+    graphic->ratio = (float) graphic->fs_width / (float) WIDTH;
+    graphic->tailleCase = 30;       // à redéfinir, je ne suis pas sûr de ça
+    graphic->fsTailleCase = (int) ((float) graphic->tailleCase * graphic->ratio);
 
     hc_textprintf_centre_hv(graphic->ressources.loadingScreen, font, makecol(255, 255, 255), -1, "Loading...");
     blit(graphic->ressources.loadingScreen, screen, 0, 0, 0, 0, WIDTH, HEIGHT);
@@ -123,9 +123,17 @@ void hc_init() {
         exit(EXIT_FAILURE);
     }
 
-    graphic->textures.SOL = load_bitmap("./res/img/sol.bmp", NULL);
+    graphic->textures.sol = load_bitmap("./res/img/sol.bmp", NULL);
 
-    if (!graphic->textures.SOL) {
+    if (!graphic->textures.sol) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    graphic->textures.ticket = load_bitmap("./res/img/ticket.bmp", NULL);
+
+    if (!graphic->textures.ticket) {
         allegro_message("Erreur de chargement de l'image");
         allegro_exit();
         exit(EXIT_FAILURE);
@@ -193,31 +201,30 @@ void jeu(int niveau) {
         if (game->etatJeu == DANS_MENU_JEU) {
             // TODO: Menu Jeu
         } else if (game->etatJeu == PLAYING) {
-            // Toutes les 20 secondes, il y a une nouvelle recette qui est rendu disponible
             hc_afficher_matrice();
             deplacerPersonnages();
 
-            if (counter > (recettes_crees + 1) * 20) {
+            // Toutes les 40 secondes, il y a une nouvelle recette qui est rendu disponible
+            if (counter > (recettes_crees + 1) * 40) {
                 newCommande();
                 recettes_crees++;
             }
-
             AfficherCommande();
         }
 
-        textprintf_ex(getCorrectBuffer(), font, 10, 10, makecol(255, 255, 255), -1, "j1: x: %03d, y: %03d", getGame()->joueurs[0].pos.x, getGame()->joueurs[0].pos.y);
-        textprintf_ex(getCorrectBuffer(), font, 10, 30, makecol(255, 255, 255), -1, "j2: x: %03d, y: %03d", getGame()->joueurs[1].pos.x, getGame()->joueurs[1].pos.y);
         hc_blit(getCorrectBuffer());
 
         if (key[KEY_F11]) {
             getGraphic()->fs = !getGraphic()->fs;
             set_gfx_mode(getGraphic()->fs ? GFX_AUTODETECT_FULLSCREEN : GFX_AUTODETECT_WINDOWED, getGraphic()->fs ? getGraphic()->fs_width : WIDTH, getGraphic()->fs ? getGraphic()->fs_height : HEIGHT, 0, 0);
             for (int i = 0; i < 2; i++) {
-                getGame()->joueurs[i].pos.x = (getGraphic()->fs ? getGame()->joueurs[i].pos.x * getGraphic()->ratio : getGame()->joueurs[i].pos.x / getGraphic()->ratio);
-                printf("a");
-                getGame()->joueurs[i].pos.y = (getGraphic()->fs ? getGame()->joueurs[i].pos.y * getGraphic()->ratio : getGame()->joueurs[i].pos.y / getGraphic()->ratio);
-                printf("b");
+                getGame()->joueurs[i].pos.x = (int) (getGraphic()->fs ? (float) getGame()->joueurs[i].pos.x * getGraphic()->ratio : (float) getGame()->joueurs[i].pos.x / getGraphic()->ratio);
+                getGame()->joueurs[i].pos.y = (int) (getGraphic()->fs ? (float) getGame()->joueurs[i].pos.y * getGraphic()->ratio : (float) getGame()->joueurs[i].pos.y / getGraphic()->ratio);
             }
+        }
+
+        if (key[KEY_F3]) {
+            getGraphic()->debug = !getGraphic()->debug;
         }
     } while (counter <= 90 || (game->etatJeu != DANS_MENU_JEU && game->etatJeu != PLAYING));
 }
@@ -229,4 +236,9 @@ void reinitialiserPartie() {
     }
     getGame()->nbCommandes = 0;
     getGame()->score = 0;
+}
+
+void hc_finish() {
+    free(getGame());
+    free(getGraphic());
 }

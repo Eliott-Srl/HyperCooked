@@ -10,7 +10,7 @@
 #define NB_MAPS_MAX 10
 
 #define WIDTH 800
-#define HEIGHT 600
+#define HEIGHT 450
 
 #include "allegro.h"
 
@@ -164,23 +164,25 @@ typedef struct s_ressources {
 } s_ressources;
 
 typedef struct s_textures {
-    BITMAP *SOL;                                 // BITMAP pour le sol
-    BITMAP *COMPTOIR;                            // BITMAP pour le comptoir
-    BITMAP *COFFFRE;                             // BITMAP pour le coffre
-    BITMAP *POUBELLE;                            // BITMAP pour la poubelle
-    BITMAP *PLANCHE_A_DECOUPER;
-    BITMAP *PLAN_DE_TRAVAIL;
-    BITMAP *PLAQUE_A_CUISSON;
-    BITMAP *POELE;
-    BITMAP *MARMITE;
-    BITMAP *ASSIETTE;
-    BITMAP *EXTINCTEUR;
+    BITMAP *sol;                                 // Texture du sol
+    BITMAP *comptoir;                            // Texture du comptoir
+    BITMAP *coffre;                              // Texture du coffre
+    BITMAP *poubelle;                            // Texture de la poubelle
+    BITMAP *plancheADecouper;                    // T de la planche à découper
+    BITMAP *planDeTravail;                       // BITMAP du plan de travail
+    BITMAP *plaqueDeCuisson;                     // BITMAP de la plaque de cuisson
+    BITMAP *poele;                               // BITMAP de la poêle
+    BITMAP *marmite;
+    BITMAP *assiette;
+    BITMAP *extincteur;
+    BITMAP *ticket;
 } s_textures;
 
 typedef struct s_graphic {
+    int debug;                                   // Booléen qui indique si on affiche les informations de debug
     int fs_width;                                // Largeur de l'écran
     int fs_height;                               // Hauteur de l'écran
-    int ratio;                                   // Ratio de la matrice
+    float ratio;                                 // Ratio de la matrice
     int fs;                                      // Booléen qui indique si le jeu est en plein écran
     int menu;                                    // Booléen qui indique si le menu pendant la partie est ouvert
     int tailleCase;                              // Taille d'une case de la matrice

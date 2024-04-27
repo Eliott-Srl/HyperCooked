@@ -14,6 +14,13 @@ int rgbToAllegroColor(s_color color) {
 }
 
 void hc_blit(BITMAP *source) {
+    if (getGraphic()->debug) {
+        textprintf_ex(source, font, 10, 10, makecol(255, 255, 255), -1, "fps: %d", get_refresh_rate());
+        textprintf_ex(source, font, 10, 30, makecol(255, 255, 255), -1, "j1: x: %03d, y: %03d", getGame()->joueurs[0].pos.x, getGame()->joueurs[0].pos.y);
+        textprintf_ex(source, font, 10, 50, makecol(255, 255, 255), -1, "j2: x: %03d, y: %03d", getGame()->joueurs[1].pos.x, getGame()->joueurs[1].pos.y);
+        textprintf_ex(source, font, 10, 70, makecol(255, 255, 255), -1, "Ratio normal/fs: %f", getGraphic()->ratio);
+    }
+
     if (getGraphic()->fs) {
        blit(source, screen, 0, 0, 0, 0, getGraphic()->fs_width, getGraphic()->fs_height);
     } else {

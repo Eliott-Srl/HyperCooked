@@ -60,28 +60,28 @@ void deplacerPersonnages() {
     s_coo velo_perso2 = {0, 0};
 
     if (key[KEY_W]) {
-        velo_perso1.y = -1;
+        velo_perso1.y--;
     }
     if (key[KEY_S]) {
-        velo_perso1.y = 1;
+        velo_perso1.y++;
     }
     if (key[KEY_A]) {
-        velo_perso1.x = -1;
+        velo_perso1.x--;
     }
     if (key[KEY_D]) {
-        velo_perso1.x = 1;
+        velo_perso1.x++;
     }
     if (key[KEY_UP]) {
-        velo_perso2.y = -1;
+        velo_perso2.y--;
     }
     if (key[KEY_DOWN]) {
-        velo_perso2.y = 1;
+        velo_perso2.y++;
     }
     if (key[KEY_LEFT]) {
-        velo_perso2.x = -1;
+        velo_perso2.x--;
     }
     if (key[KEY_RIGHT]) {
-        velo_perso2.x = 1;
+        velo_perso2.x++;
     }
 
     deplacerPersonnage(&getGame()->joueurs[0], velo_perso1.x, velo_perso1.y);

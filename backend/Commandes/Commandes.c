@@ -10,9 +10,7 @@ void newCommande() {
 
 
 void AfficherCommande() {
-
-    BITMAP *tiket = load_bitmap("Ticket de commande.bmp",NULL);
-   if (getGraphic()->fs == 0) {
+   if (!getGraphic()->fs) {
        int coos[3]= {27,45,32};
        int posLig1 = 10, posCol1 = 10; // Position de départ
        int LargeurRectangle = 90, LongueurRectangle = 105;
@@ -27,7 +25,7 @@ void AfficherCommande() {
                circlefill(getCorrectBuffer(), xLogo, 42 , 25, makecol(50,20,100));
            }
 
-           stretch_sprite(getCorrectBuffer(),tiket,20,480,110,140);
+           stretch_sprite(getCorrectBuffer(),getGraphic()->textures.ticket,20,480,110,140);
 
            for (int j = 0;  coos[j]< getGame()->commandes[i].recette.nbIngredients; i++) {
                if (getGame()->commandes[i].recette.ingredients[i].nom == SALADE) {
@@ -45,7 +43,7 @@ void AfficherCommande() {
                }
            }
        }
-   } else if (getGraphic()->fs == 1) {
+   } else {
         int coos[3]= {27,45,32};
         int posLig1 = 10, posCol1 = 10; // Position de départ
         int LargeurRectangle = 150, LongueurRectangle = 220;

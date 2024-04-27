@@ -80,20 +80,20 @@ void hc_afficher_matrice() {
     for(int h = 0; h < HAUTEUR; h++) {
         for(int l = 0; l < LARGEUR; l++) {
             if (getGame()->matrice[h][l].typeMeuble == SOL) {
-                stretch_sprite(getCorrectBuffer(), getGraphic()->textures.SOL, (getCorrectWidth()-LARGEUR*getCorrectCaseSize())/2+l*getCorrectCaseSize(), (getCorrectHeight()-HAUTEUR*getCorrectCaseSize())/2+h*getCorrectCaseSize(), getCorrectCaseSize(), getCorrectCaseSize());
+                stretch_sprite(getCorrectBuffer(), getGraphic()->textures.sol, (getCorrectWidth() - LARGEUR * getCorrectCaseSize()) / 2 + l * getCorrectCaseSize(), (getCorrectHeight() - HAUTEUR * getCorrectCaseSize()) / 2 + h * getCorrectCaseSize(), getCorrectCaseSize(), getCorrectCaseSize());
             }
             if (getGame()->matrice[h][l].typeMeuble == COMPTOIR) {
-                stretch_sprite(getCorrectBuffer(), getGraphic()->textures.COMPTOIR, (getCorrectWidth()-LARGEUR*getCorrectCaseSize())/2+l*getCorrectCaseSize(), (getCorrectHeight()-HAUTEUR*getCorrectCaseSize())/2+h*getCorrectCaseSize(), getCorrectCaseSize(), getCorrectCaseSize());
+                stretch_sprite(getCorrectBuffer(), getGraphic()->textures.comptoir, (getCorrectWidth() - LARGEUR * getCorrectCaseSize()) / 2 + l * getCorrectCaseSize(), (getCorrectHeight() - HAUTEUR * getCorrectCaseSize()) / 2 + h * getCorrectCaseSize(), getCorrectCaseSize(), getCorrectCaseSize());
             }
             if (getGame()->matrice[h][l].typeMeuble == COFFRE) {
-                stretch_sprite(getCorrectBuffer(), getGraphic()->textures.COFFFRE, (getCorrectWidth()-LARGEUR*getCorrectCaseSize())/2+l*getCorrectCaseSize(), (getCorrectHeight()-HAUTEUR*getCorrectCaseSize())/2+h*getCorrectCaseSize(), getCorrectCaseSize(), getCorrectCaseSize());
+                stretch_sprite(getCorrectBuffer(), getGraphic()->textures.coffre, (getCorrectWidth() - LARGEUR * getCorrectCaseSize()) / 2 + l * getCorrectCaseSize(), (getCorrectHeight() - HAUTEUR * getCorrectCaseSize()) / 2 + h * getCorrectCaseSize(), getCorrectCaseSize(), getCorrectCaseSize());
             }
             if (getGame()->matrice[h][l].typeMeuble == POUBELLE) {
-                getGraphic()->textures.POUBELLE;
-                stretch_sprite(getCorrectBuffer(), getGraphic()->textures.POUBELLE, (getCorrectWidth()-LARGEUR*getCorrectCaseSize())/2+l*getCorrectCaseSize(), (getCorrectHeight()-HAUTEUR*getCorrectCaseSize())/2+h*getCorrectCaseSize(), getCorrectCaseSize(), getCorrectCaseSize());
+                getGraphic()->textures.poubelle;
+                stretch_sprite(getCorrectBuffer(), getGraphic()->textures.poubelle, (getCorrectWidth() - LARGEUR * getCorrectCaseSize()) / 2 + l * getCorrectCaseSize(), (getCorrectHeight() - HAUTEUR * getCorrectCaseSize()) / 2 + h * getCorrectCaseSize(), getCorrectCaseSize(), getCorrectCaseSize());
             }
             if (getGame()->matrice[h][l].typeMeuble == PLAN_DE_TRAVAIL) {
-                stretch_sprite(getCorrectBuffer(), getGraphic()->textures.COFFFRE, (getCorrectWidth()-LARGEUR*getCorrectCaseSize())/2+l*getCorrectCaseSize(), (getCorrectHeight()-HAUTEUR*getCorrectCaseSize())/2+h*getCorrectCaseSize(), getCorrectCaseSize(), getCorrectCaseSize());
+                stretch_sprite(getCorrectBuffer(), getGraphic()->textures.coffre, (getCorrectWidth() - LARGEUR * getCorrectCaseSize()) / 2 + l * getCorrectCaseSize(), (getCorrectHeight() - HAUTEUR * getCorrectCaseSize()) / 2 + h * getCorrectCaseSize(), getCorrectCaseSize(), getCorrectCaseSize());
             }
             if (getGame()->matrice[h][l].typeMeuble == PLANCHE_A_DECOUPER) {
 

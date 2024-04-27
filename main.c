@@ -8,7 +8,7 @@ int main() {
 
     rest(100);
 
-    for (int i = 0; i < nbMaps + 1; i++) {
+    for (int i = 0; i < nbMaps; i++) {
         reinitialiserPartie();
 
         char filename[STRMAX];
@@ -31,6 +31,8 @@ int main() {
             hc_blit(getGraphic()->ressources.loadingScreen);
         }
     }
+
+    hc_finish();
 
     return 0;
 } END_OF_MAIN()
