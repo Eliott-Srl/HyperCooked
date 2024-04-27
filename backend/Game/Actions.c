@@ -1,7 +1,7 @@
 #include "Actions.h"
 
-void deplacerPersonnageClavier(s_joueur* joueur, int veloX, int veloY) {
-    if (veloX == 0 && veloY == 0) {
+void deplacerPersonnage(s_joueur* joueur, double veloX, double veloY) {
+    if (veloX < 0.01 && veloX > -0.01 && veloY < 0.01 && veloY > -0.01) {
         return;
     }
 
@@ -56,6 +56,16 @@ void deplacerPersonnageClavier(s_joueur* joueur, int veloX, int veloY) {
         }
     }
 
+    /*
+    fixed angle = fixcos(ftofix(veloX));
+
+    if (fixsin(ftofix(veloY)) < 0) {
+        angle = -angle;
+    }
+
+    joueur->angle = angle;
+     */
+
     joueur->x = newX;
     joueur->y = newY;
 }
@@ -100,42 +110,38 @@ void deplacerPersonnagesClavier() {
         velo_perso2.x++;
     }
 
-    deplacerPersonnageClavier(&getGame()->joueurs[0], velo_perso1.x, velo_perso1.y);
-    deplacerPersonnageClavier(&getGame()->joueurs[1], velo_perso2.x, velo_perso2.y);
+    deplacerPersonnage(&getGame()->joueurs[0], velo_perso1.x, velo_perso1.y);
+    deplacerPersonnage(&getGame()->joueurs[1], velo_perso2.x, velo_perso2.y);
 }
 
 void deplacerPersonnageJoystick() {
-    s_coo velo_perso1 = {0, 0};
-    s_coo velo_perso2 = {0, 0};
+    for (int i = 0; i < 2; i++) {
+        if (joy[i].flags & JOYFLAG_ANALOG && joy[i].flags & JOYFLAG_SIGNED) {
+            double x = (double) joy[i].stick[0].axis[0].pos / 128.0;
+            double y = (double) joy[i].stick[0].axis[1].pos / 128.0;
 
-    if (joy[0].stick[0].axis[0].d1) {
-        velo_perso1.x--;
-    }
-    if (joy[0].stick[0].axis[0].d2) {
-        velo_perso1.x++;
-    }
-    if (joy[0].stick[0].axis[1].d1) {
-        velo_perso1.y--;
-    }
-    if (joy[0].stick[0].axis[1].d2) {
-        velo_perso1.y++;
-    }
+            deplacerPersonnage(&getGame()->joueurs[i], x, y);
+        } else if (joy[i].flags & JOYFLAG_CALIB_DIGITAL) {
 
-    if (joy[1].stick[0].axis[0].d1) {
-        velo_perso2.x--;
-    }
-    if (joy[1].stick[0].axis[0].d2) {
-        velo_perso2.x++;
-    }
-    if (joy[1].stick[0].axis[1].d1) {
-        velo_perso2.y--;
-    }
-    if (joy[1].stick[0].axis[1].d2) {
-        velo_perso2.y++;
-    }
+        } else {
+            s_coo velo_perso = {0, 0};
 
-    deplacerPersonnageClavier(&getGame()->joueurs[0], velo_perso1.x, velo_perso1.y);
-    deplacerPersonnageClavier(&getGame()->joueurs[1], velo_perso2.x, velo_perso2.y);
+            if (joy[i].stick[0].axis[0].d1) {
+                velo_perso.x--;
+            }
+            if (joy[i].stick[0].axis[0].d2) {
+                velo_perso.x++;
+            }
+            if (joy[i].stick[0].axis[1].d1) {
+                velo_perso.y--;
+            }
+            if (joy[i].stick[0].axis[1].d2) {
+                velo_perso.y++;
+            }
+
+            deplacerPersonnage(&getGame()->joueurs[i], velo_perso.x, velo_perso.y);
+        }
+    }
 }
 
 void deplacerPersonnages() {
