@@ -176,6 +176,8 @@ typedef struct s_textures {
     BITMAP *assiette;
     BITMAP *extincteur;
     BITMAP *ticket;
+    BITMAP *BAR;
+    BITMAP *PlancheH
 } s_textures;
 
 typedef struct s_graphic {
