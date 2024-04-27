@@ -7,8 +7,8 @@ void deplacerPersonnage(s_joueur* joueur, double veloX, double veloY) {
 
     s_game *game = getGame();
     // Nouvelles positions potentielles
-    float newX = joueur->x + (float) veloX * (float) SPEED;
-    float newY = joueur->y + (float) veloY * (float) SPEED;
+    float newX = joueur->x + (float) veloX * (float) (getGraphic()->fs ? SPEED * getGraphic()->ratio * 3.0 : SPEED);
+    float newY = joueur->y + (float) veloY * (float) (getGraphic()->fs ? SPEED * getGraphic()->ratio * 3.0 : SPEED);
 
     if (newX < 0 || newX > (float) getCorrectWidth() || newY < 0 || newY > (float) getCorrectHeight()) {
         return;
