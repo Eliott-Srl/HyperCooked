@@ -1,6 +1,6 @@
 #include "Actions.h"
 
-void deplacerPersonnage(s_joueur* joueur, int veloX, int veloY) {
+void deplacerPersonnageClavier(s_joueur* joueur, int veloX, int veloY) {
     if (veloX == 0 && veloY == 0) {
         return;
     }
@@ -43,7 +43,7 @@ void deplacerPersonnage(s_joueur* joueur, int veloX, int veloY) {
 
     // Déplacer et tourner le personnage aux nouvelles positions
     if (veloX * veloY != 0) {
-        joueur->angle = fixatan(fixdiv(itofix(veloY), itofix(veloX))) - itofix(64);
+        joueur->angle = fixatan(ftofix((float) veloY / (float) veloX)) - itofix(64);
 
         if (veloX > 0) {
             joueur->angle += itofix(128);
@@ -60,7 +60,7 @@ void deplacerPersonnage(s_joueur* joueur, int veloX, int veloY) {
     joueur->y = newY;
 }
 
-void afficherPersonnages(s_coo velo_perso1, s_coo velo_perso2) {
+void afficherPersonnages() {
     for (int i = 0; i < 2; i++) {
         int dims = getCorrectCaseSize();
         float x = getGame()->joueurs[i].x - (float) dims / 2;
@@ -71,7 +71,7 @@ void afficherPersonnages(s_coo velo_perso1, s_coo velo_perso2) {
     }
 }
 
-void deplacerPersonnages() {
+void deplacerPersonnagesClavier() {
     s_coo velo_perso1 = {0, 0};
     s_coo velo_perso2 = {0, 0};
 
@@ -100,9 +100,49 @@ void deplacerPersonnages() {
         velo_perso2.x++;
     }
 
-    deplacerPersonnage(&getGame()->joueurs[0], velo_perso1.x, velo_perso1.y);
-    deplacerPersonnage(&getGame()->joueurs[1], velo_perso2.x, velo_perso2.y);
-    afficherPersonnages(velo_perso1, velo_perso2);
+    deplacerPersonnageClavier(&getGame()->joueurs[0], velo_perso1.x, velo_perso1.y);
+    deplacerPersonnageClavier(&getGame()->joueurs[1], velo_perso2.x, velo_perso2.y);
+}
+
+void deplacerPersonnageJoystick() {
+    s_coo velo_perso1 = {0, 0};
+    s_coo velo_perso2 = {0, 0};
+
+    if (joy[0].stick[0].axis[0].d1) {
+        velo_perso1.x--;
+    }
+    if (joy[0].stick[0].axis[0].d2) {
+        velo_perso1.x++;
+    }
+    if (joy[0].stick[0].axis[1].d1) {
+        velo_perso1.y--;
+    }
+    if (joy[0].stick[0].axis[1].d2) {
+        velo_perso1.y++;
+    }
+
+    if (joy[1].stick[0].axis[0].d1) {
+        velo_perso2.x--;
+    }
+    if (joy[1].stick[0].axis[0].d2) {
+        velo_perso2.x++;
+    }
+    if (joy[1].stick[0].axis[1].d1) {
+        velo_perso2.y--;
+    }
+    if (joy[1].stick[0].axis[1].d2) {
+        velo_perso2.y++;
+    }
+
+    deplacerPersonnageClavier(&getGame()->joueurs[0], velo_perso1.x, velo_perso1.y);
+    deplacerPersonnageClavier(&getGame()->joueurs[1], velo_perso2.x, velo_perso2.y);
+}
+
+void deplacerPersonnages() {
+    deplacerPersonnagesClavier();
+    deplacerPersonnageJoystick();
+
+    afficherPersonnages();
 }
 
 void neFaitRien(s_joueur* joueur) {

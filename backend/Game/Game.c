@@ -45,6 +45,7 @@ void jeu(int niveau) {
 
     do {
         hc_clear_buffers();
+        poll_joystick();
 
         if (game->etatJeu == DANS_MENU_JEU) {
             // TODO: Menu Jeu

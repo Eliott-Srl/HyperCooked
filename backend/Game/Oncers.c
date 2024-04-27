@@ -58,6 +58,12 @@ void hc_init() {
     install_mouse();
     install_keyboard();
 
+    if (install_joystick(JOY_TYPE_AUTODETECT) != 0) {
+        allegro_message("Error initialising joystick!");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
     graphic->ressources.fsLoadingScreen = create_bitmap(fs_width, fs_height);
 
     if (!graphic->ressources.fsLoadingScreen) {
