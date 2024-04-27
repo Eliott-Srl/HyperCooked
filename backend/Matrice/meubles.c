@@ -17,8 +17,13 @@ void initialiserMatrice(const char* file) {
     // Ouvrir le fichier en mode lecture
     fichier = fopen(file, "r");
 
+    if (fichier == NULL) {
+        allegro_message("Erreur lors de l'ouverture du fichier\n");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
     char *base = "0123456789";
-    char nombre[128] = "";
 
     int x;
     int y = 0;
@@ -30,7 +35,7 @@ void initialiserMatrice(const char* file) {
         char nombre[128] = "";
 
         while(*p != '\n' && *p != '\0') {
-            if (strchr(base, *p) == NULL) {
+            if (strchr(base, *p) != NULL) {
                 strncat(nombre, p, 1);
             } else if (*p == ' ') {
                 game->matrice[y][x].typeMeuble = strtol(nombre, NULL, 10);
@@ -48,9 +53,9 @@ void initialiserMatrice(const char* file) {
                 } else {
                     game->matrice[y][x].objet.type = strtol(nombre, NULL, 10);
 
-                    if(strtol(nombre, NULL, 10) == POELE || strtol(nombre, NULL, 10) == ASSIETTE) {
+                    if (strtol(nombre, NULL, 10) == POELE || strtol(nombre, NULL, 10) == ASSIETTE) {
                         game->matrice[y][x].objet.stockageMax = 1;
-                    } else if(strtol(nombre, NULL, 10) == MARMITE) {
+                    } else if (strtol(nombre, NULL, 10) == MARMITE) {
                         game->matrice[y][x].objet.stockageMax = 3;
                     } else {
                         game->matrice[y][x].objet.stockageMax = 0;
@@ -70,37 +75,20 @@ void initialiserMatrice(const char* file) {
 
     afficherMatrice();
 
-    fclose(fichier);  // Fermer le fichier après avoir trouvé un espace
+    fclose(fichier);
 }
 
-
-
 void hc_afficher_matrice() {
-    // TODO: Charles tu vas bosser ici
     for(int h = 0; h < HAUTEUR; h++) {
         for(int l = 0; l < LARGEUR; l++) {
-            if (getGame()->matrice[h][l].typeMeuble == SOL) {
-                stretch_sprite(getCorrectBuffer(), getGraphic()->textures.SOL, (getCorrectWidth()-LARGEUR*getCorrectCaseSize())/2+l*getCorrectCaseSize(), (getCorrectHeight()-HAUTEUR*getCorrectCaseSize())/2+h*getCorrectCaseSize(), getCorrectCaseSize(), getCorrectCaseSize());
-            }
-            if (getGame()->matrice[h][l].typeMeuble == COMPTOIR) {
-                stretch_sprite(getCorrectBuffer(), getGraphic()->textures.COMPTOIR, (getCorrectWidth()-LARGEUR*getCorrectCaseSize())/2+l*getCorrectCaseSize(), (getCorrectHeight()-HAUTEUR*getCorrectCaseSize())/2+h*getCorrectCaseSize(), getCorrectCaseSize(), getCorrectCaseSize());
-            }
-            if (getGame()->matrice[h][l].typeMeuble == COFFRE) {
-                stretch_sprite(getCorrectBuffer(), getGraphic()->textures.COFFFRE, (getCorrectWidth()-LARGEUR*getCorrectCaseSize())/2+l*getCorrectCaseSize(), (getCorrectHeight()-HAUTEUR*getCorrectCaseSize())/2+h*getCorrectCaseSize(), getCorrectCaseSize(), getCorrectCaseSize());
-            }
-            if (getGame()->matrice[h][l].typeMeuble == POUBELLE) {
-                getGraphic()->textures.POUBELLE;
-                stretch_sprite(getCorrectBuffer(), getGraphic()->textures.POUBELLE, (getCorrectWidth()-LARGEUR*getCorrectCaseSize())/2+l*getCorrectCaseSize(), (getCorrectHeight()-HAUTEUR*getCorrectCaseSize())/2+h*getCorrectCaseSize(), getCorrectCaseSize(), getCorrectCaseSize());
-            }
-            if (getGame()->matrice[h][l].typeMeuble == PLAN_DE_TRAVAIL) {
-                stretch_sprite(getCorrectBuffer(), getGraphic()->textures.COFFFRE, (getCorrectWidth()-LARGEUR*getCorrectCaseSize())/2+l*getCorrectCaseSize(), (getCorrectHeight()-HAUTEUR*getCorrectCaseSize())/2+h*getCorrectCaseSize(), getCorrectCaseSize(), getCorrectCaseSize());
-            }
-            if (getGame()->matrice[h][l].typeMeuble == PLANCHE_A_DECOUPER) {
+            int offsetX = (getCorrectWidth() - LARGEUR * getCorrectCaseSize()) / 2;
+            int offsetY = (getCorrectHeight() - HAUTEUR * getCorrectCaseSize()) / 2;
+            int x = offsetX + l * getCorrectCaseSize();
+            int y = offsetY + h * getCorrectCaseSize();
 
+            if (getGame()->matrice[h][l].typeMeuble == SOL) {
+                stretch_sprite(getCorrectBuffer(), getGraphic()->textures.sol, x, y, getCorrectCaseSize(), getCorrectCaseSize());
             }
         }
     }
-    getGame()->matrice[0][0].typeMeuble == SOL;
-
-    //getCorrectCaseSize();
 }

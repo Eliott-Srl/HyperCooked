@@ -13,6 +13,9 @@ void set_graphic(s_graphic* new_graphic);
 // Transforme une couleur de la structure couleur en une couleur d'Allegro
 int rgbToAllegroColor(s_color color);
 
+// Affiche les informations de debug
+void menu_debug(BITMAP *source);
+
 // Affiche le buffer adapté avec la bonne taille
 void hc_blit(BITMAP *source);
 
@@ -56,6 +59,9 @@ int getCorrectWidth();
 
 // Retourne la taille d'une case appropriée en fonction du mode plein écran
 int getCorrectCaseSize();
+
+// Retourne le rayon approprié en fonction du mode plein écran
+int getCorrectRayon();
 
 // Retourne le buffer correct en fonction du mode plein écran et de l'état du jeu
 BITMAP *getCorrectBuffer();
