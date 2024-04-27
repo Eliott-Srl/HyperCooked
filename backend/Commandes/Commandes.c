@@ -24,7 +24,7 @@ void AfficherCommande() {
     }
 
    for ( int i = 0; i < getGame()->nbCommandes; i++) {
-       int xLogo = 54 + (i* (LargeurRectangle + EspaceHorizontalEntreLesRectangle) );
+       int xLogo = (i* (LargeurRectangle + EspaceHorizontalEntreLesRectangle) );
 
        if (strcmp(getGame()->commandes[0].recette.nom, "Hamburger") == 0) {
            circlefill(getCorrectBuffer(), xLogo, 42 , 25, makecol(50,20,100));
@@ -34,7 +34,7 @@ void AfficherCommande() {
 
            stretch_sprite(getCorrectBuffer(),getGraphic()->textures.BAR,0,350,600,40);
            stretch_sprite(getCorrectBuffer(),getGraphic()->textures.PlancheH,0,380,600,140);
-           stretch_sprite(getCorrectBuffer(),getGraphic()->textures.ticket,20,368,110,140);
+           stretch_sprite(getCorrectBuffer(),getGraphic()->textures.ticket,xLogo,368,110,140);
 
        for (int j = 0;  coos[j]< getGame()->commandes[i].recette.nbIngredients; i++) {
            if (getGame()->commandes[i].recette.ingredients[i].nom == SALADE) {
