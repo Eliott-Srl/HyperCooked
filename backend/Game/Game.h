@@ -6,6 +6,8 @@
 
 int getTime();
 void mouseActions();
+int getOffsetX();
+int getOffsetY();
 void showCustomCursor();
 s_game *getGame();
 void jeu(int niveau);

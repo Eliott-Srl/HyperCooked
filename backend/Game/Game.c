@@ -26,6 +26,14 @@ s_game *getGame() {
     return game;
 }
 
+int getOffsetX() {
+    return (getCorrectWidth() - LARGEUR * getCorrectCaseSize()) / 2;
+}
+
+int getOffsetY() {
+    return ((getCorrectHeight() - 70) - HAUTEUR * getCorrectCaseSize()) / 2;
+}
+
 void showCustomCursor() {
     stretch_sprite(getCorrectBuffer(), getGraphic()->textures.cursor, mouse_x, mouse_y, 40, 40);
 }

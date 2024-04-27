@@ -116,6 +116,14 @@ void hc_init() {
         exit(EXIT_FAILURE);
     }
 
+    graphic->textures.planDeTravail = load_bitmap("./res/img/plancheH.bmp", NULL);
+
+    if (!graphic->textures.planDeTravail) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
     graphic->textures.ticket = load_bitmap("./res/img/ticket3.0.bmp", NULL);
 
     if (!graphic->textures.ticket) {
@@ -123,6 +131,7 @@ void hc_init() {
         allegro_exit();
         exit(EXIT_FAILURE);
     }
+
     graphic->textures.BAR = load_bitmap("./res/img/BAR.bmp", NULL);
 
     if (!graphic->textures.BAR) {
