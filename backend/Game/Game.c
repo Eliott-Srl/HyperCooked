@@ -201,9 +201,6 @@ void jeu(int niveau) {
                 newCommande();
                 recettes_crees++;
             }
-
-            deplacerPersonnages();
-            hc_afficher_matrice();
         }
 
         textprintf_ex(getCorrectBuffer(), font, 10, 10, makecol(255, 255, 255), -1, "j1: x: %03d, y: %03d", getGame()->joueurs[0].pos.x, getGame()->joueurs[0].pos.y);

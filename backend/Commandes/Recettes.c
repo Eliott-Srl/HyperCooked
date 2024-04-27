@@ -23,11 +23,11 @@ void loadRecipes() {
 
         p = strtok(ligne, ";");
 
-        if (strchr(base, *p) == NULL) {
-            strncat(nombre, p, 1);
-        } else {
-            for(int i = 1; i <= 3; i++){
-                p = strtok(p, ",");
+        for(int i = 1; i <= 3; i++){
+            p = strtok(p, ",");
+            if (strchr(base, *ligne) == NULL) {
+                strncat(nombre, p, 1);
+            } else {
                 for(int j = 1; j <= 3; j++){
                     p = strtok(p, " ");
                     switch (j) {
