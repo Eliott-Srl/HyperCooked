@@ -106,7 +106,7 @@ typedef struct s_meuble {
 } s_meuble;
 
 typedef enum e_typeEnMain {                      // Inqique le contenu de la main du joueur
-    NOTHING,                                
+    NOTHING,
     INGREDIENT,
     OBJET
 } e_typeEnMain;
@@ -132,7 +132,7 @@ typedef struct s_game {
     int score;                                   // Le score jusqu'ici
 } s_game;
 
-/*############### ALLEZGROS ###############*/   
+/*############### ALLEZGROS ###############*/
 typedef struct s_rectangle {
     int h;                                       // Hauteur
     int w;                                       // Largeur
@@ -159,9 +159,6 @@ typedef struct s_ressources {
     BITMAP *fsMainMenuBuffer;                    // BITMAP pour le menu en plein écran
     BITMAP *menuBuffer;                          // BITMAP pour le menu pendant la partie
     BITMAP *fsMenuBuffer;                        // BITMAP pour le menu pendant la partie en plein écran
-    BITMAP *cursor;                              // Sprite du curseur
-    BITMAP *pointer;                             // Sprite du pointeur
-    BITMAP *player;                              // Sprite du joueur
 } s_ressources;
 
 typedef struct s_textures {
@@ -172,16 +169,16 @@ typedef struct s_textures {
     BITMAP *comptoir;                            // Texture du comptoir
     BITMAP *coffre;                              // Texture du coffre
     BITMAP *poubelle;                            // Texture de la poubelle
-    BITMAP *plancheADecouper;                    // T de la planche à découper
-    BITMAP *planDeTravail;                       // BITMAP du plan de travail
-    BITMAP *plaqueDeCuisson;                     // BITMAP de la plaque de cuisson
-    BITMAP *poele;                               // BITMAP de la poêle
-    BITMAP *marmite;
-    BITMAP *assiette;
-    BITMAP *extincteur;
-    BITMAP *ticket;
-    BITMAP *BAR;
-    BITMAP *PlancheH; // Texture de l'extincteur
+    BITMAP *plancheADecouper;                    // Texture de la planche à découper
+    BITMAP *planDeTravail;                       // Texture du plan de travail
+    BITMAP *plaqueDeCuisson;                     // Texture de la plaque de cuisson
+    BITMAP *poele;                               // Texture de la poêle
+    BITMAP *marmite;                             // Texture de la marmite
+    BITMAP *assiette;                            // Texture de l'assiette
+    BITMAP *extincteur;                          // Texture de l'extincteur
+    BITMAP *ticket;                              // Texture du ticket
+    BITMAP *BAR;                                 // Texture du bar
+    BITMAP *PlancheH                             // Texture de la planche horizontale
 } s_textures;
 
 typedef struct s_graphic {
@@ -190,7 +187,6 @@ typedef struct s_graphic {
     int fs_height;                               // Hauteur de l'écran
     float ratio;                                 // Ratio de la matrice
     int fs;                                      // Booléen qui indique si le jeu est en plein écran
-    int menu;                                    // Booléen qui indique si le menu pendant la partie est ouvert
     int tailleCase;                              // Taille d'une case de la matrice
     int fsTailleCase;                            // Taille d'une case de la matrice en fullscreen
     int rayon;                                   // Rayon du joueur

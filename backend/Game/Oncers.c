@@ -116,9 +116,25 @@ void hc_init() {
         exit(EXIT_FAILURE);
     }
 
-    graphic->textures.ticket = load_bitmap("./res/img/ticket.bmp", NULL);
+    graphic->textures.ticket = load_bitmap("./res/img/Ticket3.0.bmp", NULL);
 
     if (!graphic->textures.ticket) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    graphic->textures.PlancheH = load_bitmap("./res/img/plancheH.bmp", NULL);
+
+    if (!graphic->textures.PlancheH) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    graphic->textures.BAR = load_bitmap("./res/img/BAR.bmp", NULL);
+
+    if (!graphic->textures.BAR) {
         allegro_message("Erreur de chargement de l'image");
         allegro_exit();
         exit(EXIT_FAILURE);
@@ -135,6 +151,7 @@ void hc_init() {
     game->nbRecettes = 0;
     game->etatJeu = LOADING;
 
+    mouse_callback = &mouseActions;
     loadRecipes();
 }
 
@@ -154,8 +171,6 @@ int loadingMaps(char *maps[NB_MAPS_MAX]) {
         }
         closedir(d);
     }
-
-    mouse_callback = &mouseActions;
 
     return map_index;
 }
