@@ -116,6 +116,7 @@ typedef struct s_joueur {
     char nom[STRMAX];                            // Nom du joueur
     float x;                                     // Position x du joueur
     float y;                                     // Position y du joueur
+    fixed angle;                                 // Angle du joueur
     s_ingredient handIngredient;                 // Nourriture dans la main du joueur
     s_objet handObjet;                           // Objet dans la main du joueur
     e_typeEnMain en_main;                        // Indique ce qu'il y a dans la main du joueur

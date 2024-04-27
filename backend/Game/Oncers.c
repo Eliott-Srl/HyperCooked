@@ -58,6 +58,12 @@ void hc_init() {
     install_mouse();
     install_keyboard();
 
+    if (install_joystick(JOY_TYPE_AUTODETECT) != 0) {
+        allegro_message("Error initialising joystick!");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
     graphic->ressources.fsLoadingScreen = create_bitmap(fs_width, fs_height);
 
     if (!graphic->ressources.fsLoadingScreen) {
@@ -116,6 +122,14 @@ void hc_init() {
         exit(EXIT_FAILURE);
     }
 
+    graphic->textures.planDeTravail = load_bitmap("./res/img/plancheH.bmp", NULL);
+
+    if (!graphic->textures.planDeTravail) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
     graphic->textures.ticket = load_bitmap("./res/img/ticket3.0.bmp", NULL);
 
     if (!graphic->textures.ticket) {
@@ -123,6 +137,7 @@ void hc_init() {
         allegro_exit();
         exit(EXIT_FAILURE);
     }
+
     graphic->textures.BAR = load_bitmap("./res/img/BAR.bmp", NULL);
 
     if (!graphic->textures.BAR) {

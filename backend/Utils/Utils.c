@@ -18,7 +18,7 @@ int clamp(int x, int a, int b) {
 int collisionsBtRectanglesAndCircles(int x1, int y1, int l1, int h1, int x2, int y2, int r2) {
     int closestX = clamp(x1, x2, x2 + l1);
     int closestY = clamp(y1, y2, y2 + h1);
-    return ((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)) < (r2 * r2);
+    return ((closestX - x2) * (closestX - x2) + (closestY - y2) * (closestY - y2)) < (r2 * r2);
 }
 
 // https://stackoverflow.com/questions/744766/how-to-compare-ends-of-strings-in-c

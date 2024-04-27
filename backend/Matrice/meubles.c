@@ -81,13 +81,15 @@ void initialiserMatrice(const char* file) {
 void hc_afficher_matrice() {
     for(int h = 0; h < HAUTEUR; h++) {
         for(int l = 0; l < LARGEUR; l++) {
-            int offsetX = (getCorrectWidth() - LARGEUR * getCorrectCaseSize()) / 2;
-            int offsetY = (getCorrectHeight() - HAUTEUR * getCorrectCaseSize()) / 2;
-            int x = offsetX + l * getCorrectCaseSize();
-            int y = offsetY + h * getCorrectCaseSize();
+            int x = getOffsetX() + l * getCorrectCaseSize();
+            int y = getOffsetY() + h * getCorrectCaseSize();
 
             if (getGame()->matrice[h][l].typeMeuble == SOL) {
                 stretch_sprite(getCorrectBuffer(), getGraphic()->textures.sol, x, y, getCorrectCaseSize(), getCorrectCaseSize());
+            }
+
+            if (getGame()->matrice[h][l].typeMeuble == PLAN_DE_TRAVAIL) {
+                stretch_sprite(getCorrectBuffer(), getGraphic()->textures.planDeTravail, x, y, getCorrectCaseSize(), getCorrectCaseSize());
             }
         }
     }
