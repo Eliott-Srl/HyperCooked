@@ -18,7 +18,6 @@ void initialiserMatrice(const char* file) {
     fichier = fopen(file, "r");
 
     char *base = "0123456789";
-    char nombre[128] = "";
 
     int x;
     int y = 0;
@@ -73,10 +72,7 @@ void initialiserMatrice(const char* file) {
     fclose(fichier);  // Fermer le fichier après avoir trouvé un espace
 }
 
-
-
 void hc_afficher_matrice() {
-    // TODO: Charles tu vas bosser ici
     for(int h = 0; h < HAUTEUR; h++) {
         for(int l = 0; l < LARGEUR; l++) {
             if (getGame()->matrice[h][l].typeMeuble == SOL) {
@@ -89,7 +85,6 @@ void hc_afficher_matrice() {
                 stretch_sprite(getCorrectBuffer(), getGraphic()->textures.coffre, (getCorrectWidth() - LARGEUR * getCorrectCaseSize()) / 2 + l * getCorrectCaseSize(), (getCorrectHeight() - HAUTEUR * getCorrectCaseSize()) / 2 + h * getCorrectCaseSize(), getCorrectCaseSize(), getCorrectCaseSize());
             }
             if (getGame()->matrice[h][l].typeMeuble == POUBELLE) {
-                getGraphic()->textures.poubelle;
                 stretch_sprite(getCorrectBuffer(), getGraphic()->textures.poubelle, (getCorrectWidth() - LARGEUR * getCorrectCaseSize()) / 2 + l * getCorrectCaseSize(), (getCorrectHeight() - HAUTEUR * getCorrectCaseSize()) / 2 + h * getCorrectCaseSize(), getCorrectCaseSize(), getCorrectCaseSize());
             }
             if (getGame()->matrice[h][l].typeMeuble == PLAN_DE_TRAVAIL) {
@@ -100,7 +95,4 @@ void hc_afficher_matrice() {
             }
         }
     }
-    getGame()->matrice[0][0].typeMeuble == SOL;
-
-    //getCorrectCaseSize();
 }
