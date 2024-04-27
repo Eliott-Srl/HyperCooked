@@ -57,6 +57,9 @@ int getCorrectWidth();
 // Retourne la taille d'une case appropriée en fonction du mode plein écran
 int getCorrectCaseSize();
 
+// Retourne le rayon approprié en fonction du mode plein écran
+int getCorrectRayon();
+
 // Retourne le buffer correct en fonction du mode plein écran et de l'état du jeu
 BITMAP *getCorrectBuffer();
 

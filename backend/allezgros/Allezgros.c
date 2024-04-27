@@ -156,6 +156,10 @@ int getCorrectCaseSize() {
     return (getGraphic()->fs ? getGraphic()->fsTailleCase : getGraphic()->tailleCase);
 }
 
+int getCorrectRayon() {
+    return (getGraphic()->fs ? getGraphic()->fsRayon : getGraphic()->rayon);
+}
+
 BITMAP *getCorrectBuffer() {
     switch (getGame()->etatJeu) {;
         case LOADING:

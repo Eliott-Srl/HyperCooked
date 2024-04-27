@@ -218,8 +218,8 @@ void jeu(int niveau) {
             getGraphic()->fs = !getGraphic()->fs;
             set_gfx_mode(getGraphic()->fs ? GFX_AUTODETECT_FULLSCREEN : GFX_AUTODETECT_WINDOWED, getGraphic()->fs ? getGraphic()->fs_width : WIDTH, getGraphic()->fs ? getGraphic()->fs_height : HEIGHT, 0, 0);
             for (int i = 0; i < 2; i++) {
-                getGame()->joueurs[i].pos.x = (int) (getGraphic()->fs ? (float) getGame()->joueurs[i].pos.x * getGraphic()->ratio : (float) getGame()->joueurs[i].pos.x / getGraphic()->ratio);
-                getGame()->joueurs[i].pos.y = (int) (getGraphic()->fs ? (float) getGame()->joueurs[i].pos.y * getGraphic()->ratio : (float) getGame()->joueurs[i].pos.y / getGraphic()->ratio);
+                getGame()->joueurs[i].x = (getGraphic()->fs ? (float) getGame()->joueurs[i].x * getGraphic()->ratio : (float) getGame()->joueurs[i].x / getGraphic()->ratio);
+                getGame()->joueurs[i].y = (getGraphic()->fs ? (float) getGame()->joueurs[i].y * getGraphic()->ratio : (float) getGame()->joueurs[i].y / getGraphic()->ratio);
             }
         }
 

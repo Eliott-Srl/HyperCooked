@@ -3,19 +3,19 @@
 void deplacerPersonnage(s_joueur* joueur, int veloX, int veloY) {
     s_game *game = getGame();
     // Nouvelles positions potentielles
-    int newX = joueur->pos.x + veloX;
-    int newY = joueur->pos.y + veloY;
+    float newX = joueur->x + (float) veloX * (float) SPEED;
+    float newY = joueur->y + (float) veloY * (float) SPEED;
 
-    if (newX < 0 || newX > getCorrectWidth() || newY < 0 || newY > getCorrectHeight()) {
+    if (newX < 0 || newX > (float) getCorrectWidth() || newY < 0 || newY > (float) getCorrectHeight()) {
         return;
     }
 
     // Vérifier les collisions avec les meubles
     for (int i = 0; i < HAUTEUR; i++) {
         for (int j = 0; j < LARGEUR; j++) {
-            if (collisions(newX, newY, getCorrectCaseSize(), getCorrectCaseSize(),
-                           i * getCorrectCaseSize(), j * getCorrectCaseSize(), getCorrectCaseSize(),
-                           getCorrectCaseSize())
+            if (collisionsBtRectanglesAndCircles(i * getCorrectCaseSize(), j * getCorrectCaseSize(),
+                                                 getCorrectCaseSize(), getCorrectCaseSize(), (int) newX, (int) newY,
+                                                 getCorrectRayon())
                 && game->matrice[i][j].typeMeuble != SOL) {
                 // Il y a une collision, ne pas bouger
                 return;
@@ -33,24 +33,24 @@ void deplacerPersonnage(s_joueur* joueur, int veloX, int veloY) {
         autre_joueur = &game->joueurs[0];
     }
 
-    if (collisions(newX, newY, getCorrectCaseSize(), getCorrectCaseSize(), autre_joueur->pos.x,
-                   autre_joueur->pos.y, getCorrectCaseSize(), getCorrectCaseSize())) {
+    if (collisionsBtCircles((int) newX, (int) newY, getCorrectRayon(), (int) autre_joueur->x, (int) autre_joueur->y,
+                            getCorrectRayon())) {
         // Il y a une collision avec un autre personnage, ne pas bouger
         return;
     }
 
     // Déplacer le personnage aux nouvelles positions
-    joueur->pos.x = newX;
-    joueur->pos.y = newY;
+    joueur->x = newX;
+    joueur->y = newY;
 }
 
 void afficherPersonnages() {
     for (int i = 0; i < 2; i++) {
         int dims = getCorrectCaseSize();
-        int x = getGame()->joueurs[i].pos.x - dims / 2;
-        int y = getGame()->joueurs[i].pos.y - dims / 2;
-        stretch_sprite(getCorrectBuffer(), getGraphic()->ressources.player, x, y, dims, dims);
-        circlefill(getCorrectBuffer(), getGame()->joueurs[i].pos.x, getGame()->joueurs[i].pos.y, dims/4,
+        float x = getGame()->joueurs[i].x - (float) dims / 2;
+        float y = getGame()->joueurs[i].y - (float) dims / 2;
+        stretch_sprite(getCorrectBuffer(), getGraphic()->textures.player, (int) x, (int) y, dims, dims);
+        circlefill(getCorrectBuffer(), (int) getGame()->joueurs[i].x, (int) getGame()->joueurs[i].y, dims/5,
                    rgbToAllegroColor(getGame()->joueurs[i].couleur));
     }
 }

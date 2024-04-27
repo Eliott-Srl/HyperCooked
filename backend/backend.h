@@ -8,7 +8,7 @@
 #define NB_INGREDIENTS_MAX 10
 #define NB_COMMANDES_MAX 5
 #define NB_MAPS_MAX 10
-
+#define SPEED 0.1
 #define WIDTH 800
 #define HEIGHT 450
 
@@ -114,7 +114,8 @@ typedef enum e_typeEnMain {                      // Inqique le contenu de la mai
 typedef struct s_joueur {
     s_color couleur;                             // Couleur du joueur
     char nom[STRMAX];                            // Nom du joueur
-    s_coo pos;                                   // Position x et y du joueur
+    float x;                                     // Position x du joueur
+    float y;                                     // Position y du joueur
     s_ingredient handIngredient;                 // Nourriture dans la main du joueur
     s_objet handObjet;                           // Objet dans la main du joueur
     e_typeEnMain en_main;                        // Indique ce qu'il y a dans la main du joueur
@@ -187,6 +188,8 @@ typedef struct s_graphic {
     int menu;                                    // Booléen qui indique si le menu pendant la partie est ouvert
     int tailleCase;                              // Taille d'une case de la matrice
     int fsTailleCase;                            // Taille d'une case de la matrice en fullscreen
+    int rayon;                                   // Rayon du joueur
+    int fsRayon;                                 // Rayon du joueur en fullscreen
     s_bouton *boutons;                           // Liste des boutons customs
     int nombreBoutons;                           // Nombre de boutons customs
     s_ressources ressources;                     // Structure qui contient les pointeurs de toutes les ressources
