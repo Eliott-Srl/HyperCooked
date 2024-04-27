@@ -11,16 +11,14 @@ void deplacerPersonnage(s_joueur* joueur, int veloX, int veloY) {
     }
 
     // Vérifier les collisions avec les meubles
-    for (int i = 0; i < HAUTEUR; i++) {
-        for (int j = 0; j < LARGEUR; j++) {
-            if (collisionsBtRectanglesAndCircles(i * getCorrectCaseSize(), j * getCorrectCaseSize(),
-                                                 getCorrectCaseSize(), getCorrectCaseSize(), (int) newX, (int) newY,
-                                                 getCorrectRayon())
-                && game->matrice[i][j].typeMeuble != SOL) {
-                // Il y a une collision, ne pas bouger
-                return;
-            }
-        }
+    int i = (int) ((newX - (float) getOffsetX()) / (float) getCorrectCaseSize());
+    int j = (int) ((newY - (float) getOffsetY()) / (float) getCorrectCaseSize());
+    if (collisionsBtRectanglesAndCircles(getOffsetX() + i * getCorrectCaseSize(), getOffsetY() + j * getCorrectCaseSize(),
+                                         getCorrectCaseSize(), getCorrectCaseSize(), (int) newX, (int) newY,
+                                         getCorrectRayon())
+        && game->matrice[j][i].typeMeuble != SOL) {
+        // Il y a une collision, ne pas bouger
+        return;
     }
 
     s_joueur *autre_joueur;
@@ -40,16 +38,22 @@ void deplacerPersonnage(s_joueur* joueur, int veloX, int veloY) {
     }
 
     // Déplacer le personnage aux nouvelles positions
+    if (veloX != 0 || veloY != 0) {
+        joueur->angle = fixacos(ftofix(veloY)) + itofix(128);
+        if (veloX > 0) {
+            joueur->angle = -joueur->angle;
+        }
+    }
     joueur->x = newX;
     joueur->y = newY;
 }
 
-void afficherPersonnages() {
+void afficherPersonnages(s_coo velo_perso1, s_coo velo_perso2) {
     for (int i = 0; i < 2; i++) {
         int dims = getCorrectCaseSize();
         float x = getGame()->joueurs[i].x - (float) dims / 2;
         float y = getGame()->joueurs[i].y - (float) dims / 2;
-        stretch_sprite(getCorrectBuffer(), getGraphic()->textures.player, (int) x, (int) y, dims, dims);
+        rotate_scaled_sprite(getCorrectBuffer(), getGraphic()->textures.player, (int) x, (int) y, getGame()->joueurs[i].angle, ftofix((float) dims / (float) getGraphic()->textures.player->w));
         circlefill(getCorrectBuffer(), (int) getGame()->joueurs[i].x, (int) getGame()->joueurs[i].y, dims/5,
                    rgbToAllegroColor(getGame()->joueurs[i].couleur));
     }
@@ -86,7 +90,7 @@ void deplacerPersonnages() {
 
     deplacerPersonnage(&getGame()->joueurs[0], velo_perso1.x, velo_perso1.y);
     deplacerPersonnage(&getGame()->joueurs[1], velo_perso2.x, velo_perso2.y);
-    afficherPersonnages();
+    afficherPersonnages(velo_perso1, velo_perso2);
 }
 
 void neFaitRien(s_joueur* joueur) {
