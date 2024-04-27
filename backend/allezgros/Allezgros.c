@@ -161,7 +161,7 @@ int getCorrectRayon() {
 }
 
 BITMAP *getCorrectBuffer() {
-    switch (getGame()->etatJeu) {;
+    switch (getGame()->etatJeu) {
         case LOADING:
             return (getGraphic()->fs ? getGraphic()->ressources.fsLoadingScreen : getGraphic()->ressources.loadingScreen);
         case PLAYING:
@@ -178,7 +178,7 @@ void coverBufferWithImage(BITMAP *buffer, BITMAP *image, int s_w, int s_h) {
     int offsetX = (s_w - (buffer->w - tailleEntierX * s_w)) / 2;
 
     int tailleEntierY = buffer->h / s_h;
-    int offsetY = (s_h - (buffer->h - tailleEntierY * s_h)) / 2;;
+    int offsetY = (s_h - (buffer->h - tailleEntierY * s_h)) / 2;
 
     for (int j = 0; j < tailleEntierY + 1; j++) {
         for (int i = 0; i < tailleEntierX + 1; i++) {

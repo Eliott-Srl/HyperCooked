@@ -3,7 +3,6 @@
 
 #include "../backend.h"
 
-int collisions(int x1, int y1, int l1, int h1, int x2, int y2, int l2, int h2);
 int collisionsBtRectangles(int x1, int y1, int l1, int h1, int x2, int y2, int l2, int h2);
 int collisionsBtCircles(int x1, int y1, int r1, int x2, int y2, int r2);
 int collisionsBtRectanglesAndCircles(int x1, int y1, int l1, int h1, int x2, int y2, int r2);

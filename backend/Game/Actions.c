@@ -90,7 +90,7 @@ void deplacerPersonnages() {
 }
 
 void neFaitRien(s_joueur* joueur) {
-    return;
+    // Ne rien faire
 }
 
 void planDeTravail(s_joueur* joueur, int i, int j) {
