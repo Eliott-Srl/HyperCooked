@@ -13,12 +13,26 @@ int rgbToAllegroColor(s_color color) {
     return makecol(color.r, color.g, color.b);
 }
 
+void menu_debug(BITMAP *source) {
+    int lines = 0;
+    textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "fps: %d", get_refresh_rate());
+    lines++;
+
+    if (getGame()->etatJeu == PLAYING) {
+        textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "time: %d", getTime());
+        lines++;
+    }
+
+    textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "j1: x: %03d, y: %03d", (int) getGame()->joueurs[0].x, (int) getGame()->joueurs[0].y);
+    lines++;
+    textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "j2: x: %03d, y: %03d", (int) getGame()->joueurs[1].x, (int) getGame()->joueurs[1].y);
+    lines++;
+    textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "Ratio normal/fullscreen: %.02f", getGraphic()->ratio);
+}
+
 void hc_blit(BITMAP *source) {
     if (getGraphic()->debug) {
-        textprintf_ex(source, font, 10, 10, makecol(255, 255, 255), -1, "fps: %d", get_refresh_rate());
-        textprintf_ex(source, font, 10, 30, makecol(255, 255, 255), -1, "j1: x: %03d, y: %03d", getGame()->joueurs[0].pos.x, getGame()->joueurs[0].pos.y);
-        textprintf_ex(source, font, 10, 50, makecol(255, 255, 255), -1, "j2: x: %03d, y: %03d", getGame()->joueurs[1].pos.x, getGame()->joueurs[1].pos.y);
-        textprintf_ex(source, font, 10, 70, makecol(255, 255, 255), -1, "Ratio normal/fs: %f", getGraphic()->ratio);
+        menu_debug(source);
     }
 
     if (getGraphic()->fs) {
