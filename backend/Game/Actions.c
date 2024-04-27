@@ -70,11 +70,43 @@ void deplacerPersonnage(s_joueur* joueur, double veloX, double veloY) {
     joueur->y = newY;
 }
 
+BITMAP *getTextureByObjectName(e_objet objet) {
+    switch (objet) {
+        case POELE:
+            return getGraphic()->textures.poele;
+        case MARMITE:
+            return getGraphic()->textures.marmite;
+        case ASSIETTE:
+            return getGraphic()->textures.assiette;
+        case EXTINCTEUR:
+            return getGraphic()->textures.extincteur;
+        case STOCKEUR:
+            return getGraphic()->textures.coffre;
+        default:
+            return NULL;
+    }
+}
+
+BITMAP *getTextureByIngredientName(e_ingredients ingredients) {
+    switch (ingredients) {
+        case SALADE:
+            //return getGraphic()->textures.salade;
+        default:
+            return NULL;
+    }
+}
+
 void afficherPersonnages() {
     for (int i = 0; i < 2; i++) {
         int dims = getCorrectCaseSize();
         float x = getGame()->joueurs[i].x - (float) dims / 2;
         float y = getGame()->joueurs[i].y - (float) dims / 2;
+        if (getGame()->joueurs[i].en_main == OBJET) {
+            rotate_scaled_sprite(getCorrectBuffer(), getTextureByObjectName(getGame()->joueurs[i].handObjet.type), (int) x, (int) y, getGame()->joueurs[i].angle, ftofix(getCorrectCaseSize() / 4));
+        } else if (getGame()->joueurs[i].en_main == INGREDIENT) {
+            rotate_scaled_sprite(getCorrectBuffer(), getTextureByIngredientName(getGame()->joueurs[i].handIngredient.nom), (int) x, (int) y, getGame()->joueurs[i].angle, ftofix(getCorrectCaseSize() / 4));
+        }
+
         rotate_scaled_sprite(getCorrectBuffer(), getGraphic()->textures.player, (int) x, (int) y, getGame()->joueurs[i].angle, ftofix((float) dims / (float) getGraphic()->textures.player->w));
         circlefill(getCorrectBuffer(), (int) getGame()->joueurs[i].x, (int) getGame()->joueurs[i].y, dims/5,
                    rgbToAllegroColor(getGame()->joueurs[i].couleur));

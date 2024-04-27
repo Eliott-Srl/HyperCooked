@@ -91,6 +91,14 @@ void hc_afficher_matrice() {
             if (getGame()->matrice[h][l].typeMeuble == PLAN_DE_TRAVAIL) {
                 stretch_sprite(getCorrectBuffer(), getGraphic()->textures.planDeTravail, x, y, getCorrectCaseSize(), getCorrectCaseSize());
             }
+
+            if (getGame()->matrice[h][l].typeMeuble == PLANCHE_A_DECOUPER) {
+                rectfill(getCorrectBuffer(), x, y, x + getCorrectCaseSize(), y + getCorrectCaseSize(), makecol(139, 69, 19));
+            }
+
+            if (getGame()->matrice[h][l].typeMeuble == COMPTOIR) {
+                rectfill(getCorrectBuffer(), x, y, x + getCorrectCaseSize(), y + getCorrectCaseSize(), makecol(238, 238, 238));
+            }
         }
     }
 }
