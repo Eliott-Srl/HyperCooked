@@ -1,6 +1,10 @@
 #include "Actions.h"
 
 void deplacerPersonnage(s_joueur* joueur, int veloX, int veloY) {
+    if (veloX == 0 && veloY == 0) {
+        return;
+    }
+
     s_game *game = getGame();
     // Nouvelles positions potentielles
     float newX = joueur->x + (float) veloX * (float) SPEED;
@@ -37,13 +41,21 @@ void deplacerPersonnage(s_joueur* joueur, int veloX, int veloY) {
         return;
     }
 
-    // Déplacer le personnage aux nouvelles positions
-    if (veloX != 0 || veloY != 0) {
-        joueur->angle = fixacos(ftofix(veloY)) + itofix(128);
+    // Déplacer et tourner le personnage aux nouvelles positions
+    if (veloX * veloY != 0) {
+        joueur->angle = fixatan(fixdiv(itofix(veloY), itofix(veloX))) - itofix(64);
+
         if (veloX > 0) {
-            joueur->angle = -joueur->angle;
+            joueur->angle += itofix(128);
+        }
+    }  else {
+        joueur->angle = ftofix((float) (((veloX + 1)*90 + (veloY)*90) * 256) / (float) 360);
+
+        if (veloX != 0) {
+            joueur->angle -= itofix(64);
         }
     }
+
     joueur->x = newX;
     joueur->y = newY;
 }
