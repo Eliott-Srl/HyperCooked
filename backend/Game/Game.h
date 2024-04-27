@@ -4,6 +4,9 @@
 #include "../backend.h"
 #include <dirent.h>
 
+int getTime();
+void mouseActions();
+void showCustomCursor();
 s_game *getGame();
 void jeu(int niveau);
 

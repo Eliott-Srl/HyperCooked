@@ -6,6 +6,16 @@ void timer_handler() {
     counter++;
 } END_OF_FUNCTION(timer_handler)
 
+int getTime() {
+    return counter;
+}
+
+void mouseActions() {
+    if (mouse_b & 1) {
+        printf("Click gauche\n");
+    }
+}
+
 s_game *getGame() {
     static s_game *game;
 
@@ -16,6 +26,9 @@ s_game *getGame() {
     return game;
 }
 
+void showCustomCursor() {
+    stretch_sprite(getCorrectBuffer(), getGraphic()->textures.cursor, mouse_x, mouse_y, 40, 40);
+}
 
 void jeu(int niveau) {
     s_game *game = getGame();
@@ -38,6 +51,8 @@ void jeu(int niveau) {
             }
             AfficherCommande();
         }
+
+        showCustomCursor();
 
         hc_blit(getCorrectBuffer());
 
