@@ -154,17 +154,17 @@ void hc_init() {
     loadRecipes();
 }
 
-int loadingMaps(char *maps[NB_MAPS_MAX]) {
+int loadingMaps(char maps[NB_MAPS_MAX][STRMAX]) {
     int map_index = 0;
 
     // Récupération des maps
     struct dirent *dir;
-    DIR *d = opendir("./maps/");
+    DIR *d = opendir("./maps");
     if (d) {
-        while ((dir = readdir(d)) != NULL) {
-            // printf("%s\n", dir->d_name);
+        while ((dir = readdir(d)) != NULL && map_index < NB_MAPS_MAX) {
+            // allegro_message("%s\n", dir->d_name);
             if (startsWith(dir->d_name, "map") && endsWith(dir->d_name, ".txt")) {
-                maps[map_index] = dir->d_name;
+                strncpy(maps[map_index], dir->d_name, STRMAX);
                 map_index++;
             }
         }

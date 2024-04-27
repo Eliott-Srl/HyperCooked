@@ -3,7 +3,7 @@
 int main() {
     hc_init();
 
-    char* maps[NB_MAPS_MAX];
+    char maps[NB_MAPS_MAX][STRMAX];
     int nbMaps = loadingMaps(maps);
 
     rest(100);
@@ -12,9 +12,9 @@ int main() {
         reinitialiserPartie();
 
         char filename[STRMAX];
-        sprintf(filename, "/maps/%s", maps[i]);
+        sprintf(filename, "maps/%s", maps[i]);
 
-        initialiserMatrice(filename); // créer un fichier ou les meubles apparais
+        initialiserMatrice(filename);
 
         getGame()->etatJeu = PLAYING;
         // Fin de l'écran de chargement

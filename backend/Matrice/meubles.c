@@ -17,6 +17,12 @@ void initialiserMatrice(const char* file) {
     // Ouvrir le fichier en mode lecture
     fichier = fopen(file, "r");
 
+    if (fichier == NULL) {
+        allegro_message("Erreur lors de l'ouverture du fichier\n");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
     char *base = "0123456789";
 
     int x;
@@ -29,7 +35,7 @@ void initialiserMatrice(const char* file) {
         char nombre[128] = "";
 
         while(*p != '\n' && *p != '\0') {
-            if (strchr(base, *p) == NULL) {
+            if (strchr(base, *p) != NULL) {
                 strncat(nombre, p, 1);
             } else if (*p == ' ') {
                 game->matrice[y][x].typeMeuble = strtol(nombre, NULL, 10);
@@ -47,9 +53,9 @@ void initialiserMatrice(const char* file) {
                 } else {
                     game->matrice[y][x].objet.type = strtol(nombre, NULL, 10);
 
-                    if(strtol(nombre, NULL, 10) == POELE || strtol(nombre, NULL, 10) == ASSIETTE) {
+                    if (strtol(nombre, NULL, 10) == POELE || strtol(nombre, NULL, 10) == ASSIETTE) {
                         game->matrice[y][x].objet.stockageMax = 1;
-                    } else if(strtol(nombre, NULL, 10) == MARMITE) {
+                    } else if (strtol(nombre, NULL, 10) == MARMITE) {
                         game->matrice[y][x].objet.stockageMax = 3;
                     } else {
                         game->matrice[y][x].objet.stockageMax = 0;
@@ -69,7 +75,7 @@ void initialiserMatrice(const char* file) {
 
     afficherMatrice();
 
-    fclose(fichier);  // Fermer le fichier après avoir trouvé un espace
+    fclose(fichier);
 }
 
 void hc_afficher_matrice() {
