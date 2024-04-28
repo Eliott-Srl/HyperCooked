@@ -14,6 +14,7 @@ void newCommande() {
     printf("Nouvelle recette: %s\n", getGame()->commandes[getGame()->nbCommandes].recette.nom);
     getGame()->commandes[getGame()->nbCommandes].timer = ((rand() % 2) + 1) * 5 + 45;
     getGame()->nbCommandes++;
+    getGame()->commandes[getGame()->nbCommandes].angle = ftofix((float) (rand() % 200 - 100) / 10);
 }
 
 void AfficherCommande() {
@@ -42,7 +43,9 @@ void AfficherCommande() {
            circlefill(getCorrectBuffer(), xLogo, 42 , 25, makecol(50,250,100));
        }
 
-       stretch_sprite(getCorrectBuffer(),getGraphic()->textures.ticket,xLogo,368,110,140);
+       set_clip_rect(getCorrectBuffer(), 0, 375, getCorrectWidth(), getCorrectHeight());
+       rotate_scaled_sprite(getCorrectBuffer(),getGraphic()->textures.ticket,xLogo, 340, getGame()->commandes[i].angle, ftofix((float) 110 / getGraphic()->textures.ticket->w));
+       set_clip_rect(getCorrectBuffer(), 0, 0, getCorrectWidth(), getCorrectHeight());
 
        for (int j = 0;  coos[j]< getGame()->commandes[i].recette.nbIngredients; i++) {
            if (getGame()->commandes[i].recette.ingredients[i].nom == SALADE) {

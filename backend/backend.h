@@ -64,6 +64,7 @@ typedef struct s_recette {
 typedef struct s_commande {
     int timer;                                   // Temps pour réaliser la commande
     s_recette recette;                           // La recette a réalisé
+    fixed angle;                                 // Angle de la carte de la commande
 } s_commande;
 
 typedef enum e_meubles {                         // Indique le type du meuble
