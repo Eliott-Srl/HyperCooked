@@ -1,0 +1,6 @@
+#ifndef HYPERCOOKED_SONG_H
+#define HYPERCOOKED_SONG_H
+
+
+
+#endif //HYPERCOOKED_SONG_H
