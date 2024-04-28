@@ -37,9 +37,15 @@ void menu_debug(BITMAP *source) {
 }
 
 void hc_blit(BITMAP *source) {
+    if (getGame()->etatJeu != LOADING) {
+        showCustomCursor();
+    }
+
     if (getGraphic()->debug) {
         menu_debug(source);
     }
+
+    globalKeyboardActions();
 
     if (getGraphic()->fs) {
        blit(source, screen, 0, 0, 0, 0, getGraphic()->fs_width, getGraphic()->fs_height);
@@ -51,10 +57,10 @@ void hc_blit(BITMAP *source) {
 int boutonsHovered() {
     int count = getGraphic()->nombreBoutons;
     for (int i = 0; i < count; i++) {
-        if (mouse_x > getGraphic()->boutons[i].rectangle.x - getGraphic()->boutons[i].rectangle.w / 2
-         && mouse_x < getGraphic()->boutons[i].rectangle.x + getGraphic()->boutons[i].rectangle.w / 2
-         && mouse_y > getGraphic()->boutons[i].rectangle.y - getGraphic()->boutons[i].rectangle.h / 2
-         && mouse_y < getGraphic()->boutons[i].rectangle.y + getGraphic()->boutons[i].rectangle.h / 2) {
+        if (mouse_x > getGraphic()->boutons[i].rectangle.virtual.x
+         && mouse_x < getGraphic()->boutons[i].rectangle.virtual.x + getGraphic()->boutons[i].rectangle.virtual.w
+         && mouse_y > getGraphic()->boutons[i].rectangle.virtual.y
+         && mouse_y < getGraphic()->boutons[i].rectangle.virtual.y + getGraphic()->boutons[i].rectangle.virtual.h) {
             return 1;
         }
     }
@@ -69,22 +75,22 @@ void divideScreenVertically(int *coos, int n, int startX, int endX) {
     }
 }
 
-s_rectangle hc_rectfill_center(BITMAP *bmp, int x, int y, int h, int w, int color) {
+s_rectangle hc_rectfill_center(BITMAP *bmp, int x, int y, int w, int h, int color) {
     rectfill(bmp, x - w/2, y - h/2, x + w/2, y + h/2, color);
 
     s_rectangle rectangle;
-    rectangle.x = x;
-    rectangle.y = y;
-    rectangle.h = h;
-    rectangle.w = w;
+    rectangle.virtual.x = x;
+    rectangle.virtual.y = y;
+    rectangle.virtual.h = h;
+    rectangle.virtual.w = w;
     rectangle.color = color;
     rectangle.fill = 1;
 
     return rectangle;
 }
 
-s_bouton *hc_boutonfill_center(BITMAP *bmp, const FONT *f, int x, int y, int h, int w, const char *text_contained, void (*callback)(), int color, int background) {
-    s_bouton *boutons = (s_bouton *) realloc(getGraphic()->boutons, (getGraphic()->nombreBoutons + 1) * sizeof(s_bouton*));
+s_bouton *hc_boutonfill_center(BITMAP *bmp, const FONT *f, int x, int y, int w, int h, const char *text_contained, void (*callback)(), int color, int background) {
+    s_bouton *boutons = (s_bouton *) realloc(getGraphic()->boutons, (getGraphic()->nombreBoutons + 1) * sizeof(s_bouton));
 
     if (boutons == NULL) {
         allegro_message("Erreur de reallocation de la mémoire");
@@ -93,12 +99,41 @@ s_bouton *hc_boutonfill_center(BITMAP *bmp, const FONT *f, int x, int y, int h, 
     }
 
     boutons[getGraphic()->nombreBoutons].bmp = bmp;
+    boutons[getGraphic()->nombreBoutons].virtual = 0;
     boutons[getGraphic()->nombreBoutons].rectangle = hc_rectfill_center(bmp, x, y, h, w, background);
     boutons[getGraphic()->nombreBoutons].callback = callback;
     boutons[getGraphic()->nombreBoutons].text = (char *) text_contained;
     boutons[getGraphic()->nombreBoutons].textColor = color;
 
     textout_centre_ex(bmp, f, text_contained, x, y, color, -1);
+
+    getGraphic()->nombreBoutons++;
+    getGraphic()->boutons = boutons;
+    return &getGraphic()->boutons[getGraphic()->nombreBoutons];
+}
+
+s_bouton *hc_bouton_virtual(BITMAP *bmp, int x, int y, int w, int h, void (*callback)()) {
+    if (getGame()->quitting) {
+        return NULL;
+    }
+    s_bouton *boutons = (s_bouton *) realloc(getGraphic()->boutons, (getGraphic()->nombreBoutons + 1) * sizeof(s_bouton));
+
+    if (boutons == NULL) {
+        allegro_message("Erreur de reallocation de la mémoire");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    rectfill(bmp, x, y, x + w, y + h, makecol(255, 255, 255));
+    boutons[getGraphic()->nombreBoutons].bmp = bmp;
+    boutons[getGraphic()->nombreBoutons].virtual = 1;
+    boutons[getGraphic()->nombreBoutons].rectangle.virtual.x = x;
+    boutons[getGraphic()->nombreBoutons].rectangle.virtual.y = y;
+    boutons[getGraphic()->nombreBoutons].rectangle.virtual.h = h;
+    boutons[getGraphic()->nombreBoutons].rectangle.virtual.w = w;
+    boutons[getGraphic()->nombreBoutons].callback = callback;
+    boutons[getGraphic()->nombreBoutons].text = NULL;
+    boutons[getGraphic()->nombreBoutons].textColor = -1;
 
     getGraphic()->nombreBoutons++;
     getGraphic()->boutons = boutons;
@@ -208,12 +243,10 @@ void coverBufferWithImage(BITMAP *buffer, BITMAP *image, int s_w, int s_h) {
 }
 
 void clear_boutons() {
-    for (int i = 0; i < getGraphic()->nombreBoutons; i++) {
-        free(getGraphic()->boutons + i);
-    }
-
     getGraphic()->nombreBoutons = 0;
-    s_bouton *boutons = realloc(getGraphic()->boutons, sizeof(s_bouton *));
+    free(getGraphic()->boutons);
+
+    s_bouton *boutons = calloc(1, sizeof(s_bouton));
 
     if (boutons == NULL) {
         allegro_message("Erreur de reallocation de la mémoire");

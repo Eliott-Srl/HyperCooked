@@ -129,23 +129,29 @@ typedef struct s_game {
     s_recette recettes[NB_RECETTES_MAX];         // Tableau des recettes disponibles
     int nbRecettes;                              // Nombre de recettes disponibles
     e_etat_jeu etatJeu;                          // L'état du jeu: LOADING, PLAYING, MENU
+    int quitting;                                // Booléen qui indique si on quitte le jeu
     s_commande commandes[NB_COMMANDES_MAX];      // Tableau de commande qui contient les commandes en cours
     int nbCommandes;                             // Nombre de commandes en cours
     int score;                                   // Le score jusqu'ici
 } s_game;
 
 /*############### ALLEZGROS ###############*/
-typedef struct s_rectangle {
+typedef struct s_rectangle_virtual {
     int h;                                       // Hauteur
     int w;                                       // Largeur
-    int color;                                   // Couleur ( utilise makecol() )
     int x;                                       // Position X du centre
     int y;                                       // Position Y du centre
+} s_rectangle_virtual;
+
+typedef struct s_rectangle {
+    s_rectangle_virtual virtual;                 // Instance de s_rectangle_virtual
+    int color;                                   // Couleur ( utilise makecol() )
     int fill;                                    // Si le rectangle est rempli ou non
 } s_rectangle;
 
 typedef struct s_bouton {
     BITMAP *bmp;                                 // Image sur laquelle on dessine
+    int virtual;                                 // Booléen qui indique si le bouton est virtuel
     s_rectangle rectangle;                       // Instance de s_rectangle
     void (*callback)();                          // Pointeur de fonction qui sera appelée
     char *text;                                  // Texte affiché sur l'écran
@@ -167,6 +173,8 @@ typedef struct s_textures {
     BITMAP *cursor;                              // Texture du curseur
     BITMAP *pointer;                             // Texture du pointeur
     BITMAP *player;                              // Texture du joueur
+    BITMAP *menuBackground;                      // Texture du fond du menu
+    BITMAP *credit;                              // Texture du crédit
     BITMAP *sol;                                 // Texture du sol
     BITMAP *comptoir;                            // Texture du comptoir
     BITMAP *coffre;                              // Texture du coffre
@@ -193,10 +201,11 @@ typedef struct s_textures {
 
 typedef struct s_graphic {
     int debug;                                   // Booléen qui indique si on affiche les informations de debug
+    int debug_button;                            // Booléen qui permet d'éviter le rebond du menu
+    int fs;                                      // Booléen qui indique si le jeu est en plein écran
     int fs_width;                                // Largeur de l'écran
     int fs_height;                               // Hauteur de l'écran
     float ratio;                                 // Ratio de la matrice
-    int fs;                                      // Booléen qui indique si le jeu est en plein écran
     int tailleCase;                              // Taille d'une case de la matrice
     int fsTailleCase;                            // Taille d'une case de la matrice en fullscreen
     int rayon;                                   // Rayon du joueur

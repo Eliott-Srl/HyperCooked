@@ -41,6 +41,8 @@ void hc_init() {
         exit(EXIT_FAILURE);
     }
 
+    graphic->debug = 0;
+    graphic->debug_button = 0;
     graphic->fs = 0;
     graphic->fs_width = fs_width;
     graphic->fs_height = fs_height;
@@ -49,9 +51,10 @@ void hc_init() {
     graphic->fsTailleCase = (int) ((float) graphic->tailleCase * graphic->ratio);
     graphic->rayon = 9;            // à redéfinir, je ne suis pas sûr de ça
     graphic->fsRayon = (int) ((float) graphic->rayon * graphic->ratio);
+    graphic->boutons = malloc(sizeof(s_bouton *));
+    graphic->nombreBoutons = 0;
 
     hc_textprintf_centre_hv(graphic->ressources.loadingScreen, font, makecol(255, 255, 255), -1, "Loading...");
-    menu_debug(graphic->ressources.loadingScreen);
     blit(graphic->ressources.loadingScreen, screen, 0, 0, 0, 0, WIDTH, HEIGHT);
 
     install_timer();
@@ -90,6 +93,22 @@ void hc_init() {
         exit(EXIT_FAILURE);
     }
 
+    graphic->ressources.mainMenuBuffer = create_bitmap(WIDTH, HEIGHT);
+
+    if (!graphic->ressources.mainMenuBuffer) {
+        allegro_message("Erreur de création du buffer");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    graphic->ressources.fsMainMenuBuffer = create_bitmap(getGraphic()->fs_width, getGraphic()->fs_height);
+
+    if (!graphic->ressources.fsMainMenuBuffer) {
+        allegro_message("Erreur de création du buffer");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
     graphic->textures.cursor = load_bitmap("./res/img/cursor.bmp", NULL);
 
     if (!graphic->textures.cursor) {
@@ -109,6 +128,22 @@ void hc_init() {
     graphic->textures.player = load_bitmap("./res/img/homme.bmp", NULL);
 
     if (!graphic->textures.player) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    graphic->textures.menuBackground = load_bitmap("./res/img/background.bmp", NULL);
+
+    if (!graphic->textures.menuBackground) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    graphic->textures.credit = load_bitmap("./res/img/credits.bmp", NULL);
+
+    if (!graphic->textures.credit) {
         allegro_message("Erreur de chargement de l'image");
         allegro_exit();
         exit(EXIT_FAILURE);
@@ -177,7 +212,7 @@ void hc_init() {
         exit(EXIT_FAILURE);
     }
 
-    graphic->textures.PommeDeTerre = load_bitmap("./res/img/Pomme de terre.bmp", NULL);
+    graphic->textures.PommeDeTerre = load_bitmap("./res/img/Pomme_de_terre.bmp", NULL);
 
     if (!graphic->textures.PommeDeTerre) {
         allegro_message("Erreur de chargement de l'image");
@@ -227,7 +262,12 @@ void hc_init() {
 
     game->nbRecettes = 0;
     game->etatJeu = LOADING;
-    srand(time (0));
+    game->quitting = 0;
+
+    srand(time(NULL));
+
+    mouse_callback = &mouseActions;
+    set_close_button_callback(&toQuit);
     loadRecipes();
 }
 
@@ -247,8 +287,6 @@ int loadingMaps(char maps[NB_MAPS_MAX][STRMAX]) {
         }
         closedir(d);
     }
-
-    mouse_callback = &mouseActions;
 
     return map_index;
 }
@@ -279,4 +317,6 @@ void reinitialiserPartie() {
 void hc_finish() {
     free(getGame());
     free(getGraphic());
+    allegro_exit();
+    exit(EXIT_SUCCESS);
 }
