@@ -1,7 +1,7 @@
 #include "Commandes.h"
 
 void newCommande() {
-    int choix = rand() % (getGame()->nbRecettes - 1);
+    int choix = rand() % (getGame()->nbRecettes);
     getGame()->commandes[getGame()->nbCommandes].recette = getGame()->recettes[choix];
     printf("Nouvelle recette: %s\n", getGame()->commandes[getGame()->nbCommandes].recette.nom);
     getGame()->commandes[getGame()->nbCommandes].timer = ((rand() % 2) + 1) * 5 + 45;
@@ -32,7 +32,7 @@ void AfficherCommande() {
        if (strcmp(getGame()->commandes[0].recette.nom, "Hamburger") == 0) {
            circlefill(getCorrectBuffer(), xLogo, 42 , 25, makecol(50,20,100));
        } else if (strcmp(getGame()->commandes[0].recette.nom, "Soupe") == 0) {
-           circlefill(getCorrectBuffer(), xLogo, 42 , 25, makecol(50,20,100));
+           circlefill(getCorrectBuffer(), xLogo, 42 , 25, makecol(50,250,100));
        }
 
        stretch_sprite(getCorrectBuffer(),getGraphic()->textures.ticket,xLogo,368,110,140);

@@ -29,10 +29,12 @@ void loadRecipes() {
             g = strtok(NULL, " ");
             game->recettes[nbRecettes].ingredients[game->recettes[nbRecettes].nbIngredients].coupable = atoi(g);
             nbIngredients++;
+            game->recettes[nbRecettes].nbIngredients = nbIngredients;
             d = strtok_r(NULL, ",", &end);
         }
         nbRecettes++;
     }
+    getGame()->nbRecettes = nbRecettes;
     fclose(fp);
 }
 
