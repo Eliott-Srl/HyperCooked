@@ -116,8 +116,10 @@ void afficherPersonnages() {
 void deplacerPersonnagesClavier() {
     s_coo velo_perso1 = {0, 0};
     s_coo velo_perso2 = {0, 0};
+    int sound = 0;
 
     if (key[KEY_W]) {
+        charge_Sound(sound);
         velo_perso1.y--;
     }
     if (key[KEY_S]) {

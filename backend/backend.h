@@ -11,6 +11,7 @@
 #define SPEED 0.1
 #define WIDTH 800
 #define HEIGHT 450
+#define NUM_SONS 8
 
 #include "allegro.h"
 
@@ -216,6 +217,15 @@ typedef struct s_graphic {
     s_textures textures;
 } s_graphic;
 
+// Structure pour stocker les échantillons sonores
+typedef struct s_sound {
+    SAMPLE* son;
+    int volume;
+    int pan;
+    int pitch;
+    int loop;
+} s_sound;
+
 #include "Utils/Utils.h"
 #include "Matrice/meubles.h"
 #include "Commandes/Recettes.h"
@@ -224,5 +234,6 @@ typedef struct s_graphic {
 #include "Game/Actions.h"
 #include "Game/Oncers.h"
 #include "allezgros/Allezgros.h"
+#include "Son/song.h"
 
 #endif //HYPERCOOKED_BACKEND_H
