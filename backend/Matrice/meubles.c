@@ -73,7 +73,7 @@ void initialiserMatrice(const char* file) {
         y++;
     }
 
-    afficherMatrice();
+    // afficherMatrice();
 
     fclose(fichier);
 }

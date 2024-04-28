@@ -72,7 +72,6 @@
     }
 
 int charge_Sound(int choix) {
-
     // Initialisation Allegro
     if (allegro_init() != 0) {
         allegro_message("Erreur d'initialisation d'Allegro.");

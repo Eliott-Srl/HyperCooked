@@ -157,7 +157,13 @@ void partie(int niveau) {
 
     do {
         hc_clear_buffers();
+        clear_boutons();
         poll_joystick();
+        float ratio = (float) getCorrectHeight() / (float) getGraphic()->textures.background->h;
+        int offsetX = (int) ((float) getCorrectWidth() - ((float) getGraphic()->textures.background->w * ratio)) / 2;
+        stretch_sprite(getCorrectBuffer(), getGraphic()->textures.background, -offsetX, 0, (int) ((float) getGraphic()->textures.background->w * ratio), (int) ((float) getGraphic()->textures.background->h * ratio));
+
+
 
         if (game->etatJeu == DANS_MENU_JEU) {
             // TODO: Menu Jeu
@@ -166,7 +172,7 @@ void partie(int niveau) {
             deplacerPersonnages();
 
             // Toutes les 40 secondes, il y a une nouvelle recette qui est rendu disponible
-            if (counter >= 5 + recettes_crees * 10) {
+            if (counter >= 5 + recettes_crees * 5) {
                 newCommande();
                 recettes_crees++;
             }
@@ -175,7 +181,14 @@ void partie(int niveau) {
 
         hc_blit(getCorrectBuffer());
         globalKeyboardActions();
+
+        if (key[KEY_LSHIFT]) {
+
+        }
     } while (counter <= 90 && (game->etatJeu == PLAYING || game->etatJeu == DANS_MENU_JEU) && !game->quitting);
+
+    remove_int(timer_handler);
+    game->etatJeu = LOADING;
 }
 
 void jeu() {
@@ -198,8 +211,8 @@ void jeu() {
             initialiserMatrice(filename);
 
             getGame()->etatJeu = PLAYING;
-            // Fin de l'écran de chargement
 
+            // Fin de l'écran de chargement
             s_color j1 = {255, 0, 0}, j2 = {0,0, 255};
             initialisePlayers(j1, "Stephane", j2, "Bernard");
 

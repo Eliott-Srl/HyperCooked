@@ -9,9 +9,13 @@ void copyRecipeToCommande(s_commande *dest, s_recette *src) {
 }
 
 void newCommande() {
+    if (getGame()->nbCommandes >= NB_COMMANDES_MAX) {
+        return;
+    }
+
     int choix = (rand() % (getGame()->nbRecettes));
     copyRecipeToCommande(&getGame()->commandes[getGame()->nbCommandes], &getGame()->recettes[choix]);
-    printf("Nouvelle recette: %s\n", getGame()->commandes[getGame()->nbCommandes].recette.nom);
+    // printf("Nouvelle recette: %s\n", getGame()->commandes[getGame()->nbCommandes].recette.nom);
     getGame()->commandes[getGame()->nbCommandes].timer = ((rand() % 2) + 1) * 5 + 45;
     getGame()->nbCommandes++;
     getGame()->commandes[getGame()->nbCommandes].angle = ftofix((float) (rand() % 200 - 100) / 10);
@@ -31,8 +35,8 @@ void AfficherCommande() {
         LongueurRectangle = 105;
     }
 
-   stretch_sprite(getCorrectBuffer(),getGraphic()->textures.BAR,0,350,600,40);
-   stretch_sprite(getCorrectBuffer(),getGraphic()->textures.PlancheH,0,380,600,140);
+   stretch_sprite(getCorrectBuffer(),getGraphic()->textures.BAR,0,350,getCorrectWidth(),40);
+   stretch_sprite(getCorrectBuffer(),getGraphic()->textures.PlancheH,0,380,getCorrectWidth(),140);
 
    for ( int i = 0; i < getGame()->nbCommandes; i++) {
        int xLogo = 10 + (i* (LargeurRectangle + EspaceHorizontalEntreLesRectangle) );

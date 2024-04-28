@@ -1,5 +1,9 @@
 #include "Utils.h"
 
+int hypotSq(int x1, int y1, int x2, int y2, int d) {
+    return ((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)) < (d * d);
+}
+
 int collisionsBtRectangles(int x1, int y1, int l1, int h1, int x2, int y2, int l2, int h2) {
     return (x1 < x2 + l2 &&
             x1 + l1 > x2 &&

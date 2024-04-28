@@ -3,6 +3,7 @@
 
 #include "../backend.h"
 
+void afficherMeubleUtilisable(s_joueur *joueur);
 // Fonction pour gérer les entrées joystick et déplacer les deux joueurs
 void deplacerPersonnageJoystick();
 void deplacerPersonnage(s_joueur* joueur, double veloX, double veloY);

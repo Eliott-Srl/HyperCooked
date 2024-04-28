@@ -2,7 +2,7 @@
 
 void hc_init() {
     allegro_init();
-    set_window_title("The best game ever");
+    set_window_title("HyperCooked");
 
     set_color_depth(desktop_color_depth());
     if(set_gfx_mode(GFX_AUTODETECT_WINDOWED,WIDTH, HEIGHT, 0, 0) != 0) {
@@ -133,7 +133,15 @@ void hc_init() {
         exit(EXIT_FAILURE);
     }
 
-    graphic->textures.menuBackground = load_bitmap("./res/img/background.bmp", NULL);
+    graphic->textures.background = load_bitmap("./res/img/background.bmp", NULL);
+
+    if (!graphic->textures.background) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    graphic->textures.menuBackground = load_bitmap("./res/img/fond_menu.bmp", NULL);
 
     if (!graphic->textures.menuBackground) {
         allegro_message("Erreur de chargement de l'image");

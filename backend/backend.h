@@ -6,7 +6,7 @@
 #define LARGEUR 20
 #define NB_RECETTES_MAX 10
 #define NB_INGREDIENTS_MAX 10
-#define NB_COMMANDES_MAX 5
+#define NB_COMMANDES_MAX 8
 #define NB_MAPS_MAX 10
 #define SPEED 0.1
 #define WIDTH 800
@@ -15,6 +15,7 @@
 
 #include "allegro.h"
 
+/*############### UTILS ###############*/
 typedef struct s_coo {                           // Structure pour des vecteurs, des coordonnées
     int x;
     int y;
@@ -26,6 +27,7 @@ typedef struct s_color {
     int b;                                       // Bleu
 } s_color;
 
+/*############### JEU ###############*/
 typedef enum e_etat_jeu {                        // Indique l'état du jeu
     LOADING,
     PLAYING,
@@ -176,6 +178,7 @@ typedef struct s_textures {
     BITMAP *player;                              // Texture du joueur
     BITMAP *menuBackground;                      // Texture du fond du menu
     BITMAP *credit;                              // Texture du crédit
+    BITMAP *background;                          // Texture du fond du jeu
     BITMAP *sol;                                 // Texture du sol
     BITMAP *comptoir;                            // Texture du comptoir
     BITMAP *coffre;                              // Texture du coffre
@@ -189,15 +192,15 @@ typedef struct s_textures {
     BITMAP *extincteur;                          // Texture de l'extincteur
     BITMAP *ticket;                              // Texture du ticket
     BITMAP *BAR;                                 // Texture du bar
-    BITMAP *PlancheH;  // Texture de la planche horizontale
-    BITMAP *Laitue;
-    BITMAP *Oeuf;
-    BITMAP *Pain;
-    BITMAP *PommeDeTerre;
-    BITMAP *steak;
-    BITMAP *tomate;
-    BITMAP *burger;
-    BITMAP *Salade;
+    BITMAP *PlancheH;                            // Texture de la planche horizontale
+    BITMAP *Laitue;                              // Texture de la laitue
+    BITMAP *Oeuf;                                // Texture de l'oeuf
+    BITMAP *Pain;                                // Texture du pain
+    BITMAP *PommeDeTerre;                        // Texture de la pomme de terre
+    BITMAP *steak;                               // Texture du steak
+    BITMAP *tomate;                              // Texture de la tomate
+    BITMAP *burger;                              // Texture du burger
+    BITMAP *Salade;                              // Texture de la salade
 } s_textures;
 
 typedef struct s_graphic {
@@ -225,6 +228,11 @@ typedef struct s_sound {
     int pitch;
     int loop;
 } s_sound;
+
+/*############### SETTINGS ###############*/
+typedef struct s_settings {
+    int volume;                                  // Volume de la musique
+} s_settings;
 
 #include "Utils/Utils.h"
 #include "Matrice/meubles.h"
