@@ -3,7 +3,7 @@
 void loadRecipes() {
     s_game *game = getGame();
 
-    int nbRecettes = 0, nbIngredients = 0;
+    int nbRecettes = 0;
     char ligne[STRMAX], *p, *d, *g, *end;
     FILE *fp = NULL;
 
@@ -15,6 +15,8 @@ void loadRecipes() {
     }
 
     while (fgets(ligne, STRMAX, fp) != NULL && nbRecettes < NB_RECETTES_MAX) {
+        int nbIngredients = 0; //
+
         p = strtok(ligne, ";");
         strcpy(game->recettes[nbRecettes].nom, p);
 
@@ -23,15 +25,15 @@ void loadRecipes() {
         d = strtok_r(p, ",", &end);
         while (d != NULL) {
             g = strtok(d, " ");
-            game->recettes[nbRecettes].ingredients[game->recettes[nbRecettes].nbIngredients].nom = atoi(g);
+            game->recettes[nbRecettes].ingredients[nbIngredients].nom = atoi(g);
             g = strtok(NULL, " ");
-            game->recettes[nbRecettes].ingredients[game->recettes[nbRecettes].nbIngredients].cuisson = atoi(g);
+            game->recettes[nbRecettes].ingredients[nbIngredients].cuisson = atoi(g);
             g = strtok(NULL, " ");
-            game->recettes[nbRecettes].ingredients[game->recettes[nbRecettes].nbIngredients].coupable = atoi(g);
+            game->recettes[nbRecettes].ingredients[nbIngredients].coupable = atoi(g);
             nbIngredients++;
-            game->recettes[nbRecettes].nbIngredients = nbIngredients;
             d = strtok_r(NULL, ",", &end);
         }
+        game->recettes[nbRecettes].nbIngredients = nbIngredients; //
         nbRecettes++;
     }
     getGame()->nbRecettes = nbRecettes;

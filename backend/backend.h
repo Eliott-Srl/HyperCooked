@@ -33,7 +33,7 @@ typedef enum e_etat_jeu {                        // Indique l'état du jeu
 } e_etat_jeu;
 
 typedef enum e_ingredients {                     // Indique le type de l'ingrédient
-    SALADE,
+    SALADE, //1
     PAIN,
     TOMATE,
     STEAK,
@@ -180,7 +180,15 @@ typedef struct s_textures {
     BITMAP *extincteur;                          // Texture de l'extincteur
     BITMAP *ticket;                              // Texture du ticket
     BITMAP *BAR;                                 // Texture du bar
-    BITMAP *PlancheH;                            // Texture de la planche horizontale
+    BITMAP *PlancheH;  // Texture de la planche horizontale
+    BITMAP *Laitue;
+    BITMAP *Oeuf;
+    BITMAP *Pain;
+    BITMAP *PommeDeTerre;
+    BITMAP *steak;
+    BITMAP *tomate;
+    BITMAP *burger;
+    BITMAP *Salade;
 } s_textures;
 
 typedef struct s_graphic {

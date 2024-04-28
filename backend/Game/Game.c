@@ -54,7 +54,7 @@ void jeu(int niveau) {
             deplacerPersonnages();
 
             // Toutes les 40 secondes, il y a une nouvelle recette qui est rendu disponible
-            if (counter >= 5 + recettes_crees * 40) {
+            if (counter >= 5 + recettes_crees * 10) {
                 newCommande();
                 recettes_crees++;
             }
