@@ -7,7 +7,7 @@
     sons[0].volume = 255;
     sons[0].pan = 128;
     sons[0].pitch = 1000;
-    sons[0].loop = 0;
+    sons[0].loop = 10;
 
     sons[1].son = load_sample("./res/res song/Cuisson.wav");
     sons[1].volume = 255;
