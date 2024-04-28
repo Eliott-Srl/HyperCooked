@@ -1,13 +1,20 @@
 #include "Commandes.h"
 
+void copyRecipeToCommande(s_commande *dest, s_recette *src) {
+    for (int i = 0; i < src->nbIngredients; i++) {
+        dest->recette.ingredients[i] = src->ingredients[i];
+    }
+    dest->recette.nbIngredients = src->nbIngredients;
+    strcpy(dest->recette.nom, src->nom);
+}
+
 void newCommande() {
-    int choix = rand() % (getGame()->nbRecettes);
-    getGame()->commandes[getGame()->nbCommandes].recette = getGame()->recettes[choix];
+    int choix = (rand() % (getGame()->nbRecettes));
+    copyRecipeToCommande(&getGame()->commandes[getGame()->nbCommandes], &getGame()->recettes[choix]);
     printf("Nouvelle recette: %s\n", getGame()->commandes[getGame()->nbCommandes].recette.nom);
     getGame()->commandes[getGame()->nbCommandes].timer = ((rand() % 2) + 1) * 5 + 45;
     getGame()->nbCommandes++;
 }
-
 
 void AfficherCommande() {
    int coos[3]= {27,45,32};
@@ -29,9 +36,9 @@ void AfficherCommande() {
    for ( int i = 0; i < getGame()->nbCommandes; i++) {
        int xLogo = (i* (LargeurRectangle + EspaceHorizontalEntreLesRectangle) );
 
-       if (strcmp(getGame()->commandes[0].recette.nom, "Hamburger") == 0) {
+       if (strcmp(getGame()->commandes[i].recette.nom, "Hamburger") == 0) {
            circlefill(getCorrectBuffer(), xLogo, 42 , 25, makecol(50,20,100));
-       } else if (strcmp(getGame()->commandes[0].recette.nom, "Soupe") == 0) {
+       } else if (strcmp(getGame()->commandes[i].recette.nom, "Soupe") == 0) {
            circlefill(getCorrectBuffer(), xLogo, 42 , 25, makecol(50,250,100));
        }
 

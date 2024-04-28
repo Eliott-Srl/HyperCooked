@@ -14,7 +14,7 @@ void loadRecipes() {
         abort();
     }
 
-    while (fgets(ligne, STRMAX, fp) != NULL || nbRecettes < NB_RECETTES_MAX) {
+    while (fgets(ligne, STRMAX, fp) != NULL && nbRecettes < NB_RECETTES_MAX) {
         p = strtok(ligne, ";");
         strcpy(game->recettes[nbRecettes].nom, p);
 
