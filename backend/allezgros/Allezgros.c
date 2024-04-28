@@ -22,7 +22,12 @@ void menu_debug(BITMAP *source) {
         textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "time: %d", getTime());
         lines++;
     }
+
     textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "Joysticks: %d", num_joysticks);
+    lines++;
+    textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "Joystick X: %f", (double) joy[0].stick[0].axis[0].pos / 128.0);
+    lines++;
+    textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "Joystick Y: %f", (double) joy[0].stick[0].axis[1].pos / 128.0);
     lines++;
     textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "j1: x: %03d, y: %03d", (int) getGame()->joueurs[0].x, (int) getGame()->joueurs[0].y);
     lines++;

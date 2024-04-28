@@ -45,9 +45,9 @@ void hc_init() {
     graphic->fs_width = fs_width;
     graphic->fs_height = fs_height;
     graphic->ratio = (float) graphic->fs_width / (float) WIDTH;
-    graphic->tailleCase = 30;       // à redéfinir, je ne suis pas sûr de ça
+    graphic->tailleCase = 24;       // à redéfinir, je ne suis pas sûr de ça
     graphic->fsTailleCase = (int) ((float) graphic->tailleCase * graphic->ratio);
-    graphic->rayon = 12;            // à redéfinir, je ne suis pas sûr de ça
+    graphic->rayon = 9;            // à redéfinir, je ne suis pas sûr de ça
     graphic->fsRayon = (int) ((float) graphic->rayon * graphic->ratio);
 
     hc_textprintf_centre_hv(graphic->ressources.loadingScreen, font, makecol(255, 255, 255), -1, "Loading...");

@@ -64,6 +64,7 @@ typedef struct s_recette {
 typedef struct s_commande {
     int timer;                                   // Temps pour réaliser la commande
     s_recette recette;                           // La recette a réalisé
+    fixed angle;                                 // Angle de la carte de la commande
 } s_commande;
 
 typedef enum e_meubles {                         // Indique le type du meuble
@@ -179,7 +180,7 @@ typedef struct s_textures {
     BITMAP *extincteur;                          // Texture de l'extincteur
     BITMAP *ticket;                              // Texture du ticket
     BITMAP *BAR;                                 // Texture du bar
-    BITMAP *PlancheH;                             // Texture de la planche horizontale
+    BITMAP *PlancheH;                            // Texture de la planche horizontale
 } s_textures;
 
 typedef struct s_graphic {

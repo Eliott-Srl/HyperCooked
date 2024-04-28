@@ -1,14 +1,14 @@
 #include "Actions.h"
 
-void deplacerPersonnageClavier(s_joueur* joueur, int veloX, int veloY) {
-    if (veloX == 0 && veloY == 0) {
+void deplacerPersonnage(s_joueur* joueur, double veloX, double veloY) {
+    if (veloX < 0.01 && veloX > -0.01 && veloY < 0.01 && veloY > -0.01) {
         return;
     }
 
     s_game *game = getGame();
     // Nouvelles positions potentielles
-    float newX = joueur->x + (float) veloX * (float) SPEED;
-    float newY = joueur->y + (float) veloY * (float) SPEED;
+    float newX = joueur->x + (float) veloX * (float) (getGraphic()->fs ? SPEED * getGraphic()->ratio * 3.0 : SPEED);
+    float newY = joueur->y + (float) veloY * (float) (getGraphic()->fs ? SPEED * getGraphic()->ratio * 3.0 : SPEED);
 
     if (newX < 0 || newX > (float) getCorrectWidth() || newY < 0 || newY > (float) getCorrectHeight()) {
         return;
@@ -56,8 +56,44 @@ void deplacerPersonnageClavier(s_joueur* joueur, int veloX, int veloY) {
         }
     }
 
+    /*
+    fixed angle = fixcos(ftofix(veloX));
+
+    if (fixsin(ftofix(veloY)) < 0) {
+        angle = -angle;
+    }
+
+    joueur->angle = angle;
+     */
+
     joueur->x = newX;
     joueur->y = newY;
+}
+
+BITMAP *getTextureByObjectName(e_objet objet) {
+    switch (objet) {
+        case POELE:
+            return getGraphic()->textures.poele;
+        case MARMITE:
+            return getGraphic()->textures.marmite;
+        case ASSIETTE:
+            return getGraphic()->textures.assiette;
+        case EXTINCTEUR:
+            return getGraphic()->textures.extincteur;
+        case STOCKEUR:
+            return getGraphic()->textures.coffre;
+        default:
+            return NULL;
+    }
+}
+
+BITMAP *getTextureByIngredientName(e_ingredients ingredients) {
+    switch (ingredients) {
+        case SALADE:
+            //return getGraphic()->textures.salade;
+        default:
+            return NULL;
+    }
 }
 
 void afficherPersonnages() {
@@ -65,6 +101,12 @@ void afficherPersonnages() {
         int dims = getCorrectCaseSize();
         float x = getGame()->joueurs[i].x - (float) dims / 2;
         float y = getGame()->joueurs[i].y - (float) dims / 2;
+        if (getGame()->joueurs[i].en_main == OBJET) {
+            rotate_scaled_sprite(getCorrectBuffer(), getTextureByObjectName(getGame()->joueurs[i].handObjet.type), (int) x, (int) y, getGame()->joueurs[i].angle, ftofix(getCorrectCaseSize() / 4));
+        } else if (getGame()->joueurs[i].en_main == INGREDIENT) {
+            rotate_scaled_sprite(getCorrectBuffer(), getTextureByIngredientName(getGame()->joueurs[i].handIngredient.nom), (int) x, (int) y, getGame()->joueurs[i].angle, ftofix(getCorrectCaseSize() / 4));
+        }
+
         rotate_scaled_sprite(getCorrectBuffer(), getGraphic()->textures.player, (int) x, (int) y, getGame()->joueurs[i].angle, ftofix((float) dims / (float) getGraphic()->textures.player->w));
         circlefill(getCorrectBuffer(), (int) getGame()->joueurs[i].x, (int) getGame()->joueurs[i].y, dims/5,
                    rgbToAllegroColor(getGame()->joueurs[i].couleur));
@@ -100,42 +142,38 @@ void deplacerPersonnagesClavier() {
         velo_perso2.x++;
     }
 
-    deplacerPersonnageClavier(&getGame()->joueurs[0], velo_perso1.x, velo_perso1.y);
-    deplacerPersonnageClavier(&getGame()->joueurs[1], velo_perso2.x, velo_perso2.y);
+    deplacerPersonnage(&getGame()->joueurs[0], velo_perso1.x, velo_perso1.y);
+    deplacerPersonnage(&getGame()->joueurs[1], velo_perso2.x, velo_perso2.y);
 }
 
 void deplacerPersonnageJoystick() {
-    s_coo velo_perso1 = {0, 0};
-    s_coo velo_perso2 = {0, 0};
+    for (int i = 0; i < 2; i++) {
+        if (joy[i].flags & JOYFLAG_ANALOG && joy[i].flags & JOYFLAG_SIGNED) {
+            double x = (double) joy[i].stick[0].axis[0].pos / 128.0;
+            double y = (double) joy[i].stick[0].axis[1].pos / 128.0;
 
-    if (joy[0].stick[0].axis[0].d1) {
-        velo_perso1.x--;
-    }
-    if (joy[0].stick[0].axis[0].d2) {
-        velo_perso1.x++;
-    }
-    if (joy[0].stick[0].axis[1].d1) {
-        velo_perso1.y--;
-    }
-    if (joy[0].stick[0].axis[1].d2) {
-        velo_perso1.y++;
-    }
+            deplacerPersonnage(&getGame()->joueurs[i], x, y);
+        } else if (joy[i].flags & JOYFLAG_CALIB_DIGITAL) {
 
-    if (joy[1].stick[0].axis[0].d1) {
-        velo_perso2.x--;
-    }
-    if (joy[1].stick[0].axis[0].d2) {
-        velo_perso2.x++;
-    }
-    if (joy[1].stick[0].axis[1].d1) {
-        velo_perso2.y--;
-    }
-    if (joy[1].stick[0].axis[1].d2) {
-        velo_perso2.y++;
-    }
+        } else {
+            s_coo velo_perso = {0, 0};
 
-    deplacerPersonnageClavier(&getGame()->joueurs[0], velo_perso1.x, velo_perso1.y);
-    deplacerPersonnageClavier(&getGame()->joueurs[1], velo_perso2.x, velo_perso2.y);
+            if (joy[i].stick[0].axis[0].d1) {
+                velo_perso.x--;
+            }
+            if (joy[i].stick[0].axis[0].d2) {
+                velo_perso.x++;
+            }
+            if (joy[i].stick[0].axis[1].d1) {
+                velo_perso.y--;
+            }
+            if (joy[i].stick[0].axis[1].d2) {
+                velo_perso.y++;
+            }
+
+            deplacerPersonnage(&getGame()->joueurs[i], velo_perso.x, velo_perso.y);
+        }
+    }
 }
 
 void deplacerPersonnages() {
