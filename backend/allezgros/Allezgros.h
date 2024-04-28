@@ -28,7 +28,7 @@ int boutonsHovered();
 /* Crée un rectangle dont:
  * - x et y sont les coordonées du centre
  * - color est la couleur du rectangle*/
-s_rectangle hc_rectfill_center(BITMAP *bmp, int x, int y, int h, int w, int color);
+s_rectangle hc_rectfill_center(BITMAP *bmp, int x, int y, int w, int h, int color);
 
 /* Crée un bouton custom interactif dont:
  * - x et y sont les coordonnées du centre
@@ -37,8 +37,12 @@ s_rectangle hc_rectfill_center(BITMAP *bmp, int x, int y, int h, int w, int colo
  * - callback sera la fonction appelé quand on clique dessus
  * - color sera la couleur du texte
  * - background sera la couleur du bouton*/
-s_bouton *hc_boutonfill_center(BITMAP *bmp,const FONT *f, int x, int y, int h, int w, const char *text_contained,
+s_bouton *hc_boutonfill_center(BITMAP *bmp,const FONT *f, int x, int y, int w, int h, const char *text_contained,
                                void (*callback)(), int color, int background);
+
+// Crée un bouton custom virtuel
+s_bouton *hc_bouton_virtual(BITMAP *bmp, int x, int y, int w, int h, void (*callback)());
+
 // Crée un texte aligné sur l'axe horizontale et dont y est la distance depuis le haut de l'écran
 void hc_textprintf_centre_h(BITMAP *bmp, int y, const FONT *f, int color, int bg, const char *format, ...);
 
