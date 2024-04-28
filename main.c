@@ -3,36 +3,16 @@
 int main() {
     hc_init();
 
-    char maps[NB_MAPS_MAX][STRMAX];
-    int nbMaps = loadingMaps(maps);
+    getGame()->etatJeu = DANS_MENU;
 
-    rest(100);
-
-    for (int i = 0; i < nbMaps; i++) {
-        reinitialiserPartie();
-
-        char filename[STRMAX];
-        sprintf(filename, "maps/%s", maps[i]);
-
-        initialiserMatrice(filename);
-
-        getGame()->etatJeu = PLAYING;
-        // Fin de l'écran de chargement
-
-        s_color j1 = {255, 0, 0}, j2 = {0,0, 255};
-        initialisePlayers(j1, "Stephane", j2, "Bernard");
-
+    while (!getGame()->quitting) {
         if (getGame()->etatJeu == DANS_MENU) {
-            // Créer les joueurs
-            getGame()->etatJeu = PLAYING;
+            menu();
         } else if (getGame()->etatJeu == PLAYING) {
-            jeu(i + 1);
-        } else if (getGame()->etatJeu == LOADING) {
-            hc_blit(getGraphic()->ressources.loadingScreen);
+            jeu();
         }
     }
 
     hc_finish();
-
     return 0;
 } END_OF_MAIN()

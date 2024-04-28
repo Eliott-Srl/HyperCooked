@@ -42,27 +42,27 @@ void AfficherCommande() {
        set_clip_rect(getCorrectBuffer(), 0, 0, getCorrectWidth(), getCorrectHeight());
 
        if (strcmp(getGame()->commandes[i].recette.nom, "Hamburger") == 0) {
-           stretch_sprite(getCorrectBuffer(),getGraphic()->textures.burger,30 + xLogo,408,35,35);
+           stretch_sprite(getCorrectBuffer(),getGraphic()->textures.burger,37 + xLogo,408,38,38);
        } else if (strcmp(getGame()->commandes[i].recette.nom, "Salade") == 0) {
-           stretch_sprite(getCorrectBuffer(),getGraphic()->textures.Salade,30 + xLogo,408,35,35);
+           stretch_sprite(getCorrectBuffer(),getGraphic()->textures.Salade,37 + xLogo,408,38,38);
        }
 
-       int coosX[4]= {25,25,75,75};
-       int coosY[4] = {400,430,430,400};
+       int coosX[4]= {25,25,90,90};
+       int coosY[4] = {400,435,435,400};
 
        for (int j = 0;  j < getGame()->commandes[i].recette.nbIngredients; j++) {
            if (getGame()->commandes[i].recette.ingredients[j].nom == SALADE) {
-               stretch_sprite(getCorrectBuffer(),getGraphic()->textures.Laitue,coosX[j] + i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle),coosY[j],15,15);
+               stretch_sprite(getCorrectBuffer(),getGraphic()->textures.Laitue,coosX[j] + i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle),coosY[j],18,18);
            } else if (getGame()->commandes[i].recette.ingredients[j].nom == PAIN) {
-               stretch_sprite(getCorrectBuffer(),getGraphic()->textures.Pain,coosX[j] + i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle),coosY[j],15,15);
+               stretch_sprite(getCorrectBuffer(),getGraphic()->textures.Pain,coosX[j] + i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle),coosY[j],18,18);
            } else if (getGame()->commandes[i].recette.ingredients[j].nom == TOMATE) {
-               stretch_sprite(getCorrectBuffer(),getGraphic()->textures.tomate,coosX[j] + i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle),coosY[j],15,15);
+               stretch_sprite(getCorrectBuffer(),getGraphic()->textures.tomate,coosX[j] + i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle),coosY[j],18,18);
            } else if (getGame()->commandes[i].recette.ingredients[j].nom == STEAK) {
-               stretch_sprite(getCorrectBuffer(),getGraphic()->textures.steak,coosX[j] + i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle),coosY[j],15,15);
+               stretch_sprite(getCorrectBuffer(),getGraphic()->textures.steak,coosX[j] + i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle),coosY[j],18,18);
            } else if (getGame()->commandes[i].recette.ingredients[j].nom == OEUF) {
-               stretch_sprite(getCorrectBuffer(),getGraphic()->textures.Oeuf,coosX[j] + i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle),coosY[j],15,15);
+               stretch_sprite(getCorrectBuffer(),getGraphic()->textures.Oeuf,coosX[j] + i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle),coosY[j],18,18);
            } else if (getGame()->commandes[i].recette.ingredients[j].nom == POTATO) {
-               stretch_sprite(getCorrectBuffer(),getGraphic()->textures.PommeDeTerre,coosX[j] + i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle),coosY[j],15,15);
+               stretch_sprite(getCorrectBuffer(),getGraphic()->textures.PommeDeTerre,coosX[j] + i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle),coosY[j],18,18);
            }
        }
    }
