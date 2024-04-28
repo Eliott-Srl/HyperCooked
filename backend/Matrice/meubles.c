@@ -89,14 +89,16 @@ void hc_afficher_matrice() {
                 stretch_sprite(getCorrectBuffer(), getGraphic()->textures.COFFFRE, (getCorrectWidth()-LARGEUR*getCorrectCaseSize())/2+l*getCorrectCaseSize(), (getCorrectHeight()-HAUTEUR*getCorrectCaseSize())/2+h*getCorrectCaseSize(), getCorrectCaseSize(), getCorrectCaseSize());
             }
             if (getGame()->matrice[h][l].typeMeuble == POUBELLE) {
-                getGraphic()->textures.POUBELLE;
                 stretch_sprite(getCorrectBuffer(), getGraphic()->textures.POUBELLE, (getCorrectWidth()-LARGEUR*getCorrectCaseSize())/2+l*getCorrectCaseSize(), (getCorrectHeight()-HAUTEUR*getCorrectCaseSize())/2+h*getCorrectCaseSize(), getCorrectCaseSize(), getCorrectCaseSize());
             }
             if (getGame()->matrice[h][l].typeMeuble == PLAN_DE_TRAVAIL) {
-                stretch_sprite(getCorrectBuffer(), getGraphic()->textures.COFFFRE, (getCorrectWidth()-LARGEUR*getCorrectCaseSize())/2+l*getCorrectCaseSize(), (getCorrectHeight()-HAUTEUR*getCorrectCaseSize())/2+h*getCorrectCaseSize(), getCorrectCaseSize(), getCorrectCaseSize());
+                stretch_sprite(getCorrectBuffer(), getGraphic()->textures.PLAN_DE_TRAVAIL, (getCorrectWidth()-LARGEUR*getCorrectCaseSize())/2+l*getCorrectCaseSize(), (getCorrectHeight()-HAUTEUR*getCorrectCaseSize())/2+h*getCorrectCaseSize(), getCorrectCaseSize(), getCorrectCaseSize());
             }
             if (getGame()->matrice[h][l].typeMeuble == PLANCHE_A_DECOUPER) {
-
+                stretch_sprite(getCorrectBuffer(), getGraphic()->textures.PLANCHE_A_DECOUPER, (getCorrectWidth()-LARGEUR*getCorrectCaseSize())/2+l*getCorrectCaseSize(), (getCorrectHeight()-HAUTEUR*getCorrectCaseSize())/2+h*getCorrectCaseSize(), getCorrectCaseSize(), getCorrectCaseSize());
+            }
+            if (getGame()->matrice[h][l].typeMeuble == PLAQUE_A_CUISSON) {
+                stretch_sprite(getCorrectBuffer(), getGraphic()->textures.PLAQUE_A_CUISSON, (getCorrectWidth()-LARGEUR*getCorrectCaseSize())/2+l*getCorrectCaseSize(), (getCorrectHeight()-HAUTEUR*getCorrectCaseSize())/2+h*getCorrectCaseSize(), getCorrectCaseSize(), getCorrectCaseSize());
             }
         }
     }

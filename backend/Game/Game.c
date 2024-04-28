@@ -130,6 +130,14 @@ void hc_init() {
         allegro_exit();
         exit(EXIT_FAILURE);
     }
+    graphic->textures.PLAN_DE_TRAVAIL = load_bitmap("./res/img/marbre.bmp", NULL);
+
+    if (!graphic->textures.PLAN_DE_TRAVAIL) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
 
     LOCK_VARIABLE(counter);
     LOCK_FUNCTION(timer_handler);
