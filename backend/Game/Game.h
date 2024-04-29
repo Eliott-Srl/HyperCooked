@@ -4,12 +4,18 @@
 #include "../backend.h"
 #include <dirent.h>
 
+s_game *getGame();
 int getTime();
-void mouseActions();
+void mouseActions(int flags);
 int getOffsetX();
 int getOffsetY();
+void toGame();
+void toQuit();
+void nope();
 void showCustomCursor();
-s_game *getGame();
-void jeu(int niveau);
+void globalKeyboardActions();
+void menu();
+void partie(int niveau);
+void jeu();
 
 #endif //HYPERCOOKED_GAME_H

@@ -21,6 +21,8 @@ add_executable(HyperCooked main.c
         backend/Game/Actions.c
         backend/Game/Actions.h
         backend/Game/Oncers.c
-        backend/Game/Oncers.h)
+        backend/Game/Oncers.h
+        backend/Son/song.c
+        backend/Son/song.h)
 
 target_link_libraries(${PROJECT_NAME} -lalleg44)

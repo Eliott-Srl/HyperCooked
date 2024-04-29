@@ -6,14 +6,16 @@
 #define LARGEUR 20
 #define NB_RECETTES_MAX 10
 #define NB_INGREDIENTS_MAX 10
-#define NB_COMMANDES_MAX 5
+#define NB_COMMANDES_MAX 8
 #define NB_MAPS_MAX 10
 #define SPEED 0.1
 #define WIDTH 800
 #define HEIGHT 450
+#define NUM_SONS 8
 
 #include "allegro.h"
 
+/*############### UTILS ###############*/
 typedef struct s_coo {                           // Structure pour des vecteurs, des coordonnées
     int x;
     int y;
@@ -25,6 +27,7 @@ typedef struct s_color {
     int b;                                       // Bleu
 } s_color;
 
+/*############### JEU ###############*/
 typedef enum e_etat_jeu {                        // Indique l'état du jeu
     LOADING,
     PLAYING,
@@ -33,7 +36,7 @@ typedef enum e_etat_jeu {                        // Indique l'état du jeu
 } e_etat_jeu;
 
 typedef enum e_ingredients {                     // Indique le type de l'ingrédient
-    SALADE,
+    SALADE, //1
     PAIN,
     TOMATE,
     STEAK,
@@ -129,23 +132,29 @@ typedef struct s_game {
     s_recette recettes[NB_RECETTES_MAX];         // Tableau des recettes disponibles
     int nbRecettes;                              // Nombre de recettes disponibles
     e_etat_jeu etatJeu;                          // L'état du jeu: LOADING, PLAYING, MENU
+    int quitting;                                // Booléen qui indique si on quitte le jeu
     s_commande commandes[NB_COMMANDES_MAX];      // Tableau de commande qui contient les commandes en cours
     int nbCommandes;                             // Nombre de commandes en cours
     int score;                                   // Le score jusqu'ici
 } s_game;
 
 /*############### ALLEZGROS ###############*/
-typedef struct s_rectangle {
+typedef struct s_rectangle_virtual {
     int h;                                       // Hauteur
     int w;                                       // Largeur
-    int color;                                   // Couleur ( utilise makecol() )
     int x;                                       // Position X du centre
     int y;                                       // Position Y du centre
+} s_rectangle_virtual;
+
+typedef struct s_rectangle {
+    s_rectangle_virtual virtual;                 // Instance de s_rectangle_virtual
+    int color;                                   // Couleur ( utilise makecol() )
     int fill;                                    // Si le rectangle est rempli ou non
 } s_rectangle;
 
 typedef struct s_bouton {
     BITMAP *bmp;                                 // Image sur laquelle on dessine
+    int virtual;                                 // Booléen qui indique si le bouton est virtuel
     s_rectangle rectangle;                       // Instance de s_rectangle
     void (*callback)();                          // Pointeur de fonction qui sera appelée
     char *text;                                  // Texte affiché sur l'écran
@@ -167,6 +176,9 @@ typedef struct s_textures {
     BITMAP *cursor;                              // Texture du curseur
     BITMAP *pointer;                             // Texture du pointeur
     BITMAP *player;                              // Texture du joueur
+    BITMAP *menuBackground;                      // Texture du fond du menu
+    BITMAP *credit;                              // Texture du crédit
+    BITMAP *background;                          // Texture du fond du jeu
     BITMAP *sol;                                 // Texture du sol
     BITMAP *comptoir;                            // Texture du comptoir
     BITMAP *coffre;                              // Texture du coffre
@@ -181,14 +193,23 @@ typedef struct s_textures {
     BITMAP *ticket;                              // Texture du ticket
     BITMAP *BAR;                                 // Texture du bar
     BITMAP *PlancheH;                            // Texture de la planche horizontale
+    BITMAP *Laitue;                              // Texture de la laitue
+    BITMAP *Oeuf;                                // Texture de l'oeuf
+    BITMAP *Pain;                                // Texture du pain
+    BITMAP *PommeDeTerre;                        // Texture de la pomme de terre
+    BITMAP *steak;                               // Texture du steak
+    BITMAP *tomate;                              // Texture de la tomate
+    BITMAP *burger;                              // Texture du burger
+    BITMAP *Salade;                              // Texture de la salade
 } s_textures;
 
 typedef struct s_graphic {
     int debug;                                   // Booléen qui indique si on affiche les informations de debug
+    int debug_button;                            // Booléen qui permet d'éviter le rebond du menu
+    int fs;                                      // Booléen qui indique si le jeu est en plein écran
     int fs_width;                                // Largeur de l'écran
     int fs_height;                               // Hauteur de l'écran
     float ratio;                                 // Ratio de la matrice
-    int fs;                                      // Booléen qui indique si le jeu est en plein écran
     int tailleCase;                              // Taille d'une case de la matrice
     int fsTailleCase;                            // Taille d'une case de la matrice en fullscreen
     int rayon;                                   // Rayon du joueur
@@ -199,6 +220,20 @@ typedef struct s_graphic {
     s_textures textures;
 } s_graphic;
 
+// Structure pour stocker les échantillons sonores
+typedef struct s_sound {
+    SAMPLE* son;
+    int volume;
+    int pan;
+    int pitch;
+    int loop;
+} s_sound;
+
+/*############### SETTINGS ###############*/
+typedef struct s_settings {
+    int volume;                                  // Volume de la musique
+} s_settings;
+
 #include "Utils/Utils.h"
 #include "Matrice/meubles.h"
 #include "Commandes/Recettes.h"
@@ -207,5 +242,6 @@ typedef struct s_graphic {
 #include "Game/Actions.h"
 #include "Game/Oncers.h"
 #include "allezgros/Allezgros.h"
+#include "Son/song.h"
 
 #endif //HYPERCOOKED_BACKEND_H

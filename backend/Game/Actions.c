@@ -1,5 +1,22 @@
 #include "Actions.h"
 
+void executeFunctionForEveryBlockReachable(s_joueur *joueur, void (*fonction)(s_joueur*, int, int)) {
+    s_game *game = getGame();
+    for (int k = 0; k < HAUTEUR; k++) {
+        for (int s = 0; s < LARGEUR; s++) {
+            if (game->matrice[k][s].typeMeuble != SOL && hypotSq((int) joueur->x, (int) joueur->y, getOffsetX() + s * getCorrectCaseSize() + getCorrectCaseSize() / 2, getOffsetY() + k * getCorrectCaseSize() + getCorrectCaseSize() / 2, 4 * getCorrectCaseSize() / 6)) {
+                fonction(joueur, k, s);
+            }
+        }
+    }
+}
+
+void meuble(s_joueur *joueur, int k, int s) {
+    char filename[STRMAX];
+    sprintf(filename, "[%s] pour intéragir", strcmp(getGame()->joueurs[0].nom, joueur->nom) == 0 ? "SHIFT" : "0");
+    textout_centre_ex(getCorrectBuffer(), font, filename, getOffsetX() + (int) ((float) s * (float) getCorrectCaseSize() + (float) getCorrectCaseSize() / 2), getOffsetY() + (int) ((float) k * (float) getCorrectCaseSize() + (float) getCorrectCaseSize() / 2), makecol(255, 255, 255), -1);
+}
+
 void deplacerPersonnage(s_joueur* joueur, double veloX, double veloY) {
     if (veloX < 0.01 && veloX > -0.01 && veloY < 0.01 && veloY > -0.01) {
         return;
@@ -56,7 +73,7 @@ void deplacerPersonnage(s_joueur* joueur, double veloX, double veloY) {
         }
     }
 
-    /*
+    /* It was a try to fix the angle of the player
     fixed angle = fixcos(ftofix(veloX));
 
     if (fixsin(ftofix(veloY)) < 0) {
@@ -110,14 +127,18 @@ void afficherPersonnages() {
         rotate_scaled_sprite(getCorrectBuffer(), getGraphic()->textures.player, (int) x, (int) y, getGame()->joueurs[i].angle, ftofix((float) dims / (float) getGraphic()->textures.player->w));
         circlefill(getCorrectBuffer(), (int) getGame()->joueurs[i].x, (int) getGame()->joueurs[i].y, dims/5,
                    rgbToAllegroColor(getGame()->joueurs[i].couleur));
+
+        executeFunctionForEveryBlockReachable(getGame()->joueurs + i, &meuble);
     }
 }
 
 void deplacerPersonnagesClavier() {
     s_coo velo_perso1 = {0, 0};
     s_coo velo_perso2 = {0, 0};
+    int sound = 0;
 
     if (key[KEY_W]) {
+//      charge_Sound(sound);
         velo_perso1.y--;
     }
     if (key[KEY_S]) {
