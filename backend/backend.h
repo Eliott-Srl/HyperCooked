@@ -8,9 +8,9 @@
 #define NB_INGREDIENTS_MAX 10
 #define NB_COMMANDES_MAX 5
 #define NB_MAPS_MAX 10
-
+#define SPEED 0.1
 #define WIDTH 800
-#define HEIGHT 600
+#define HEIGHT 450
 
 #include "allegro.h"
 
@@ -64,6 +64,7 @@ typedef struct s_recette {
 typedef struct s_commande {
     int timer;                                   // Temps pour réaliser la commande
     s_recette recette;                           // La recette a réalisé
+    fixed angle;                                 // Angle de la carte de la commande
 } s_commande;
 
 typedef enum e_meubles {                         // Indique le type du meuble
@@ -106,7 +107,7 @@ typedef struct s_meuble {
 } s_meuble;
 
 typedef enum e_typeEnMain {                      // Inqique le contenu de la main du joueur
-    NOTHING,                                
+    NOTHING,
     INGREDIENT,
     OBJET
 } e_typeEnMain;
@@ -114,7 +115,9 @@ typedef enum e_typeEnMain {                      // Inqique le contenu de la mai
 typedef struct s_joueur {
     s_color couleur;                             // Couleur du joueur
     char nom[STRMAX];                            // Nom du joueur
-    s_coo pos;                                   // Position x et y du joueur
+    float x;                                     // Position x du joueur
+    float y;                                     // Position y du joueur
+    fixed angle;                                 // Angle du joueur
     s_ingredient handIngredient;                 // Nourriture dans la main du joueur
     s_objet handObjet;                           // Objet dans la main du joueur
     e_typeEnMain en_main;                        // Indique ce qu'il y a dans la main du joueur
@@ -131,7 +134,7 @@ typedef struct s_game {
     int score;                                   // Le score jusqu'ici
 } s_game;
 
-/*############### ALLEZGROS ###############*/   
+/*############### ALLEZGROS ###############*/
 typedef struct s_rectangle {
     int h;                                       // Hauteur
     int w;                                       // Largeur
@@ -158,33 +161,38 @@ typedef struct s_ressources {
     BITMAP *fsMainMenuBuffer;                    // BITMAP pour le menu en plein écran
     BITMAP *menuBuffer;                          // BITMAP pour le menu pendant la partie
     BITMAP *fsMenuBuffer;                        // BITMAP pour le menu pendant la partie en plein écran
-    BITMAP *cursor;                              // Sprite du curseur
-    BITMAP *pointer;                             // Sprite du pointeur
-    BITMAP *player;                              // Sprite du joueur
 } s_ressources;
 
 typedef struct s_textures {
-    BITMAP *SOL;                                 // BITMAP pour le sol
-    BITMAP *COMPTOIR;                            // BITMAP pour le comptoir
-    BITMAP *COFFFRE;                             // BITMAP pour le coffre
-    BITMAP *POUBELLE;                            // BITMAP pour la poubelle
-    BITMAP *PLANCHE_A_DECOUPER;
-    BITMAP *PLAN_DE_TRAVAIL;
-    BITMAP *PLAQUE_A_CUISSON;
-    BITMAP *POELE;
-    BITMAP *MARMITE;
-    BITMAP *ASSIETTE;
-    BITMAP *EXTINCTEUR;
+    BITMAP *cursor;                              // Texture du curseur
+    BITMAP *pointer;                             // Texture du pointeur
+    BITMAP *player;                              // Texture du joueur
+    BITMAP *sol;                                 // Texture du sol
+    BITMAP *comptoir;                            // Texture du comptoir
+    BITMAP *coffre;                              // Texture du coffre
+    BITMAP *poubelle;                            // Texture de la poubelle
+    BITMAP *plancheADecouper;                    // Texture de la planche à découper
+    BITMAP *planDeTravail;                       // Texture du plan de travail
+    BITMAP *plaqueDeCuisson;                     // Texture de la plaque de cuisson
+    BITMAP *poele;                               // Texture de la poêle
+    BITMAP *marmite;                             // Texture de la marmite
+    BITMAP *assiette;                            // Texture de l'assiette
+    BITMAP *extincteur;                          // Texture de l'extincteur
+    BITMAP *ticket;                              // Texture du ticket
+    BITMAP *BAR;                                 // Texture du bar
+    BITMAP *PlancheH;                            // Texture de la planche horizontale
 } s_textures;
 
 typedef struct s_graphic {
+    int debug;                                   // Booléen qui indique si on affiche les informations de debug
     int fs_width;                                // Largeur de l'écran
     int fs_height;                               // Hauteur de l'écran
-    int ratio;                                   // Ratio de la matrice
+    float ratio;                                 // Ratio de la matrice
     int fs;                                      // Booléen qui indique si le jeu est en plein écran
-    int menu;                                    // Booléen qui indique si le menu pendant la partie est ouvert
     int tailleCase;                              // Taille d'une case de la matrice
     int fsTailleCase;                            // Taille d'une case de la matrice en fullscreen
+    int rayon;                                   // Rayon du joueur
+    int fsRayon;                                 // Rayon du joueur en fullscreen
     s_bouton *boutons;                           // Liste des boutons customs
     int nombreBoutons;                           // Nombre de boutons customs
     s_ressources ressources;                     // Structure qui contient les pointeurs de toutes les ressources
@@ -197,6 +205,7 @@ typedef struct s_graphic {
 #include "Commandes/Commandes.h"
 #include "Game/Game.h"
 #include "Game/Actions.h"
+#include "Game/Oncers.h"
 #include "allezgros/Allezgros.h"
 
 #endif //HYPERCOOKED_BACKEND_H

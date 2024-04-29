@@ -3,18 +3,18 @@
 int main() {
     hc_init();
 
-    char* maps[NB_MAPS_MAX];
+    char maps[NB_MAPS_MAX][STRMAX];
     int nbMaps = loadingMaps(maps);
 
     rest(100);
 
-    for (int i = 0; i < nbMaps + 1; i++) {
+    for (int i = 0; i < nbMaps; i++) {
         reinitialiserPartie();
 
         char filename[STRMAX];
-        sprintf(filename, "/maps/%s", maps[i]);
+        sprintf(filename, "maps/%s", maps[i]);
 
-        initialiserMatrice(filename); // créer un fichier ou les meubles apparais
+        initialiserMatrice(filename);
 
         getGame()->etatJeu = PLAYING;
         // Fin de l'écran de chargement
@@ -31,6 +31,8 @@ int main() {
             hc_blit(getGraphic()->ressources.loadingScreen);
         }
     }
+
+    hc_finish();
 
     return 0;
 } END_OF_MAIN()

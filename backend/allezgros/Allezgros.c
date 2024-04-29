@@ -13,7 +13,34 @@ int rgbToAllegroColor(s_color color) {
     return makecol(color.r, color.g, color.b);
 }
 
+void menu_debug(BITMAP *source) {
+    int lines = 0;
+    textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "fps: %d", get_refresh_rate());
+    lines++;
+
+    if (getGame()->etatJeu == PLAYING) {
+        textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "time: %d", getTime());
+        lines++;
+    }
+
+    textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "Joysticks: %d", num_joysticks);
+    lines++;
+    textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "Joystick X: %f", (double) joy[0].stick[0].axis[0].pos / 128.0);
+    lines++;
+    textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "Joystick Y: %f", (double) joy[0].stick[0].axis[1].pos / 128.0);
+    lines++;
+    textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "j1: x: %03d, y: %03d", (int) getGame()->joueurs[0].x, (int) getGame()->joueurs[0].y);
+    lines++;
+    textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "j2: x: %03d, y: %03d", (int) getGame()->joueurs[1].x, (int) getGame()->joueurs[1].y);
+    lines++;
+    textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "Ratio normal/fullscreen: %.02f", getGraphic()->ratio);
+}
+
 void hc_blit(BITMAP *source) {
+    if (getGraphic()->debug) {
+        menu_debug(source);
+    }
+
     if (getGraphic()->fs) {
        blit(source, screen, 0, 0, 0, 0, getGraphic()->fs_width, getGraphic()->fs_height);
     } else {
@@ -149,8 +176,12 @@ int getCorrectCaseSize() {
     return (getGraphic()->fs ? getGraphic()->fsTailleCase : getGraphic()->tailleCase);
 }
 
+int getCorrectRayon() {
+    return (getGraphic()->fs ? getGraphic()->fsRayon : getGraphic()->rayon);
+}
+
 BITMAP *getCorrectBuffer() {
-    switch (getGame()->etatJeu) {;
+    switch (getGame()->etatJeu) {
         case LOADING:
             return (getGraphic()->fs ? getGraphic()->ressources.fsLoadingScreen : getGraphic()->ressources.loadingScreen);
         case PLAYING:
@@ -167,7 +198,7 @@ void coverBufferWithImage(BITMAP *buffer, BITMAP *image, int s_w, int s_h) {
     int offsetX = (s_w - (buffer->w - tailleEntierX * s_w)) / 2;
 
     int tailleEntierY = buffer->h / s_h;
-    int offsetY = (s_h - (buffer->h - tailleEntierY * s_h)) / 2;;
+    int offsetY = (s_h - (buffer->h - tailleEntierY * s_h)) / 2;
 
     for (int j = 0; j < tailleEntierY + 1; j++) {
         for (int i = 0; i < tailleEntierX + 1; i++) {

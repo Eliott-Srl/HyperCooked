@@ -3,49 +3,38 @@
 void loadRecipes() {
     s_game *game = getGame();
 
-    int nbRecettes = 0;
-    char ligne[STRMAX], *p, ingredients[STRMAX], *end, *s;
-    s_recette *pRecette = NULL;
+    int nbRecettes = 0, nbIngredients = 0;
+    char ligne[STRMAX], *p, *d, *g, *end;
     FILE *fp = NULL;
 
-    char *base = "0123456789";
-    char nombre[128] = "";
-
     fp = fopen("recettes.txt", "r");
+
     if (!fp) {
         perror("recettes.txt");
         abort();
     }
 
-    while (fgets(ligne, STRMAX, fp) != NULL || nbRecettes < NB_RECETTES_MAX) {
+    while (fgets(ligne, STRMAX, fp) != NULL && nbRecettes < NB_RECETTES_MAX) {
         p = strtok(ligne, ";");
         strcpy(game->recettes[nbRecettes].nom, p);
 
-        p = strtok(ligne, ";");
+        p = strtok(NULL, ";");
 
-        if (strchr(base, *p) == NULL) {
-            strncat(nombre, p, 1);
-        } else {
-            for(int i = 1; i <= 3; i++){
-                p = strtok(p, ",");
-                for(int j = 1; j <= 3; j++){
-                    p = strtok(p, " ");
-                    switch (j) {
-                        case 1:
-                            game->recettes[nbRecettes].ingredients[i].nom = strtol(ligne, &end, 10);
-                            break;
-                        case 2:
-                            game->recettes[nbRecettes].ingredients[i].cuit = strtol(ligne, &end, 10);
-                            break;
-                        case 3:
-                            game->recettes[nbRecettes].ingredients[i].coupable = strtol(ligne, &end, 10);
-                            break;
-                    }
-                }
-            }
+        d = strtok_r(p, ",", &end);
+        while (d != NULL) {
+            g = strtok(d, " ");
+            game->recettes[nbRecettes].ingredients[game->recettes[nbRecettes].nbIngredients].nom = atoi(g);
+            g = strtok(NULL, " ");
+            game->recettes[nbRecettes].ingredients[game->recettes[nbRecettes].nbIngredients].cuisson = atoi(g);
+            g = strtok(NULL, " ");
+            game->recettes[nbRecettes].ingredients[game->recettes[nbRecettes].nbIngredients].coupable = atoi(g);
+            nbIngredients++;
+            game->recettes[nbRecettes].nbIngredients = nbIngredients;
+            d = strtok_r(NULL, ",", &end);
         }
         nbRecettes++;
     }
+    getGame()->nbRecettes = nbRecettes;
     fclose(fp);
 }
 
