@@ -159,11 +159,10 @@ void partie(int niveau) {
         hc_clear_buffers();
         clear_boutons();
         poll_joystick();
+
         float ratio = (float) getCorrectHeight() / (float) getGraphic()->textures.background->h;
         int offsetX = (int) ((float) getCorrectWidth() - ((float) getGraphic()->textures.background->w * ratio)) / 2;
         stretch_sprite(getCorrectBuffer(), getGraphic()->textures.background, -offsetX, 0, (int) ((float) getGraphic()->textures.background->w * ratio), (int) ((float) getGraphic()->textures.background->h * ratio));
-
-
 
         if (game->etatJeu == DANS_MENU_JEU) {
             // TODO: Menu Jeu
@@ -183,8 +182,23 @@ void partie(int niveau) {
         globalKeyboardActions();
 
         if (key[KEY_LSHIFT]) {
-
+            getGame()->joueurs[0].shift_pressed = 1;
         }
+
+        if (!key[KEY_LSHIFT] && getGame()->joueurs[0].shift_pressed) {
+            executeFunctionForEveryBlockReachable(&game->joueurs[0], &interact);
+            getGame()->joueurs[0].shift_pressed = 0;
+        }
+
+        if (key[KEY_RSHIFT]) {
+            getGame()->joueurs[1].shift_pressed = 1;
+        }
+
+        if (!key[KEY_RSHIFT] && getGame()->joueurs[1].shift_pressed) {
+            executeFunctionForEveryBlockReachable(&game->joueurs[1], &interact);
+            getGame()->joueurs[1].shift_pressed = 0;
+        }
+
     } while (counter <= 90 && (game->etatJeu == PLAYING || game->etatJeu == DANS_MENU_JEU) && !game->quitting);
 
     remove_int(timer_handler);

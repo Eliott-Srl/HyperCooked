@@ -4,7 +4,7 @@ void executeFunctionForEveryBlockReachable(s_joueur *joueur, void (*fonction)(s_
     s_game *game = getGame();
     for (int k = 0; k < HAUTEUR; k++) {
         for (int s = 0; s < LARGEUR; s++) {
-            if (game->matrice[k][s].typeMeuble != SOL && hypotSq((int) joueur->x, (int) joueur->y, getOffsetX() + s * getCorrectCaseSize() + getCorrectCaseSize() / 2, getOffsetY() + k * getCorrectCaseSize() + getCorrectCaseSize() / 2, 4 * getCorrectCaseSize() / 6)) {
+            if (hypotSq((int) joueur->x, (int) joueur->y, getOffsetX() + s * getCorrectCaseSize() + getCorrectCaseSize() / 2, getOffsetY() + k * getCorrectCaseSize() + getCorrectCaseSize() / 2, 4 * getCorrectCaseSize() / 6)) {
                 fonction(joueur, k, s);
             }
         }
@@ -12,6 +12,10 @@ void executeFunctionForEveryBlockReachable(s_joueur *joueur, void (*fonction)(s_
 }
 
 void meuble(s_joueur *joueur, int k, int s) {
+    if (getGame()->matrice[k][s].typeMeuble == SOL) {
+        return;
+    }
+
     char filename[STRMAX];
     sprintf(filename, "[%s] pour intéragir", strcmp(getGame()->joueurs[0].nom, joueur->nom) == 0 ? "SHIFT" : "0");
     textout_centre_ex(getCorrectBuffer(), font, filename, getOffsetX() + (int) ((float) s * (float) getCorrectCaseSize() + (float) getCorrectCaseSize() / 2), getOffsetY() + (int) ((float) k * (float) getCorrectCaseSize() + (float) getCorrectCaseSize() / 2), makecol(255, 255, 255), -1);
@@ -89,6 +93,7 @@ void deplacerPersonnage(s_joueur* joueur, double veloX, double veloY) {
 
 BITMAP *getTextureByObjectName(e_objet objet) {
     switch (objet) {
+        /*
         case POELE:
             return getGraphic()->textures.poele;
         case MARMITE:
@@ -99,6 +104,30 @@ BITMAP *getTextureByObjectName(e_objet objet) {
             return getGraphic()->textures.extincteur;
         case STOCKEUR:
             return getGraphic()->textures.coffre;
+        */
+        default:
+            return NULL;
+    }
+}
+
+BITMAP *getTextureByFurnitureName(e_meubles meuble) {
+    switch (meuble) {
+        case SOL:
+            return getGraphic()->textures.sol;
+        case PLAN_DE_TRAVAIL:
+            return getGraphic()->textures.planDeTravail;
+        /*
+        case PLANCHE_A_DECOUPER:
+            return getGraphic()->textures.plancheADecouper;
+        case COMPTOIR:
+            return getGraphic()->textures.comptoir;
+        case COFFRE:
+            return getGraphic()->textures.coffre;
+        case PLAQUE_A_CUISSON:
+            return getGraphic()->textures.plaqueDeCuisson;
+        case POUBELLE:
+            return getGraphic()->textures.poubelle;
+        */
         default:
             return NULL;
     }
@@ -107,7 +136,17 @@ BITMAP *getTextureByObjectName(e_objet objet) {
 BITMAP *getTextureByIngredientName(e_ingredients ingredients) {
     switch (ingredients) {
         case SALADE:
-            //return getGraphic()->textures.salade;
+            return getGraphic()->textures.Laitue;
+        case TOMATE:
+            return getGraphic()->textures.tomate;
+        case PAIN:
+            return getGraphic()->textures.Pain;
+        case STEAK:
+            return getGraphic()->textures.steak;
+        case POTATO:
+            return getGraphic()->textures.PommeDeTerre;
+        case OEUF:
+            return getGraphic()->textures.Oeuf;
         default:
             return NULL;
     }
@@ -118,10 +157,22 @@ void afficherPersonnages() {
         int dims = getCorrectCaseSize();
         float x = getGame()->joueurs[i].x - (float) dims / 2;
         float y = getGame()->joueurs[i].y - (float) dims / 2;
+        float offsetX = (float) cos(fixtof(getGame()->joueurs[i].angle)) * (float) dims / 2;
+        float offsetY = (float) sin(fixtof(getGame()->joueurs[i].angle)) * (float) dims / 2;
+
+
         if (getGame()->joueurs[i].en_main == OBJET) {
-            rotate_scaled_sprite(getCorrectBuffer(), getTextureByObjectName(getGame()->joueurs[i].handObjet.type), (int) x, (int) y, getGame()->joueurs[i].angle, ftofix(getCorrectCaseSize() / 4));
+            if (getTextureByObjectName(getGame()->joueurs[i].handObjet.type) != NONE) {
+                rotate_scaled_sprite(getCorrectBuffer(), getTextureByObjectName(getGame()->joueurs[i].handObjet.type),
+                                     (int) (x + (float) offsetX), (int) (y + (float) offsetY),
+                                     getGame()->joueurs[i].angle, ftofix((float) getCorrectCaseSize() /
+                                                                         (float) getTextureByIngredientName(
+                                                                                 getGame()->joueurs[i].handIngredient.nom)->w));
+            }
         } else if (getGame()->joueurs[i].en_main == INGREDIENT) {
-            rotate_scaled_sprite(getCorrectBuffer(), getTextureByIngredientName(getGame()->joueurs[i].handIngredient.nom), (int) x, (int) y, getGame()->joueurs[i].angle, ftofix(getCorrectCaseSize() / 4));
+            if (getTextureByIngredientName(getGame()->joueurs[i].handIngredient.nom) != PAS_D_INGREDIENT) {
+                rotate_scaled_sprite(getCorrectBuffer(), getTextureByIngredientName(getGame()->joueurs[i].handIngredient.nom), (int)(x + (float) offsetX), (int)(y + (float) offsetY), getGame()->joueurs[i].angle, ftofix((float) getCorrectCaseSize() / (float) getTextureByIngredientName(getGame()->joueurs[i].handIngredient.nom)->w));
+            }
         }
 
         rotate_scaled_sprite(getCorrectBuffer(), getGraphic()->textures.player, (int) x, (int) y, getGame()->joueurs[i].angle, ftofix((float) dims / (float) getGraphic()->textures.player->w));
@@ -204,14 +255,50 @@ void deplacerPersonnages() {
     afficherPersonnages();
 }
 
-void neFaitRien(s_joueur* joueur) {
+int coupableByIngredient(e_ingredients ingredient) {
+    switch (ingredient) {
+        case POTATO:
+        case TOMATE:
+        case PAIN:
+        case SALADE:
+            return 1;
+        default:
+            return 0;
+    }
+}
+
+int cuissonByIngredient(e_ingredients ingredient) {
+    switch (ingredient) {
+        case STEAK:
+            return A_LA_POELE;
+        default:
+            return NON;
+    }
+}
+
+void neFaitRien(s_joueur* joueur, int i, int j) {
     // Ne rien faire
 }
 
 void planDeTravail(s_joueur* joueur, int i, int j) {
-    if (joueur->en_main == OBJET) {
+    if (joueur->en_main == OBJET && getGame()->matrice[i][j].objet.type == NONE) {
         getGame()->matrice[i][j].objet = joueur->handObjet;
         joueur->en_main = NOTHING;
+    } else if (joueur->en_main == INGREDIENT && getGame()->matrice[i][j].objet.nourriture[0].nom == PAS_D_INGREDIENT) {
+        getGame()->matrice[i][j].objet.type = STOCKEUR;
+        getGame()->matrice[i][j].objet.nourriture[0] = joueur->handIngredient;
+        joueur->en_main = NOTHING;
+    } else if (joueur->en_main == NOTHING) {
+        if (getGame()->matrice[i][j].objet.type == STOCKEUR) {
+            joueur->handIngredient = getGame()->matrice[i][j].objet.nourriture[0];
+            joueur->en_main = INGREDIENT;
+            getGame()->matrice[i][j].objet.nourriture[0].nom = PAS_D_INGREDIENT;
+            getGame()->matrice[i][j].objet.type = NONE;
+        } else if (getGame()->matrice[i][j].objet.type != NONE) {
+            joueur->handObjet = getGame()->matrice[i][j].objet;
+            joueur->en_main = OBJET;
+            getGame()->matrice[i][j].objet.type = NONE;
+        }
     }
 }
 
@@ -267,4 +354,8 @@ void poubelle(s_joueur* joueur, int i, int j) {
         joueur->handObjet.nbStockes = 0;
         joueur->en_main = NOTHING;
     }
+}
+
+void interact(s_joueur* joueur, int i, int j) {
+    getGame()->matrice[i][j].action(joueur, i, j);
 }
