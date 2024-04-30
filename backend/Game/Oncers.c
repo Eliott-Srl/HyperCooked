@@ -283,6 +283,20 @@ void hc_init() {
         allegro_exit();
         exit(EXIT_FAILURE);
     }
+    graphic->textures.pizza = load_bitmap("./res/img/pizza.bmp", NULL);
+
+    if (!graphic->textures.pizza) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+    graphic->textures.Fromage = load_bitmap("./res/img/fromage.bmp", NULL);
+
+    if (!graphic->textures.Fromage) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
 
     s_game *game = getGame();
 

@@ -43,6 +43,7 @@ typedef enum e_ingredients {                     // Indique le type de l'ingréd
     STEAK,
     OEUF,
     POTATO,
+    FROMAGE,
 } e_ingredients;
 
 typedef enum e_cuisson {                         // Indique le type de cuisson nécessaire
@@ -203,7 +204,9 @@ typedef struct s_textures {
     BITMAP *steak;                               // Texture du steak
     BITMAP *tomate;                              // Texture de la tomate
     BITMAP *burger;                              // Texture du burger
-    BITMAP *Salade;                              // Texture de la salade
+    BITMAP *Salade; // Texture de la salade
+    BITMAP *Fromage;
+    BITMAP *pizza;
 } s_textures;
 
 typedef struct s_graphic {
@@ -232,6 +235,9 @@ typedef struct s_sound {
     int loop;
 } s_sound;
 
+typedef struct leson{
+    s_sound sons[NUM_SONS];
+}s_leson;
 /*############### SETTINGS ###############*/
 typedef struct s_settings {
     int volume;                                  // Volume de la musique

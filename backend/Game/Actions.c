@@ -182,11 +182,12 @@ void afficherPersonnages() {
 void deplacerPersonnagesClavier() {
     s_coo velo_perso1 = {0, 0};
     s_coo velo_perso2 = {0, 0};
-    int sound = 0;
+        int nb=0;
+        s_leson leson;
 
     if (key[KEY_W]) {
-//      charge_Sound(sound);
         velo_perso1.y--;
+
     }
     if (key[KEY_S]) {
         velo_perso1.y++;
@@ -196,18 +197,23 @@ void deplacerPersonnagesClavier() {
     }
     if (key[KEY_D]) {
         velo_perso1.x++;
+        charge_Sound(nb);
     }
     if (key[KEY_UP]) {
         velo_perso2.y--;
+        charge_Sound(nb);
     }
     if (key[KEY_DOWN]) {
         velo_perso2.y++;
+        // playSound(sons, 0);
     }
     if (key[KEY_LEFT]) {
         velo_perso2.x--;
+        // playSound(sons, 0);
     }
     if (key[KEY_RIGHT]) {
         velo_perso2.x++;
+       // playSound(sons, 0);
     }
 
     deplacerPersonnage(&getGame()->joueurs[0], velo_perso1.x, velo_perso1.y);

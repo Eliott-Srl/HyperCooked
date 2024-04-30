@@ -4,8 +4,8 @@
 #include "../backend.h"
 
 int charge_Sound(int choix);
-void chargeSound(s_sound sound[NUM_SONS]);
-void playSound(s_sound sons[NUM_SONS], int index);
-void freeSound(s_sound sound[NUM_SONS]);
+void chargeSound(s_leson *leson);
+void playSound(s_leson *leson, int index);
+void freeSound(s_leson *leson);
 
 #endif //HYPERCOOKED_SONG_H
