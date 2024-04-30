@@ -36,7 +36,8 @@ typedef enum e_etat_jeu {                        // Indique l'état du jeu
 } e_etat_jeu;
 
 typedef enum e_ingredients {                     // Indique le type de l'ingrédient
-    SALADE, //1
+    PAS_D_INGREDIENT,
+    SALADE,
     PAIN,
     TOMATE,
     STEAK,
@@ -103,12 +104,6 @@ typedef struct s_objet {
     int nbStockes;                               // Nombre d'objet stockés actuellement
 } s_objet;
 
-typedef struct s_meuble {
-    e_meubles typeMeuble;                        // Type du meuble
-    s_objet objet;                               // L'objet sur le meuble ( objet ou null )
-    void (*action)();                            // Fonction appelée quand on interagit avec le meuble
-} s_meuble;
-
 typedef enum e_typeEnMain {                      // Inqique le contenu de la main du joueur
     NOTHING,
     INGREDIENT,
@@ -124,7 +119,14 @@ typedef struct s_joueur {
     s_ingredient handIngredient;                 // Nourriture dans la main du joueur
     s_objet handObjet;                           // Objet dans la main du joueur
     e_typeEnMain en_main;                        // Indique ce qu'il y a dans la main du joueur
+    int shift_pressed;                           // Booléen qui indique si le shift est pressé
 } s_joueur;
+
+typedef struct s_meuble {
+    e_meubles typeMeuble;                        // Type du meuble
+    s_objet objet;                               // L'objet sur le meuble ( objet ou null )
+    void (*action)(s_joueur*, int, int);                            // Fonction appelée quand on interagit avec le meuble
+} s_meuble;
 
 typedef struct s_game {
     s_meuble matrice[HAUTEUR][LARGEUR];          // Matrice qui contient tous les meubles et leurs infos

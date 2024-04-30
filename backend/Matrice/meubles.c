@@ -45,25 +45,71 @@ void initialiserMatrice(const char* file) {
                 a = 1;
                 nombre[0] = '\0';
             } else if (*p == ';') {
+                for (int i = 0; i < NB_INGREDIENTS_MAX; ++i) {
+                    game->matrice[y][x].objet.nourriture[i].nom = PAS_D_INGREDIENT;
+                }
+
                 if (a == 0) {
                     game->matrice[y][x].typeMeuble = strtol(nombre, NULL, 10);
                     game->matrice[y][x].objet.type = NONE;
-                    game->matrice[y][x].objet.nbStockes = 0;
-                    game->matrice[y][x].objet.stockageMax = 0;
+                    game->matrice[y][x].objet.nbStockes = 1;
+                    game->matrice[y][x].objet.stockageMax = 1;
                 } else {
-                    game->matrice[y][x].objet.type = strtol(nombre, NULL, 10);
-
-                    if (strtol(nombre, NULL, 10) == POELE || strtol(nombre, NULL, 10) == ASSIETTE) {
+                    int elm = strtol(nombre, NULL, 10);
+                    if (game->matrice[y][x].typeMeuble == COFFRE) {
+                        game->matrice[y][x].objet.type = STOCKEUR;
+                        game->matrice[y][x].objet.nbStockes = 1;
                         game->matrice[y][x].objet.stockageMax = 1;
-                    } else if (strtol(nombre, NULL, 10) == MARMITE) {
-                        game->matrice[y][x].objet.stockageMax = 3;
+                        game->matrice[y][x].objet.nourriture[0].nom = elm;
+                        game->matrice[y][x].objet.nourriture[0].coupable = coupableByIngredient(elm);
+                        game->matrice[y][x].objet.nourriture[0].cuisson = cuissonByIngredient(elm);
                     } else {
-                        game->matrice[y][x].objet.stockageMax = 0;
-                    }
+                        game->matrice[y][x].objet.type = elm;
 
+                        if (game->matrice[y][x].objet.type == POELE || game->matrice[y][x].objet.type == ASSIETTE) {
+                            game->matrice[y][x].objet.stockageMax = 1;
+                        } else if (game->matrice[y][x].objet.type == MARMITE) {
+                            game->matrice[y][x].objet.stockageMax = 3;
+                        } else {
+                            game->matrice[y][x].objet.stockageMax = 0;
+                        }
+
+                    }
                     a = 0;
                 }
+
                 nombre[0] = '\0';
+                switch (game->matrice[y][x].typeMeuble) {
+                    case SOL:
+                        game->matrice[y][x].action = &neFaitRien;
+                        break;
+                    case PLAN_DE_TRAVAIL:
+                        game->matrice[y][x].action = &planDeTravail;
+                        break;
+                    case PLANCHE_A_DECOUPER:
+                        game->matrice[y][x].action = &plancheADecouper;
+                        break;
+                    case COMPTOIR:
+                        game->matrice[y][x].action = &comptoir;
+                        break;
+                    case COFFRE:
+                        game->matrice[y][x].action = &coffre;
+                        break;
+                    case PLAQUE_A_CUISSON:
+                        game->matrice[y][x].action = &plaqueDeCuisson;
+                        break;
+                    case POUBELLE:
+                        game->matrice[y][x].action = &poubelle;
+                        break;
+                    default:
+                        break;
+                }
+                if (game->matrice[y][x].typeMeuble == COFFRE && game->matrice[y][x].objet.type != STOCKEUR) {
+                    allegro_message("Bad format");
+                    allegro_exit();
+                    exit(EXIT_FAILURE);
+                }
+
                 x++;
             } else {
                 exit(-1);
@@ -84,20 +130,21 @@ void hc_afficher_matrice() {
             int x = getOffsetX() + l * getCorrectCaseSize();
             int y = getOffsetY() + h * getCorrectCaseSize();
 
-            if (getGame()->matrice[h][l].typeMeuble == SOL) {
-                stretch_sprite(getCorrectBuffer(), getGraphic()->textures.sol, x, y, getCorrectCaseSize(), getCorrectCaseSize());
+            BITMAP *meuble = getTextureByFurnitureName(getGame()->matrice[h][l].typeMeuble);
+            if (meuble) {
+                stretch_sprite(getCorrectBuffer(), meuble, x, y, getCorrectCaseSize(), getCorrectCaseSize());
             }
 
-            if (getGame()->matrice[h][l].typeMeuble == PLAN_DE_TRAVAIL) {
-                stretch_sprite(getCorrectBuffer(), getGraphic()->textures.planDeTravail, x, y, getCorrectCaseSize(), getCorrectCaseSize());
+            BITMAP *objet = getTextureByObjectName(getGame()->matrice[h][l].objet.type);
+            if (objet) {
+                stretch_sprite(getCorrectBuffer(), objet, x, y, getCorrectCaseSize(), getCorrectCaseSize());
             }
 
-            if (getGame()->matrice[h][l].typeMeuble == PLANCHE_A_DECOUPER) {
-                rectfill(getCorrectBuffer(), x, y, x + getCorrectCaseSize(), y + getCorrectCaseSize(), makecol(139, 69, 19));
-            }
-
-            if (getGame()->matrice[h][l].typeMeuble == COMPTOIR) {
-                rectfill(getCorrectBuffer(), x, y, x + getCorrectCaseSize(), y + getCorrectCaseSize(), makecol(238, 238, 238));
+            if (getGame()->matrice[h][l].objet.type == STOCKEUR) {
+                BITMAP *nourriture = getTextureByIngredientName(getGame()->matrice[h][l].objet.nourriture[0].nom);
+                if (nourriture) {
+                    stretch_sprite(getCorrectBuffer(), nourriture, x, y, getCorrectCaseSize(), getCorrectCaseSize());
+                }
             }
         }
     }

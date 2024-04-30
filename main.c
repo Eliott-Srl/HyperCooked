@@ -6,7 +6,7 @@ int main() {
     getGame()->etatJeu = DANS_MENU;
 
     while (!getGame()->quitting) {
-        if (getGame()->etatJeu == DANS_MENU) {
+        if (getGame()->etatJeu == DANS_MENU || getGame()->etatJeu == LOADING) {
             menu();
         } else if (getGame()->etatJeu == PLAYING) {
             jeu();
