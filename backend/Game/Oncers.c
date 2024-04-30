@@ -228,6 +228,28 @@ void hc_init() {
         exit(EXIT_FAILURE);
     }
 
+    graphic->textures.plancheADecouper = load_bitmap("./res/img/planche_a_decouper.bmp", NULL);
+
+    if (!graphic->textures.plancheADecouper) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+    graphic->textures.assiette = load_bitmap("./res/img/assiette.bmp", NULL);
+
+    if (!graphic->textures.assiette) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+    graphic->textures.plaqueDeCuisson = load_bitmap("./res/img/Plaque_de_cuisson.bmp", NULL);
+
+    if (!graphic->textures.plaqueDeCuisson) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
     graphic->textures.steak = load_bitmap("./res/img/Steak.bmp", NULL);
 
     if (!graphic->textures.steak) {
