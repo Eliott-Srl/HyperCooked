@@ -97,7 +97,8 @@ void nope() {
 }
 
 void menu() {
-    while (getGame()->etatJeu == DANS_MENU && !credit && !getGame()->quitting) {
+    while ((getGame()->etatJeu == DANS_MENU || getGame()->etatJeu == LOADING) && !credit && !getGame()->quitting) {
+        getGame()->etatJeu = DANS_MENU;
         hc_clear_buffers();
         clear_boutons();
         float ratio = (float) getCorrectWidth() / (float) getGraphic()->textures.menuBackground->w;
@@ -148,11 +149,15 @@ void menu() {
         hc_blit(getCorrectBuffer());
         globalKeyboardActions();
     }
+
+
 }
 
 void partie(int niveau) {
     s_game *game = getGame();
     int recettes_crees = 0;
+    counter = 0;
+    credit = 0;
     install_int_ex(timer_handler, SECS_TO_TIMER(1));
 
     do {
@@ -198,42 +203,38 @@ void partie(int niveau) {
             executeFunctionForEveryBlockReachable(&game->joueurs[1], &interact);
             getGame()->joueurs[1].shift_pressed = 0;
         }
-
-    } while (counter <= 90 && (game->etatJeu == PLAYING || game->etatJeu == DANS_MENU_JEU) && !game->quitting);
+    } while (counter <= 110 && (game->etatJeu == PLAYING || game->etatJeu == DANS_MENU_JEU) && !game->quitting);
 
     remove_int(timer_handler);
-    game->etatJeu = LOADING;
 }
 
 void jeu() {
     getGame()->etatJeu = LOADING;
     hc_blit(getCorrectBuffer());
-    while (!getGame()->quitting) {
-        char maps[NB_MAPS_MAX][STRMAX];
-        int nbMaps = loadingMaps(maps);
+    char maps[NB_MAPS_MAX][STRMAX];
+    int nbMaps = loadingMaps(maps);
 
-        for (int i = 0; i < nbMaps; i++) {
-            if (getGame()->quitting) {
-                break;
-            }
-
-            reinitialiserPartie();
-
-            char filename[STRMAX];
-            sprintf(filename, "maps/%s", maps[i]);
-
-            initialiserMatrice(filename);
-
-            getGame()->etatJeu = PLAYING;
-
-            // Fin de l'écran de chargement
-            s_color j1 = {255, 0, 0}, j2 = {0,0, 255};
-            initialisePlayers(j1, "Stephane", j2, "Bernard");
-
-            partie(i + 1);
-
-            getGame()->etatJeu = LOADING;
-            hc_blit(getCorrectBuffer());
+    for (int i = 0; i < nbMaps; i++) {
+        if (getGame()->quitting) {
+            break;
         }
+
+        reinitialiserPartie();
+
+        char filename[STRMAX];
+        sprintf(filename, "maps/%s", maps[i]);
+
+        initialiserMatrice(filename);
+
+        getGame()->etatJeu = PLAYING;
+
+        // Fin de l'écran de chargement
+        s_color j1 = {255, 0, 0}, j2 = {0,0, 255};
+        initialisePlayers(j1, "Stephane", j2, "Bernard");
+
+        partie(i + 1);
+
+        getGame()->etatJeu = LOADING;
+        hc_blit(getCorrectBuffer());
     }
 }

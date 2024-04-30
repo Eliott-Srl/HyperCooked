@@ -36,8 +36,8 @@ typedef enum e_etat_jeu {                        // Indique l'état du jeu
 } e_etat_jeu;
 
 typedef enum e_ingredients {                     // Indique le type de l'ingrédient
-    PAS_D_INGREDIENT,
-    SALADE,
+    PAS_D_INGREDIENT = -1,
+    SALADE = 1,
     PAIN,
     TOMATE,
     STEAK,
@@ -78,7 +78,8 @@ typedef enum e_meubles {                         // Indique le type du meuble
     COMPTOIR,
     COFFRE,
     PLAQUE_A_CUISSON,
-    POUBELLE
+    POUBELLE,
+    POSITION_JOUEUR = 10
 } e_meubles;
 
 typedef enum e_objet {                           // Indique le type de l'objet

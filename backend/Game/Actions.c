@@ -102,8 +102,6 @@ BITMAP *getTextureByObjectName(e_objet objet) {
             return getGraphic()->textures.assiette;
         case EXTINCTEUR:
             return getGraphic()->textures.extincteur;
-        case STOCKEUR:
-            return getGraphic()->textures.coffre;
         */
         default:
             return NULL;
@@ -116,18 +114,16 @@ BITMAP *getTextureByFurnitureName(e_meubles meuble) {
             return getGraphic()->textures.sol;
         case PLAN_DE_TRAVAIL:
             return getGraphic()->textures.planDeTravail;
-        /*
         case PLANCHE_A_DECOUPER:
             return getGraphic()->textures.plancheADecouper;
+        /*
         case COMPTOIR:
             return getGraphic()->textures.comptoir;
         case COFFRE:
             return getGraphic()->textures.coffre;
+        */
         case PLAQUE_A_CUISSON:
             return getGraphic()->textures.plaqueDeCuisson;
-        case POUBELLE:
-            return getGraphic()->textures.poubelle;
-        */
         default:
             return NULL;
     }

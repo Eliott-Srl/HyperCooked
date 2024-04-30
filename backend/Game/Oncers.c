@@ -235,6 +235,7 @@ void hc_init() {
         allegro_exit();
         exit(EXIT_FAILURE);
     }
+
     graphic->textures.assiette = load_bitmap("./res/img/assiette.bmp", NULL);
 
     if (!graphic->textures.assiette) {
@@ -242,6 +243,7 @@ void hc_init() {
         allegro_exit();
         exit(EXIT_FAILURE);
     }
+
     graphic->textures.plaqueDeCuisson = load_bitmap("./res/img/Plaque_de_cuisson.bmp", NULL);
 
     if (!graphic->textures.plaqueDeCuisson) {
@@ -323,8 +325,8 @@ int loadingMaps(char maps[NB_MAPS_MAX][STRMAX]) {
 
 void initialisePlayers(s_color c_player1, const char *n_player1, s_color c_player2, const char *n_player2) {
     for (int i = 0; i < 2; i++) {
-        getGame()->joueurs[i].x = (float) WIDTH / 2 + (float) ((i * 2 - 1) * getCorrectCaseSize());
-        getGame()->joueurs[i].y = (float) HEIGHT / 2;
+        // getGame()->joueurs[i].x = (float) WIDTH / 2 + (float) ((i * 2 - 1) * getCorrectCaseSize());
+        // getGame()->joueurs[i].y = (float) HEIGHT / 2;
         getGame()->joueurs[i].en_main = NOTHING;
     }
 

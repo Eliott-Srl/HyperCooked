@@ -13,6 +13,7 @@ void initialiserMatrice(const char* file) {
     FILE *fichier;
     char ligne[128];
     s_game *game = getGame();
+    int joueur = 0;
 
     // Ouvrir le fichier en mode lecture
     fichier = fopen(file, "r");
@@ -50,10 +51,22 @@ void initialiserMatrice(const char* file) {
                 }
 
                 if (a == 0) {
-                    game->matrice[y][x].typeMeuble = strtol(nombre, NULL, 10);
-                    game->matrice[y][x].objet.type = NONE;
-                    game->matrice[y][x].objet.nbStockes = 1;
-                    game->matrice[y][x].objet.stockageMax = 1;
+                    if (strtol(nombre, NULL, 10) == POSITION_JOUEUR) {
+                        game->matrice[y][x].typeMeuble = SOL;
+                        game->matrice[y][x].objet.type = NONE;
+                        game->matrice[y][x].objet.nbStockes = 1;
+                        game->matrice[y][x].objet.stockageMax = 1;
+                        if (joueur < 2) {
+                            game->joueurs[joueur].x = (float) x * (float) getCorrectCaseSize() + (float) getOffsetX();
+                            game->joueurs[joueur].y = (float) y * (float) getCorrectCaseSize() + (float) getOffsetY();
+                            joueur++;
+                        }
+                    } else {
+                        game->matrice[y][x].typeMeuble = strtol(nombre, NULL, 10);
+                        game->matrice[y][x].objet.type = NONE;
+                        game->matrice[y][x].objet.nbStockes = 1;
+                        game->matrice[y][x].objet.stockageMax = 1;
+                    }
                 } else {
                     int elm = strtol(nombre, NULL, 10);
                     if (game->matrice[y][x].typeMeuble == COFFRE) {
@@ -125,11 +138,20 @@ void initialiserMatrice(const char* file) {
 }
 
 void hc_afficher_matrice() {
+    BITMAP *plandetravail = getTextureByFurnitureName(PLAN_DE_TRAVAIL);
+    if (!plandetravail) {
+        allegro_message("Erreur lors du chargement de la texture du sol");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
     for(int h = 0; h < HAUTEUR; h++) {
         for(int l = 0; l < LARGEUR; l++) {
             int x = getOffsetX() + l * getCorrectCaseSize();
             int y = getOffsetY() + h * getCorrectCaseSize();
 
+            if (getGame()->matrice[h][l].typeMeuble != SOL && getGame()->matrice[h][l].typeMeuble != COFFRE && getGame()->matrice[h][l].typeMeuble != COMPTOIR && getGame()->matrice[h][l].typeMeuble != POUBELLE) {
+                stretch_sprite(getCorrectBuffer(), plandetravail, x, y, getCorrectCaseSize(), getCorrectCaseSize());
+            }
             BITMAP *meuble = getTextureByFurnitureName(getGame()->matrice[h][l].typeMeuble);
             if (meuble) {
                 stretch_sprite(getCorrectBuffer(), meuble, x, y, getCorrectCaseSize(), getCorrectCaseSize());
