@@ -61,6 +61,12 @@ void hc_init() {
     install_mouse();
     install_keyboard();
 
+    if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, NULL) != 0) {
+        allegro_message("Erreur d'initialisation du système audio.");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
     if (install_joystick(JOY_TYPE_AUTODETECT) != 0) {
         allegro_message("Error initialising joystick!");
         allegro_exit();
@@ -252,6 +258,14 @@ void hc_init() {
         exit(EXIT_FAILURE);
     }
 
+    graphic->textures.poubelle = load_bitmap("./res/img/poubelle.bmp", NULL);
+
+    if (!graphic->textures.poubelle) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
     graphic->textures.steak = load_bitmap("./res/img/Steak.bmp", NULL);
 
     if (!graphic->textures.steak) {
@@ -335,20 +349,6 @@ int loadingMaps(char maps[NB_MAPS_MAX][STRMAX]) {
     }
 
     return map_index;
-}
-
-void initialisePlayers(s_color c_player1, const char *n_player1, s_color c_player2, const char *n_player2) {
-    for (int i = 0; i < 2; i++) {
-        // getGame()->joueurs[i].x = (float) WIDTH / 2 + (float) ((i * 2 - 1) * getCorrectCaseSize());
-        // getGame()->joueurs[i].y = (float) HEIGHT / 2;
-        getGame()->joueurs[i].en_main = NOTHING;
-    }
-
-    getGame()->joueurs[0].couleur = c_player1;
-    strcpy(getGame()->joueurs[0].nom, n_player1);
-
-    getGame()->joueurs[1].couleur = c_player2;
-    strcpy(getGame()->joueurs[1].nom, n_player2);
 }
 
 void reinitialiserPartie() {

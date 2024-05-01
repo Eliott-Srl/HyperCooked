@@ -9,6 +9,7 @@
 #include <string.h>
 
 void afficherMatrice();
+BITMAP *getTextureByFurnitureName(e_meubles meuble);
 void initialiserMatrice(const char* file);
 void hc_afficher_matrice();
 

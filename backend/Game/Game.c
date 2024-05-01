@@ -176,7 +176,7 @@ void partie(int niveau) {
             deplacerPersonnages();
 
             // Toutes les 40 secondes, il y a une nouvelle recette qui est rendu disponible
-            if (counter >= 5 + recettes_crees * 5) {
+            if (counter >= 5 + recettes_crees * 20) {
                 newCommande();
                 recettes_crees++;
             }
@@ -203,7 +203,7 @@ void partie(int niveau) {
             executeFunctionForEveryBlockReachable(&game->joueurs[1], &interact);
             getGame()->joueurs[1].shift_pressed = 0;
         }
-    } while (counter <= 110 && (game->etatJeu == PLAYING || game->etatJeu == DANS_MENU_JEU) && !game->quitting);
+    } while (counter <= 120 && (game->etatJeu == PLAYING || game->etatJeu == DANS_MENU_JEU) && !game->quitting);
 
     remove_int(timer_handler);
 }

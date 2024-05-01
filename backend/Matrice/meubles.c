@@ -54,7 +54,7 @@ void initialiserMatrice(const char* file) {
                     if (strtol(nombre, NULL, 10) == POSITION_JOUEUR) {
                         game->matrice[y][x].typeMeuble = SOL;
                         game->matrice[y][x].objet.type = NONE;
-                        game->matrice[y][x].objet.nbStockes = 1;
+                        game->matrice[y][x].objet.nbStockes = 0;
                         game->matrice[y][x].objet.stockageMax = 1;
                         if (joueur < 2) {
                             game->joueurs[joueur].x = (float) x * (float) getCorrectCaseSize() + (float) getOffsetX();
@@ -64,7 +64,7 @@ void initialiserMatrice(const char* file) {
                     } else {
                         game->matrice[y][x].typeMeuble = strtol(nombre, NULL, 10);
                         game->matrice[y][x].objet.type = NONE;
-                        game->matrice[y][x].objet.nbStockes = 1;
+                        game->matrice[y][x].objet.nbStockes = 0;
                         game->matrice[y][x].objet.stockageMax = 1;
                     }
                 } else {
@@ -72,7 +72,7 @@ void initialiserMatrice(const char* file) {
                     if (game->matrice[y][x].typeMeuble == COFFRE) {
                         game->matrice[y][x].objet.type = STOCKEUR;
                         game->matrice[y][x].objet.nbStockes = 1;
-                        game->matrice[y][x].objet.stockageMax = 1;
+                        game->matrice[y][x].objet.stockageMax = 0;
                         game->matrice[y][x].objet.nourriture[0].nom = elm;
                         game->matrice[y][x].objet.nourriture[0].coupable = coupableByIngredient(elm);
                         game->matrice[y][x].objet.nourriture[0].cuisson = cuissonByIngredient(elm);
@@ -169,5 +169,28 @@ void hc_afficher_matrice() {
                 }
             }
         }
+    }
+}
+
+BITMAP *getTextureByFurnitureName(e_meubles meuble) {
+    switch (meuble) {
+        case SOL:
+            return getGraphic()->textures.sol;
+        case PLAN_DE_TRAVAIL:
+            return getGraphic()->textures.planDeTravail;
+        case PLANCHE_A_DECOUPER:
+            return getGraphic()->textures.plancheADecouper;
+            /*
+            case COMPTOIR:
+                return getGraphic()->textures.comptoir;
+            case COFFRE:
+                return getGraphic()->textures.coffre;
+            */
+        case PLAQUE_A_CUISSON:
+            return getGraphic()->textures.plaqueDeCuisson;
+        case POUBELLE:
+            return getGraphic()->textures.poubelle;
+        default:
+            return NULL;
     }
 }

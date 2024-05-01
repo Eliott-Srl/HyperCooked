@@ -6,7 +6,6 @@
 void hc_init();
 
 int loadingMaps(char maps[NB_MAPS_MAX][STRMAX]);
-void initialisePlayers(s_color c_player1, const char *n_player1, s_color c_player2, const char *n_player2);
 void reinitialiserPartie();
 void hc_finish();
 

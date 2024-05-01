@@ -6,7 +6,7 @@
 #define LARGEUR 20
 #define NB_RECETTES_MAX 10
 #define NB_INGREDIENTS_MAX 10
-#define NB_COMMANDES_MAX 8
+#define NB_COMMANDES_MAX 6
 #define NB_MAPS_MAX 10
 #define SPEED 0.1
 #define WIDTH 800
@@ -122,6 +122,7 @@ typedef struct s_joueur {
     s_objet handObjet;                           // Objet dans la main du joueur
     e_typeEnMain en_main;                        // Indique ce qu'il y a dans la main du joueur
     int shift_pressed;                           // Booléen qui indique si le shift est pressé
+    int score;                                   // Score du joueur
 } s_joueur;
 
 typedef struct s_meuble {
@@ -137,7 +138,7 @@ typedef struct s_game {
     int nbRecettes;                              // Nombre de recettes disponibles
     e_etat_jeu etatJeu;                          // L'état du jeu: LOADING, PLAYING, MENU
     int quitting;                                // Booléen qui indique si on quitte le jeu
-    s_commande commandes[NB_COMMANDES_MAX];      // Tableau de commande qui contient les commandes en cours
+    s_commande commandes[NB_COMMANDES_MAX + 1];  // Tableau de commande qui contient les commandes en cours
     int nbCommandes;                             // Nombre de commandes en cours
     int score;                                   // Le score jusqu'ici
 } s_game;
@@ -226,18 +227,19 @@ typedef struct s_graphic {
     s_textures textures;
 } s_graphic;
 
-// Structure pour stocker les échantillons sonores
+/*############### SETTINGS ###############*/
 typedef struct s_sound {
-    SAMPLE* son;
-    int volume;
-    int pan;
-    int pitch;
-    int loop;
+    SAMPLE* son;                                // Pointeur vers l'échantillon sonore
+    int volume;                                 // Volume du son
+    int pan;                                    // Position stéréo du son
+    int pitch;                                  // Hauteur du son
+    int loop;                                   // Booléen qui indique si le son doit être joué en boucle
 } s_sound;
 
 typedef struct leson{
     s_sound sons[NUM_SONS];
 }s_leson;
+
 /*############### SETTINGS ###############*/
 typedef struct s_settings {
     int volume;                                  // Volume de la musique
@@ -252,5 +254,7 @@ typedef struct s_settings {
 #include "Game/Oncers.h"
 #include "allezgros/Allezgros.h"
 #include "Son/song.h"
+#include "Commandes/Ingredients.h"
+#include "Game/Players.h"
 
 #endif //HYPERCOOKED_BACKEND_H
