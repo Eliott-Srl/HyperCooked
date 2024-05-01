@@ -171,7 +171,7 @@ void hc_init() {
         exit(EXIT_FAILURE);
     }
 
-    graphic->textures.planDeTravail = load_bitmap("./res/img/plancheH.bmp", NULL);
+    graphic->textures.planDeTravail = load_bitmap("./res/img/marbre.bmp", NULL);
 
     if (!graphic->textures.planDeTravail) {
         allegro_message("Erreur de chargement de l'image");
@@ -195,7 +195,7 @@ void hc_init() {
         exit(EXIT_FAILURE);
     }
 
-    graphic->textures.PlancheH = load_bitmap("./res/img/plancheH.bmp", NULL);
+    graphic->textures.PlancheH = load_bitmap("./res/img/planche2.0.bmp", NULL);
 
     if (!graphic->textures.PlancheH) {
         allegro_message("Erreur de chargement de l'image");
@@ -226,7 +226,7 @@ void hc_init() {
         exit(EXIT_FAILURE);
     }
 
-    graphic->textures.PommeDeTerre = load_bitmap("./res/img/Pomme_de_terre.bmp", NULL);
+    graphic->textures.PommeDeTerre = load_bitmap("./res/img/Pomme de terre.bmp", NULL);
 
     if (!graphic->textures.PommeDeTerre) {
         allegro_message("Erreur de chargement de l'image");
@@ -234,7 +234,7 @@ void hc_init() {
         exit(EXIT_FAILURE);
     }
 
-    graphic->textures.plancheADecouper = load_bitmap("./res/img/planche_a_decouper.bmp", NULL);
+    graphic->textures.plancheADecouper = load_bitmap("./res/img/plancheH.bmp", NULL);
 
     if (!graphic->textures.plancheADecouper) {
         allegro_message("Erreur de chargement de l'image");
@@ -274,7 +274,7 @@ void hc_init() {
         exit(EXIT_FAILURE);
     }
 
-    graphic->textures.tomate = load_bitmap("./res/img/Tomates.bmp", NULL);
+    graphic->textures.tomate = load_bitmap("./res/img/Tomate.bmp", NULL);
 
     if (!graphic->textures.tomate) {
         allegro_message("Erreur de chargement de l'image");
