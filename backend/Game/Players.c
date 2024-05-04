@@ -22,17 +22,18 @@ void deplacerPersonnage(s_joueur* joueur, double veloX, double veloY) {
 
     s_game *game = getGame();
     // Nouvelles positions potentielles
-    float newX = joueur->x + (float) veloX * (float) (getGraphic()->fs ? SPEED * getGraphic()->ratio * 3.0 : SPEED);
-    float newY = joueur->y + (float) veloY * (float) (getGraphic()->fs ? SPEED * getGraphic()->ratio * 3.0 : SPEED);
+    float newX = joueur->x + (float) veloX * (float) getCorrectRatio() * (float) getCorrectRatio() * (float) SPEED;
+    float newY = joueur->y + (float) veloY * (float) getCorrectRatio() * (float) getCorrectRatio() * (float) SPEED;
 
     if (newX < 0 || newX > (float) getCorrectWidth() || newY < 0 || newY > (float) getCorrectHeight()) {
         return;
     }
 
     // Vérifier les collisions avec les meubles
-    int i = (int) ((newX - (float) getOffsetX()) / (float) getCorrectCaseSize());
-    int j = (int) ((newY - (float) getOffsetY()) / (float) getCorrectCaseSize());
-    if (collisionsBtRectanglesAndCircles(getOffsetX() + i * getCorrectCaseSize(), getOffsetY() + j * getCorrectCaseSize(),
+    int i = (int) ((newX - getCorrectOffsetX()) / (float) getCorrectCaseSize());
+    int j = (int) ((newY - getCorrectOffsetY()) / (float) getCorrectCaseSize());
+    if (collisionsBtRectanglesAndCircles((int) (getCorrectOffsetX() + (float) i * (float) getCorrectCaseSize()),
+                                         (int) (getCorrectOffsetY() + (float) j * (float) getCorrectCaseSize()),
                                          getCorrectCaseSize(), getCorrectCaseSize(), (int) newX, (int) newY,
                                          getCorrectRayon())
         && game->matrice[j][i].typeMeuble != SOL) {
@@ -97,11 +98,11 @@ void afficherPersonnages() {
 
         if (getGame()->joueurs[i].en_main == OBJET) {
             if (getTextureByObjectName(getGame()->joueurs[i].handObjet.type) != NONE) {
-                rotate_scaled_sprite(getCorrectBuffer(), getTextureByObjectName(getGame()->joueurs[i].handObjet.type),
+                rotate_scaled_sprite(getCorrectBuffer(),
+                                     getTextureByObjectName(getGame()->joueurs[i].handObjet.type),
                                      (int) (x + (float) offsetX), (int) (y + (float) offsetY),
-                                     getGame()->joueurs[i].angle, ftofix((float) getCorrectCaseSize() /
-                                                                         (float) getTextureByIngredientName(
-                                                                                 getGame()->joueurs[i].handIngredient.nom)->w));
+                                     getGame()->joueurs[i].angle,
+                                     ftofix((float) getCorrectCaseSize() / (float) getTextureByIngredientName(getGame()->joueurs[i].handIngredient.nom)->w));
             }
         } else if (getGame()->joueurs[i].en_main == INGREDIENT) {
             if (getGame()->joueurs[i].handIngredient.nom != PAS_D_INGREDIENT) {
@@ -113,15 +114,17 @@ void afficherPersonnages() {
         circlefill(getCorrectBuffer(), (int) getGame()->joueurs[i].x, (int) getGame()->joueurs[i].y, dims/5,
                    rgbToAllegroColor(getGame()->joueurs[i].couleur));
 
-        executeFunctionForEveryBlockReachable(getGame()->joueurs + i, &meuble);
+        executeFunctionForEveryBlockReachable(getGame()->joueurs + i, &showInteractions);
     }
 }
 
 void deplacerPersonnagesClavier() {
     s_coo velo_perso1 = {0, 0};
     s_coo velo_perso2 = {0, 0};
+    /*
     int nb=0;
     s_leson leson;
+    */
 
     if (key[KEY_W]) {
         velo_perso1.y--;

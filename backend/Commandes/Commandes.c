@@ -10,7 +10,7 @@ void newCommande() {
         getGame()->commandes[getGame()->nbCommandes].recette.ingredients[i] = getGame()->recettes[choix].ingredients[i];
     }
     getGame()->commandes[getGame()->nbCommandes].recette.nbIngredients = getGame()->recettes[choix].nbIngredients;
-    strncpy(getGame()->commandes[getGame()->nbCommandes].recette.nom, getGame()->recettes[choix].nom, STRMAX);
+    getGame()->commandes[getGame()->nbCommandes].recette.nom = getGame()->recettes[choix].nom;
 
     // printf("Nouvelle recette: %s\n", getGame()->commandes[getGame()->nbCommandes].recette.nom);
 
@@ -33,8 +33,8 @@ void AfficherCommande() {
         LargeurRectangle = 90;
     }
 
-    stretch_sprite(getCorrectBuffer(), getGraphic()->textures.BAR, 0, getCorrectHeight() - 100, getCorrectWidth(), 40);
-    stretch_sprite(getCorrectBuffer(), getGraphic()->textures.PlancheH, 0, getCorrectHeight() - 70, getCorrectWidth(), 140);
+    stretch_sprite(getCorrectBuffer(), getGraphic()->textures.bar, 0, getCorrectHeight() - 100, getCorrectWidth(), 40);
+    stretch_sprite(getCorrectBuffer(), getGraphic()->textures.plancheH, 0, getCorrectHeight() - 70, getCorrectWidth(), 140);
 
     for (int i = 0; i < getGame()->nbCommandes; i++) {
         int xLogo = 10 + (i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle));
@@ -44,20 +44,7 @@ void AfficherCommande() {
                              getGame()->commandes[i].angle, ftofix((float) 110 / (float) getGraphic()->textures.ticket->w));
         set_clip_rect(getCorrectBuffer(), 0, 0, getCorrectWidth(), getCorrectHeight());
 
-        BITMAP *thumbnail_recette;
-        if (strcmp(getGame()->commandes[i].recette.nom, "Hamburger") == 0) {
-            thumbnail_recette = getGraphic()->textures.burger;
-        } else if (strcmp(getGame()->commandes[i].recette.nom, "Salade") == 0) {
-            thumbnail_recette = getGraphic()->textures.Salade;
-        } else if (strcmp(getGame()->commandes[i].recette.nom, "pizza") == 0) {
-            thumbnail_recette = getGraphic()->textures.pizza;
-        } else {
-            thumbnail_recette = NULL;
-        }
-
-        if(thumbnail_recette != NULL) {
-           stretch_sprite(getCorrectBuffer(), thumbnail_recette, 37 + xLogo, 408, 38, 38);
-        }
+        stretch_sprite(getCorrectBuffer(), getTextureByRecette(getGame()->commandes[i].recette.nom), 37 + xLogo, 408, 38, 38);
 
         int coosX[4] = {25, 90};
         int coosY[4] = {400, 435};

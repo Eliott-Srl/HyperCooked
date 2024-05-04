@@ -8,8 +8,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-void afficherMatrice();
 BITMAP *getTextureByFurnitureName(e_meubles meuble);
+int getSupposedTimerByFurnitures(e_meubles meuble);
+int getSlotByFurniture(e_meubles meuble);
+void afficherMatrice();
 void initialiserMatrice(const char* file);
 void hc_afficher_matrice();
 

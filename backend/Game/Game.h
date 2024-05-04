@@ -7,8 +7,10 @@
 s_game *getGame();
 int getTime();
 void mouseActions(int flags);
-int getOffsetX();
-int getOffsetY();
+float getCorrectOffsetX();
+float getIncorrectOffsetX();
+float getCorrectOffsetY();
+float getIncorrectOffsetY();
 void toGame();
 void toQuit();
 void nope();

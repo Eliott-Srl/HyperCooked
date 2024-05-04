@@ -3,35 +3,27 @@
 BITMAP *getTextureByIngredientName(e_ingredients ingredients) {
     switch (ingredients) {
         case SALADE:
-            return getGraphic()->textures.Laitue;
+            return getGraphic()->textures.laitue;
+        case SALADE_COUPEE:
+            return getGraphic()->textures.laitueCoupee;
         case TOMATE:
             return getGraphic()->textures.tomate;
+        case TOMATES_COUPEES:
+            return getGraphic()->textures.tomateCoupee;
         case PAIN:
-            return getGraphic()->textures.Pain;
+            return getGraphic()->textures.pain;
         case STEAK:
             return getGraphic()->textures.steak;
         case POTATO:
-            return getGraphic()->textures.PommeDeTerre;
+            return getGraphic()->textures.pommeDeTerre;
         case OEUF:
-            return getGraphic()->textures.Oeuf;
+            return getGraphic()->textures.oeuf;
+        case FROMAGE:
+            return getGraphic()->textures.fromage;
         default:
-            return NULL;
+            return getGraphic()->textures.invalidTexture;
     }
 }
-
-
-int coupableByIngredient(e_ingredients ingredient) {
-    switch (ingredient) {
-        case POTATO:
-        case TOMATE:
-        case PAIN:
-        case SALADE:
-            return 1;
-        default:
-            return 0;
-    }
-}
-
 
 int cuissonByIngredient(e_ingredients ingredient) {
     switch (ingredient) {
@@ -39,5 +31,16 @@ int cuissonByIngredient(e_ingredients ingredient) {
             return A_LA_POELE;
         default:
             return NON;
+    }
+}
+
+int getIngredientAfterCutting(e_ingredients ingredient) {
+    switch (ingredient) {
+        case TOMATE:
+            return TOMATES_COUPEES;
+        case SALADE:
+            return SALADE_COUPEE;
+        default:
+            return PAS_D_INGREDIENT;
     }
 }

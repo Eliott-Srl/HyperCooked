@@ -5,7 +5,7 @@
 #include <Math.h>
 
 void executeFunctionForEveryBlockReachable(s_joueur *joueur, void (*fonction)(s_joueur*, int, int));
-void meuble(s_joueur *joueur, int k, int s);
+void showInteractions(s_joueur *joueur, int k, int s);
 BITMAP *getTextureByObjectName(e_objet objet);
 void interact(s_joueur* joueur, int i, int j);
 void neFaitRien(s_joueur* joueur, int i, int j);

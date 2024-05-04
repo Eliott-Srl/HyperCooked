@@ -5,11 +5,18 @@ void hc_init() {
     set_window_title("HyperCooked");
 
     set_color_depth(desktop_color_depth());
+    request_refresh_rate(FRAMERATE);
     if(set_gfx_mode(GFX_AUTODETECT_WINDOWED,WIDTH, HEIGHT, 0, 0) != 0) {
         allegro_message("Pb de mode graphique");
         allegro_exit();
         exit(EXIT_FAILURE);
     }
+
+    /*if (get_refresh_rate() != FRAMERATE) {
+        allegro_message("Pb de framerate");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }*/
 
     // écran de chargement ici
     s_graphic *graphic = getGraphic();
@@ -115,6 +122,14 @@ void hc_init() {
         exit(EXIT_FAILURE);
     }
 
+    graphic->textures.invalidTexture = load_bitmap("./res/img/invalid_texture.bmp", NULL);
+
+    if (!graphic->textures.invalidTexture) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
     graphic->textures.cursor = load_bitmap("./res/img/cursor.bmp", NULL);
 
     if (!graphic->textures.cursor) {
@@ -171,6 +186,14 @@ void hc_init() {
         exit(EXIT_FAILURE);
     }
 
+    graphic->textures.comptoir = load_bitmap("./res/img/comptoir.bmp", NULL);
+
+    if (!graphic->textures.comptoir) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
     graphic->textures.planDeTravail = load_bitmap("./res/img/marbre.bmp", NULL);
 
     if (!graphic->textures.planDeTravail) {
@@ -187,48 +210,56 @@ void hc_init() {
         exit(EXIT_FAILURE);
     }
 
-    graphic->textures.BAR = load_bitmap("./res/img/BAR.bmp", NULL);
+    graphic->textures.bar = load_bitmap("./res/img/bar.bmp", NULL);
 
-    if (!graphic->textures.BAR) {
+    if (!graphic->textures.bar) {
         allegro_message("Erreur de chargement de l'image");
         allegro_exit();
         exit(EXIT_FAILURE);
     }
 
-    graphic->textures.PlancheH = load_bitmap("./res/img/planche2.0.bmp", NULL);
+    graphic->textures.plancheH = load_bitmap("./res/img/planche2.0.bmp", NULL);
 
-    if (!graphic->textures.PlancheH) {
+    if (!graphic->textures.plancheH) {
         allegro_message("Erreur de chargement de l'image");
         allegro_exit();
         exit(EXIT_FAILURE);
     }
-    graphic->textures.Laitue = load_bitmap("./res/img/Laitue.bmp", NULL);
+    graphic->textures.laitue = load_bitmap("./res/img/laitue.bmp", NULL);
 
-    if (!graphic->textures.Laitue) {
-        allegro_message("Erreur de chargement de l'image");
-        allegro_exit();
-        exit(EXIT_FAILURE);
-    }
-
-    graphic->textures.Oeuf = load_bitmap("./res/img/Oeuf.bmp", NULL);
-
-    if (!graphic->textures.Oeuf) {
+    if (!graphic->textures.laitue) {
         allegro_message("Erreur de chargement de l'image");
         allegro_exit();
         exit(EXIT_FAILURE);
     }
 
-    graphic->textures.Pain = load_bitmap("./res/img/Pain.bmp", NULL);
+    graphic->textures.laitueCoupee = load_bitmap("./res/img/laitue_coupee.bmp", NULL);
 
-    if (!graphic->textures.Pain) {
+    if (!graphic->textures.laitueCoupee) {
         allegro_message("Erreur de chargement de l'image");
         allegro_exit();
         exit(EXIT_FAILURE);
     }
 
-    graphic->textures.PommeDeTerre = load_bitmap("./res/img/Pomme de terre.bmp", NULL);
+    graphic->textures.oeuf = load_bitmap("./res/img/oeuf.bmp", NULL);
 
-    if (!graphic->textures.PommeDeTerre) {
+    if (!graphic->textures.oeuf) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    graphic->textures.pain = load_bitmap("./res/img/pain.bmp", NULL);
+
+    if (!graphic->textures.pain) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    graphic->textures.pommeDeTerre = load_bitmap("./res/img/Pomme de terre.bmp", NULL);
+
+    if (!graphic->textures.pommeDeTerre) {
         allegro_message("Erreur de chargement de l'image");
         allegro_exit();
         exit(EXIT_FAILURE);
@@ -282,6 +313,14 @@ void hc_init() {
         exit(EXIT_FAILURE);
     }
 
+    graphic->textures.tomateCoupee = load_bitmap("./res/img/tomates_coupees.bmp", NULL);
+
+    if (!graphic->textures.tomateCoupee) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
     graphic->textures.burger = load_bitmap("./res/img/Burger.bmp", NULL);
 
     if (!graphic->textures.burger) {
@@ -290,9 +329,9 @@ void hc_init() {
         exit(EXIT_FAILURE);
     }
 
-    graphic->textures.Salade = load_bitmap("./res/img/Salade.bmp", NULL);
+    graphic->textures.salade = load_bitmap("./res/img/salade.bmp", NULL);
 
-    if (!graphic->textures.Salade) {
+    if (!graphic->textures.salade) {
         allegro_message("Erreur de chargement de l'image");
         allegro_exit();
         exit(EXIT_FAILURE);
@@ -304,9 +343,9 @@ void hc_init() {
         allegro_exit();
         exit(EXIT_FAILURE);
     }
-    graphic->textures.Fromage = load_bitmap("./res/img/fromage.bmp", NULL);
+    graphic->textures.fromage = load_bitmap("./res/img/fromage.bmp", NULL);
 
-    if (!graphic->textures.Fromage) {
+    if (!graphic->textures.fromage) {
         allegro_message("Erreur de chargement de l'image");
         allegro_exit();
         exit(EXIT_FAILURE);

@@ -38,12 +38,20 @@ s_game *getGame() {
     return game;
 }
 
-int getOffsetX() {
-    return (getCorrectWidth() - LARGEUR * getCorrectCaseSize()) / 2;
+float getCorrectOffsetX() {
+    return ((float) getCorrectWidth() - LARGEUR * getCorrectCaseSize()) / (float) 2;
 }
 
-int getOffsetY() {
-    return ((getCorrectHeight() - 70) - HAUTEUR * getCorrectCaseSize()) / 2;
+float getIncorrectOffsetX() {
+    return ((float) getIncorrectWidth() - LARGEUR * getIncorrectCaseSize()) / (float) 2;
+}
+
+float getCorrectOffsetY() {
+    return ((float) (getCorrectHeight() - 70) - HAUTEUR * getCorrectCaseSize()) / (float) 2;
+}
+
+float getIncorrectOffsetY() {
+    return ((float) (getIncorrectHeight() - 70) - HAUTEUR * getIncorrectCaseSize()) / (float) 2;
 }
 
 void showCustomCursor() {
@@ -61,10 +69,24 @@ void showCustomCursor() {
 void globalKeyboardActions() {
     if (key[KEY_F11]) {
         getGraphic()->fs = !getGraphic()->fs;
-        set_gfx_mode(getGraphic()->fs ? GFX_AUTODETECT_FULLSCREEN : GFX_AUTODETECT_WINDOWED, getGraphic()->fs ? getGraphic()->fs_width : WIDTH, getGraphic()->fs ? getGraphic()->fs_height : HEIGHT, 0, 0);
+        request_refresh_rate(FRAMERATE);
+        if (set_gfx_mode(getGraphic()->fs ? GFX_AUTODETECT_FULLSCREEN : GFX_AUTODETECT_WINDOWED, getGraphic()->fs ? getGraphic()->fs_width : WIDTH, getGraphic()->fs ? getGraphic()->fs_height : HEIGHT, 0, 0)) {
+            allegro_message("Pb de mode graphique");
+            allegro_exit();
+            exit(EXIT_FAILURE);
+        }
+
+        /*if (get_refresh_rate() != FRAMERATE) {
+            allegro_message("Pb de framerate");
+            allegro_exit();
+            exit(EXIT_FAILURE);
+        }*/
+
         for (int i = 0; i < 2; i++) {
-            getGame()->joueurs[i].x = (getGraphic()->fs ? (float) getGame()->joueurs[i].x * getGraphic()->ratio : (float) getGame()->joueurs[i].x / getGraphic()->ratio);
-            getGame()->joueurs[i].y = (getGraphic()->fs ? (float) getGame()->joueurs[i].y * getGraphic()->ratio : (float) getGame()->joueurs[i].y / getGraphic()->ratio);
+            float rawX = ((float) getGame()->joueurs[i].x - getIncorrectOffsetX());
+            getGame()->joueurs[i].x = (getGraphic()->fs ? rawX * getGraphic()->ratio : rawX / getGraphic()->ratio) + getCorrectOffsetX();
+            float rawY = ((float) getGame()->joueurs[i].y - getIncorrectOffsetY());
+            getGame()->joueurs[i].y = (getGraphic()->fs ? rawY * getGraphic()->ratio : rawY / getGraphic()->ratio) + getCorrectOffsetY();
         }
     }
 
@@ -158,7 +180,7 @@ void partie(int niveau) {
     int recettes_crees = 0;
     counter = 0;
     credit = 0;
-    install_int_ex(timer_handler, SECS_TO_TIMER(1));
+    install_int_ex(timer_handler, MSEC_TO_TIMER(1));
 
     do {
         hc_clear_buffers();
@@ -176,7 +198,7 @@ void partie(int niveau) {
             deplacerPersonnages();
 
             // Toutes les 40 secondes, il y a une nouvelle recette qui est rendu disponible
-            if (counter >= 5 + recettes_crees * 20) {
+            if (counter >= 500 + recettes_crees * 2000) {
                 newCommande();
                 recettes_crees++;
             }
@@ -203,7 +225,7 @@ void partie(int niveau) {
             executeFunctionForEveryBlockReachable(&game->joueurs[1], &interact);
             getGame()->joueurs[1].shift_pressed = 0;
         }
-    } while (counter <= 120 && (game->etatJeu == PLAYING || game->etatJeu == DANS_MENU_JEU) && !game->quitting);
+    } while (counter <= 120000 && (game->etatJeu == PLAYING || game->etatJeu == DANS_MENU_JEU) && !game->quitting);
 
     remove_int(timer_handler);
 }

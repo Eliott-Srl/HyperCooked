@@ -58,14 +58,26 @@ void hc_clear_buffers();
 // Retourne la hauteur appropriée en fonction du mode plein écran
 int getCorrectHeight();
 
+// Retourne la hauteur inappropriée en fonction du mode plein écran
+int getIncorrectHeight();
+
 // Retourne la largeur appropriée en fonction du mode plein écran
 int getCorrectWidth();
+
+// Retourne la largeur inappropriée en fonction du mode plein écran
+int getIncorrectWidth();
 
 // Retourne la taille d'une case appropriée en fonction du mode plein écran
 int getCorrectCaseSize();
 
+// Retourne la taille d'une case inappropriée en fonction du mode plein écran
+int getIncorrectCaseSize();
+
 // Retourne le rayon approprié en fonction du mode plein écran
 int getCorrectRayon();
+
+// Retourne le ratio correct en fonction du mode plein écran
+float getCorrectRatio();
 
 // Retourne le buffer correct en fonction du mode plein écran et de l'état du jeu
 BITMAP *getCorrectBuffer();

@@ -4,11 +4,12 @@
 #define STRMAX 120
 #define HAUTEUR 12
 #define LARGEUR 20
+#define FRAMERATE 100
 #define NB_RECETTES_MAX 10
 #define NB_INGREDIENTS_MAX 10
 #define NB_COMMANDES_MAX 6
 #define NB_MAPS_MAX 10
-#define SPEED 0.1
+#define SPEED ((get_refresh_rate() * 0.05) / 60)
 #define WIDTH 800
 #define HEIGHT 450
 #define NUM_SONS 8
@@ -38,13 +39,21 @@ typedef enum e_etat_jeu {                        // Indique l'état du jeu
 typedef enum e_ingredients {                     // Indique le type de l'ingrédient
     PAS_D_INGREDIENT = -1,
     SALADE = 1,
+    SALADE_COUPEE,
     PAIN,
     TOMATE,
+    TOMATES_COUPEES,
     STEAK,
     OEUF,
     POTATO,
-    FROMAGE,
+    FROMAGE
 } e_ingredients;
+
+typedef enum e_recettes {                     // Indique le type de l'ingrédient
+    BURGER,
+    P_SALADE,
+    PIZZA
+} e_recettes;
 
 typedef enum e_cuisson {                         // Indique le type de cuisson nécessaire
     NON,
@@ -61,7 +70,7 @@ typedef struct s_ingredient {
 } s_ingredient;
 
 typedef struct s_recette {
-    char nom[STRMAX];                            // Nom de la recette
+    e_recettes nom;                              // Nom de la recette
     s_ingredient ingredients[NB_INGREDIENTS_MAX];// Tableau des ingrédients dans la recette
     int nbIngredients;                           // Nombre d'ingrédients dans la recette
 } s_recette;
@@ -78,7 +87,7 @@ typedef enum e_meubles {                         // Indique le type du meuble
     PLANCHE_A_DECOUPER,
     COMPTOIR,
     COFFRE,
-    PLAQUE_A_CUISSON,
+    PLAQUE_DE_CUISSON,
     POUBELLE,
     POSITION_JOUEUR = 10
 } e_meubles;
@@ -128,7 +137,8 @@ typedef struct s_joueur {
 typedef struct s_meuble {
     e_meubles typeMeuble;                        // Type du meuble
     s_objet objet;                               // L'objet sur le meuble ( objet ou null )
-    void (*action)(s_joueur*, int, int);                            // Fonction appelée quand on interagit avec le meuble
+    void (*action)(s_joueur*, int, int);         // Fonction appelée quand on interagit avec le meuble
+    int timer;                                   // Timer pour les actions
 } s_meuble;
 
 typedef struct s_game {
@@ -178,6 +188,7 @@ typedef struct s_ressources {
 } s_ressources;
 
 typedef struct s_textures {
+    BITMAP *invalidTexture;                      // Texture par défaut
     BITMAP *cursor;                              // Texture du curseur
     BITMAP *pointer;                             // Texture du pointeur
     BITMAP *player;                              // Texture du joueur
@@ -196,17 +207,19 @@ typedef struct s_textures {
     BITMAP *assiette;                            // Texture de l'assiette
     BITMAP *extincteur;                          // Texture de l'extincteur
     BITMAP *ticket;                              // Texture du ticket
-    BITMAP *BAR;                                 // Texture du bar
-    BITMAP *PlancheH;                            // Texture de la planche horizontale
-    BITMAP *Laitue;                              // Texture de la laitue
-    BITMAP *Oeuf;                                // Texture de l'oeuf
-    BITMAP *Pain;                                // Texture du pain
-    BITMAP *PommeDeTerre;                        // Texture de la pomme de terre
+    BITMAP *bar;                                 // Texture du bar
+    BITMAP *plancheH;                            // Texture de la planche horizontale
+    BITMAP *laitue;                              // Texture de la laitue
+    BITMAP *laitueCoupee;                        // Texture de la laitue coupée
+    BITMAP *oeuf;                                // Texture de l'oeuf
+    BITMAP *pain;                                // Texture du pain
+    BITMAP *pommeDeTerre;                        // Texture de la pomme de terre
     BITMAP *steak;                               // Texture du steak
     BITMAP *tomate;                              // Texture de la tomate
+    BITMAP *tomateCoupee;                        // Texture de la tomate coupée
     BITMAP *burger;                              // Texture du burger
-    BITMAP *Salade; // Texture de la salade
-    BITMAP *Fromage;
+    BITMAP *salade; // Texture de la salade
+    BITMAP *fromage;
     BITMAP *pizza;
 } s_textures;
 

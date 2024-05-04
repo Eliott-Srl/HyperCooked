@@ -19,7 +19,9 @@ void menu_debug(BITMAP *source) {
     lines++;
 
     if (getGame()->etatJeu == PLAYING) {
-        textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "time: %d", getTime());
+        textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "time: %.03f", (double) getTime() / 1000);
+        lines++;
+        textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "time: %d", getGame()->matrice[4][19].timer);
         lines++;
     }
 
@@ -47,11 +49,7 @@ void hc_blit(BITMAP *source) {
 
     globalKeyboardActions();
 
-    if (getGraphic()->fs) {
-       blit(source, screen, 0, 0, 0, 0, getGraphic()->fs_width, getGraphic()->fs_height);
-    } else {
-        blit(source, screen, 0, 0, 0, 0, WIDTH, HEIGHT);
-    }
+    blit(source, screen, 0, 0, 0, 0, getCorrectWidth(), getCorrectHeight());
 }
 
 int boutonsHovered() {
@@ -203,16 +201,32 @@ int getCorrectHeight() {
     return (getGraphic()->fs ? getGraphic()->fs_height : HEIGHT);
 }
 
+int getIncorrectHeight() {
+    return (getGraphic()->fs ? HEIGHT : getGraphic()->fs_height);
+}
+
 int getCorrectWidth() {
     return (getGraphic()->fs ? getGraphic()->fs_width : WIDTH);
+}
+
+int getIncorrectWidth() {
+    return (getGraphic()->fs ? WIDTH : getGraphic()->fs_width);
 }
 
 int getCorrectCaseSize() {
     return (getGraphic()->fs ? getGraphic()->fsTailleCase : getGraphic()->tailleCase);
 }
 
+int getIncorrectCaseSize() {
+    return (getGraphic()->fs ? getGraphic()->tailleCase : getGraphic()->fsTailleCase);
+}
+
 int getCorrectRayon() {
     return (getGraphic()->fs ? getGraphic()->fsRayon : getGraphic()->rayon);
+}
+
+float getCorrectRatio() {
+    return (getGraphic()->fs ? getGraphic()->ratio : (float) 1.0);
 }
 
 BITMAP *getCorrectBuffer() {

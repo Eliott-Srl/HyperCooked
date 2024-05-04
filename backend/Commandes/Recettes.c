@@ -1,5 +1,18 @@
 #include "Recettes.h"
 
+BITMAP *getTextureByRecette(e_recettes recette) {
+    switch (recette) {
+        case BURGER:
+            return getGraphic()->textures.burger;
+        case P_SALADE:
+            return getGraphic()->textures.salade;
+        case PIZZA:
+            return getGraphic()->textures.pizza;
+        default:
+            return getGraphic()->textures.invalidTexture;
+    }
+}
+
 void loadRecipes() {
     s_game *game = getGame();
 
@@ -21,18 +34,18 @@ void loadRecipes() {
         int nbIngredients = 0; //
 
         p = strtok(ligne, ";");
-        strcpy(game->recettes[nbRecettes].nom, p);
+        game->recettes[nbRecettes].nom = strtol(p, NULL, 10);
 
         p = strtok(NULL, ";");
 
         d = strtok_r(p, ",", &end);
         while (d != NULL) {
             g = strtok(d, " ");
-            game->recettes[nbRecettes].ingredients[nbIngredients].nom = atoi(g);
+            game->recettes[nbRecettes].ingredients[nbIngredients].nom = strtol(g, NULL, 10);
             g = strtok(NULL, " ");
-            game->recettes[nbRecettes].ingredients[nbIngredients].cuisson = atoi(g);
+            game->recettes[nbRecettes].ingredients[nbIngredients].cuisson = strtol(g, NULL, 10);
             g = strtok(NULL, " ");
-            game->recettes[nbRecettes].ingredients[nbIngredients].coupable = atoi(g);
+            game->recettes[nbRecettes].ingredients[nbIngredients].coupable = strtol(g, NULL, 10);
             nbIngredients++;
             d = strtok_r(NULL, ",", &end);
         }
@@ -41,10 +54,6 @@ void loadRecipes() {
     }
     getGame()->nbRecettes = nbRecettes;
     fclose(fp);
-}
-
-void freeRecettes(s_recette *recettes) {
-    free(recettes);
 }
 
 int verificationDeLaRecette(s_objet* plat, s_commande* commandeFind) {
