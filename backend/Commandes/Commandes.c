@@ -44,8 +44,8 @@ void AfficherCommande() {
         LargeurRectangle = 90;
     }
 
-    stretch_sprite(getCorrectBuffer(), getGraphic()->textures.bar, 0, (int) (getGraphic()->fs ? getCorrectHeight() - 50 : (float) getCorrectHeight() - 100), getCorrectWidth(), 40);
-    stretch_sprite(getCorrectBuffer(), getGraphic()->textures.plancheH, 0, (int) (getGraphic()->fs ? getCorrectHeight() - 20 : (float) getCorrectHeight() - 70), getCorrectWidth(), (int) (getGraphic()->fs ? 240 : (float) 140));
+    stretch_sprite(getCorrectBuffer(), getGraphic()->textures.bar, 0, (int) (getGraphic()->fs ? getCorrectHeight() - 220 : (float) getCorrectHeight() - 100), getCorrectWidth(), 40);
+    stretch_sprite(getCorrectBuffer(), getGraphic()->textures.plancheH, 0, (int) (getGraphic()->fs ? getCorrectHeight() - 180 : (float) getCorrectHeight() - 70), getCorrectWidth(), (int) (getGraphic()->fs ? 240 : (float) 140));
 
     for (int i = 0; i < getGame()->nbCommandes; i++) {
         int xLogo = 10 + (i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle));
@@ -55,7 +55,7 @@ void AfficherCommande() {
                              getGame()->commandes[i].angle, ftofix((float) 110 / (float) getGraphic()->textures.ticket->w));
         set_clip_rect(getCorrectBuffer(), 0, 0, getCorrectWidth(), getCorrectHeight());
 
-        stretch_sprite(getCorrectBuffer(), getTextureByRecette(getGame()->commandes[i].recette.nom), 37 + xLogo, (int) (getGraphic()->fs ? 800 : (float) 408), 38, 38);
+        stretch_sprite(getCorrectBuffer(), getTextureByRecette(getGame()->commandes[i].recette.nom), 37 + xLogo, (int) (getGraphic()->fs ? 850 : (float) 408), 38, 38);
 
         int coosX[4] = {25, 90};
         int coosY[4] = {400, 435};
