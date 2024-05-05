@@ -209,12 +209,14 @@ void initialiserMatrice(const char* file) {
 void afficherPlancheDecouper(int h, int l) {
     int x = (int) (getCorrectOffsetX() + (float) l * (float) getCorrectCaseSize());
     int y = (int) (getCorrectOffsetY() + (float) h * (float) getCorrectCaseSize());
+    int offSetIngredient = (int) ((float) getCorrectCaseSize() / 4);
+
     stretch_sprite(getCorrectBuffer(), getTextureByFurnitureName(getGame()->matrice[h][l].typeMeuble), x, y, getCorrectCaseSize(), getCorrectCaseSize());
 
     if (getGame()->matrice[h][l].timer != -1 && getTime() - getGame()->matrice[h][l].timer < getSupposedTimerByFurnitures(getGame()->matrice[h][l].typeMeuble)) {
-        stretch_sprite(getCorrectBuffer(), getTextureByIngredientName(getGame()->matrice[h][l].objet.nourriture[0].nom), x, y, getCorrectCaseSize(), getCorrectCaseSize());
+        stretch_sprite(getCorrectBuffer(), getTextureByIngredientName(getGame()->matrice[h][l].objet.nourriture[0].nom), x + offSetIngredient, y + offSetIngredient, (int) ((float) getCorrectCaseSize() / 2), (int) ((float) getCorrectCaseSize() / 2));
     } else if (getGame()->matrice[h][l].timer != -1 && getGame()->matrice[h][l].objet.nbStockes > 0) {
-        stretch_sprite(getCorrectBuffer(), getTextureByIngredientName(getIngredientAfterCutting(getGame()->matrice[h][l].objet.nourriture[0].nom)), x, y, getCorrectCaseSize(), getCorrectCaseSize());
+        stretch_sprite(getCorrectBuffer(), getTextureByIngredientName(getIngredientAfterCutting(getGame()->matrice[h][l].objet.nourriture[0].nom)), x + offSetIngredient, y + offSetIngredient, (int) ((float) getCorrectCaseSize() / 2), (int) ((float) getCorrectCaseSize() / 2));
     }
 }
 
