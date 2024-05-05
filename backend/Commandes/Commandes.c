@@ -1,18 +1,29 @@
 #include "Commandes.h"
 
+int recetteAvailable(int choix) {
+    for (int i = 0; i < getGame()->nbRecettes; i++) {
+        if (getGame()->recetteAvailable[i] == choix) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 void newCommande() {
     if (getGame()->nbCommandes >= NB_COMMANDES_MAX) {
         return;
     }
 
-    int choix = (rand() % (getGame()->nbRecettes));
+    int choix;
+    do {
+        choix = (rand() % (getGame()->nbRecettesAvailable));
+    } while (!recetteAvailable(choix));
+
     for (int i = 0; i < getGame()->recettes[choix].nbIngredients; i++) {
         getGame()->commandes[getGame()->nbCommandes].recette.ingredients[i] = getGame()->recettes[choix].ingredients[i];
     }
     getGame()->commandes[getGame()->nbCommandes].recette.nbIngredients = getGame()->recettes[choix].nbIngredients;
     getGame()->commandes[getGame()->nbCommandes].recette.nom = getGame()->recettes[choix].nom;
-
-    // printf("Nouvelle recette: %s\n", getGame()->commandes[getGame()->nbCommandes].recette.nom);
 
     getGame()->commandes[getGame()->nbCommandes].timer = ((rand() % 2) + 1) * 5 + 45;
     getGame()->nbCommandes++;

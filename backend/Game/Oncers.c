@@ -218,6 +218,14 @@ void hc_init() {
         exit(EXIT_FAILURE);
     }
 
+    graphic->textures.poele = load_bitmap("./res/img/poele.bmp", NULL);
+
+    if (!graphic->textures.poele) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
     graphic->textures.plancheH = load_bitmap("./res/img/planche2.0.bmp", NULL);
 
     if (!graphic->textures.plancheH) {
@@ -297,9 +305,17 @@ void hc_init() {
         exit(EXIT_FAILURE);
     }
 
-    graphic->textures.steak = load_bitmap("./res/img/Steak.bmp", NULL);
+    graphic->textures.steak = load_bitmap("./res/img/steak_pas_cuit.bmp", NULL);
 
     if (!graphic->textures.steak) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    graphic->textures.steakCuit = load_bitmap("./res/img/steak.bmp", NULL);
+
+    if (!graphic->textures.steakCuit) {
         allegro_message("Erreur de chargement de l'image");
         allegro_exit();
         exit(EXIT_FAILURE);
@@ -367,6 +383,8 @@ void hc_init() {
 
     mouse_callback = &mouseActions;
     set_close_button_callback(&toQuit);
+    set_display_switch_callback(SWITCH_OUT, &afficherPause);
+    set_mouse_speed(10, 10);
     loadRecipes();
 }
 

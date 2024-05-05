@@ -10,7 +10,8 @@
 
 BITMAP *getTextureByFurnitureName(e_meubles meuble);
 int getSupposedTimerByFurnitures(e_meubles meuble);
-int getSlotByFurniture(e_meubles meuble);
+int getSlotsByFurniture(e_objet objet);
+void *getActionByFurnitureName(e_meubles meuble);
 void afficherMatrice();
 void initialiserMatrice(const char* file);
 void hc_afficher_matrice();

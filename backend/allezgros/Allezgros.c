@@ -21,8 +21,6 @@ void menu_debug(BITMAP *source) {
     if (getGame()->etatJeu == PLAYING) {
         textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "time: %.03f", (double) getTime() / 1000);
         lines++;
-        textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "time: %d", getGame()->matrice[4][19].timer);
-        lines++;
     }
 
     textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "Joysticks: %d", num_joysticks);
@@ -269,6 +267,20 @@ void clear_boutons() {
     }
 
     getGraphic()->boutons = boutons;
+}
+
+// It's slow, I love it
+void cadrillage(BITMAP *bitmap, int color) {
+    int a = 0;
+    for (int j = 0; j < bitmap->h; j++) {
+        for (int i = 0; i < bitmap->w; i++) {
+            if (a % 2 == 0) {
+                _putpixel32(bitmap, i, j, color);
+            }
+            a++;
+        }
+        a++;
+    }
 }
 
 void screenshot() {

@@ -14,6 +14,8 @@ BITMAP *getTextureByIngredientName(e_ingredients ingredients) {
             return getGraphic()->textures.pain;
         case STEAK:
             return getGraphic()->textures.steak;
+        case STEAK_CUIT:
+            return getGraphic()->textures.steakCuit;
         case POTATO:
             return getGraphic()->textures.pommeDeTerre;
         case OEUF:
@@ -25,12 +27,33 @@ BITMAP *getTextureByIngredientName(e_ingredients ingredients) {
     }
 }
 
-int cuissonByIngredient(e_ingredients ingredient) {
+int getCuissonByIngredient(e_ingredients ingredient) {
     switch (ingredient) {
         case STEAK:
             return A_LA_POELE;
         default:
             return NON;
+    }
+}
+
+int getIngredientAfterCooking(e_ingredients ingredient) {
+    switch (ingredient) {
+        case STEAK:
+            return STEAK_CUIT;
+        default:
+            return PAS_D_INGREDIENT;
+    }
+}
+
+
+int getFurnitureByCooking(e_cuisson cuisson) {
+    switch (cuisson) {
+        case A_LA_POELE:
+            return POELE;
+        case A_LA_MARMITE:
+            return MARMITE;
+        default:
+            return NONE;
     }
 }
 

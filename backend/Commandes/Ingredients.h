@@ -4,7 +4,9 @@
 #include "../backend.h"
 
 BITMAP *getTextureByIngredientName(e_ingredients ingredients);
-int cuissonByIngredient(e_ingredients ingredient);
+int getCuissonByIngredient(e_ingredients ingredient);
+int getIngredientAfterCooking(e_ingredients ingredient);
+int getFurnitureByCooking(e_cuisson cuisson);
 int getIngredientAfterCutting(e_ingredients ingredient);
 
 #endif //HYPERCOOKED_INGREDIENTS_H

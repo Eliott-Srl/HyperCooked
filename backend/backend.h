@@ -44,6 +44,7 @@ typedef enum e_ingredients {                     // Indique le type de l'ingréd
     TOMATE,
     TOMATES_COUPEES,
     STEAK,
+    STEAK_CUIT,
     OEUF,
     POTATO,
     FROMAGE
@@ -104,8 +105,7 @@ typedef enum e_objet {                           // Indique le type de l'objet
 typedef enum e_stockage {                        // Inqique la taille du contenant
     SANS = 0,
     UN_SLOT = 1,
-    TROIS_SLOTS = 3,
-    RECETTE = 10
+    TROIS_SLOTS = 3
 } e_stockage;
 
 typedef struct s_objet {
@@ -144,8 +144,11 @@ typedef struct s_meuble {
 typedef struct s_game {
     s_meuble matrice[HAUTEUR][LARGEUR];          // Matrice qui contient tous les meubles et leurs infos
     s_joueur joueurs[2];                         // Tableau qui contient les infos sur les deux joueurs
-    s_recette recettes[NB_RECETTES_MAX];         // Tableau des recettes disponibles
+    s_recette recettes[NB_RECETTES_MAX];         // Tableau des recettes disponibles dans le jeu
+    e_recettes recetteAvailable[NB_RECETTES_MAX];// Tableau des recettes disponibles pour la partie
     int nbRecettes;                              // Nombre de recettes disponibles
+    int nbRecettesAvailable;                     // Nombre de recettes disponibles
+    int duration;                                // Durée de la partie
     e_etat_jeu etatJeu;                          // L'état du jeu: LOADING, PLAYING, MENU
     int quitting;                                // Booléen qui indique si on quitte le jeu
     s_commande commandes[NB_COMMANDES_MAX + 1];  // Tableau de commande qui contient les commandes en cours
@@ -215,6 +218,7 @@ typedef struct s_textures {
     BITMAP *pain;                                // Texture du pain
     BITMAP *pommeDeTerre;                        // Texture de la pomme de terre
     BITMAP *steak;                               // Texture du steak
+    BITMAP *steakCuit;                           // Texture du steak cuit
     BITMAP *tomate;                              // Texture de la tomate
     BITMAP *tomateCoupee;                        // Texture de la tomate coupée
     BITMAP *burger;                              // Texture du burger

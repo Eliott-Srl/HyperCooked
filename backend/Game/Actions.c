@@ -50,13 +50,13 @@ void showInteractions(s_joueur *joueur, int k, int s) {
 
 BITMAP *getTextureByObjectName(e_objet objet) {
     switch (objet) {
-        /*
         case POELE:
             return getGraphic()->textures.poele;
-        case MARMITE:
-            return getGraphic()->textures.marmite;
         case ASSIETTE:
             return getGraphic()->textures.assiette;
+        /*
+        case MARMITE:
+            return getGraphic()->textures.marmite;
         case EXTINCTEUR:
             return getGraphic()->textures.extincteur;
         */
@@ -70,34 +70,36 @@ void neFaitRien(s_joueur* joueur, int i, int j) {
 }
 
 void planDeTravail(s_joueur* joueur, int i, int j) {
-    if (joueur->en_main == OBJET && getGame()->matrice[i][j].objet.type == NONE) {
-        getGame()->matrice[i][j].objet = joueur->handObjet;
+    s_meuble *meuble = &getGame()->matrice[i][j];
+
+    if (joueur->en_main == OBJET && meuble->objet.type == NONE) {
+        meuble->objet = joueur->handObjet;
         joueur->en_main = NOTHING;
-    } else if (joueur->en_main == INGREDIENT && getGame()->matrice[i][j].objet.nbStockes == 0) {
-        getGame()->matrice[i][j].objet.type = STOCKEUR;
-        getGame()->matrice[i][j].objet.nourriture[0] = joueur->handIngredient;
+    } else if (joueur->en_main == INGREDIENT && meuble->objet.nbStockes == 0) {
+        meuble->objet.type = STOCKEUR;
+        meuble->objet.nourriture[0] = joueur->handIngredient;
         joueur->en_main = NOTHING;
-        getGame()->matrice[i][j].objet.nbStockes = 1;
+        meuble->objet.nbStockes = 1;
     } else if (joueur->en_main == NOTHING) {
-        if (getGame()->matrice[i][j].objet.type == STOCKEUR) {
-            joueur->handIngredient = getGame()->matrice[i][j].objet.nourriture[0];
+        if (meuble->objet.type == STOCKEUR) {
+            joueur->handIngredient = meuble->objet.nourriture[0];
             joueur->en_main = INGREDIENT;
-            getGame()->matrice[i][j].objet.nbStockes = 0;
-            getGame()->matrice[i][j].objet.type = NONE;
-        } else if (getGame()->matrice[i][j].objet.type != NONE) {
-            joueur->handObjet = getGame()->matrice[i][j].objet;
+            meuble->objet.nbStockes = 0;
+            meuble->objet.type = NONE;
+        } else if (meuble->objet.type != NONE) {
+            joueur->handObjet = meuble->objet;
             joueur->en_main = OBJET;
-            getGame()->matrice[i][j].objet.type = NONE;
+            meuble->objet.type = NONE;
         }
     }
 }
 
 void plancheADecouper(s_joueur* joueur, int i, int j) {
     s_meuble *meuble = &getGame()->matrice[i][j];
+
     if (joueur->en_main == INGREDIENT
      && getIngredientAfterCutting(joueur->handIngredient.nom) != PAS_D_INGREDIENT
      && meuble->timer == -1
-     && meuble->objet.nourriture[0].nom == PAS_D_INGREDIENT
      && meuble->objet.nbStockes == 0) {
         meuble->objet.nourriture[0] = joueur->handIngredient;
         joueur->en_main = NOTHING;
@@ -105,14 +107,13 @@ void plancheADecouper(s_joueur* joueur, int i, int j) {
         meuble->objet.nbStockes = 1;
     } else if (joueur->en_main == NOTHING
             && getTime() - meuble->timer > getSupposedTimerByFurnitures(PLANCHE_A_DECOUPER)
-            && meuble->objet.nourriture[0].nom != PAS_D_INGREDIENT
             && meuble->objet.nbStockes == 1) {
         joueur->handIngredient.nom = getIngredientAfterCutting(meuble->objet.nourriture[0].nom);
         joueur->en_main = INGREDIENT;
         joueur->handIngredient.coupable = 0;
         joueur->handIngredient.coupe = 1;
-        joueur->handIngredient.cuit = TRUE;
-        joueur->handIngredient.cuisson = cuissonByIngredient(joueur->handIngredient.nom);
+        joueur->handIngredient.cuit = 0;
+        joueur->handIngredient.cuisson = getCuissonByIngredient(joueur->handIngredient.nom);
         meuble->objet.nourriture[0].nom = PAS_D_INGREDIENT;
         meuble->timer = -1;
         meuble->objet.nbStockes = 0;
@@ -146,16 +147,47 @@ void coffre(s_joueur* joueur, int i, int j) {
 }
 
 void plaqueDeCuisson(s_joueur* joueur, int i, int j) {
+    s_meuble *meuble = &getGame()->matrice[i][j];
+
     if (joueur->en_main == INGREDIENT
-    && ((getGame()->matrice[i][j].objet.type == MARMITE
-      && getGame()->matrice[i][j].objet.nbStockes < getGame()->matrice[i][j].objet.stockageMax)
-     || (getGame()->matrice[i][j].objet.type == POELE
-      && getGame()->matrice[i][j].objet.nbStockes < 1))) {
-        getGame()->matrice[i][j].objet.nourriture[getGame()->matrice[i][j].objet.nbStockes] = joueur->handIngredient;
+     && meuble->objet.nbStockes < meuble->objet.stockageMax
+     && meuble->objet.type != NONE
+     && meuble->objet.type == getFurnitureByCooking(joueur->handIngredient.cuisson)
+     && meuble->timer == -1) {
+        meuble->objet.nourriture[meuble->objet.nbStockes] = joueur->handIngredient;
         joueur->en_main = NOTHING;
-    } else if (joueur->en_main == OBJET && getGame()->matrice[i][j].objet.type == NONE) {
-        getGame()->matrice[i][j].objet = joueur->handObjet;
+        meuble->objet.nbStockes++;
+        if (meuble->objet.nbStockes == meuble->objet.stockageMax) {
+            meuble->timer = getTime();
+        }
+    } else if (joueur->en_main == OBJET
+            && meuble->objet.type == NONE
+            && meuble->timer == -1) {
+        meuble->objet = joueur->handObjet;
         joueur->en_main = NOTHING;
+        if (meuble->objet.nbStockes == meuble->objet.stockageMax) {
+            meuble->timer = getTime();
+        }
+    } else if (joueur->en_main == NOTHING
+            && getTime() - meuble->timer > getSupposedTimerByFurnitures(meuble->typeMeuble)
+            && meuble->objet.type != NONE
+            && meuble->objet.nbStockes == meuble->objet.stockageMax) {
+        for (int k = 0; k < meuble->objet.nbStockes; k++) {
+            meuble->objet.nourriture[k].cuit = 1;
+            meuble->objet.nourriture[k].cuisson = NON;
+            meuble->objet.nourriture[k].nom = getIngredientAfterCooking(meuble->objet.nourriture[k].nom);
+        }
+        joueur->handObjet = meuble->objet;
+        joueur->en_main = OBJET;
+        meuble->objet.nbStockes = 0;
+        meuble->timer = -1;
+        meuble->objet.type = NONE;
+    } else if (joueur->en_main == NOTHING
+            && meuble->objet.type != NONE) {
+        meuble->timer = -1;
+        joueur->handObjet = meuble->objet;
+        joueur->en_main = OBJET;
+        meuble->objet.type = NONE;
     }
 }
 

@@ -97,12 +97,15 @@ void afficherPersonnages() {
 
 
         if (getGame()->joueurs[i].en_main == OBJET) {
-            if (getTextureByObjectName(getGame()->joueurs[i].handObjet.type) != NONE) {
-                rotate_scaled_sprite(getCorrectBuffer(),
-                                     getTextureByObjectName(getGame()->joueurs[i].handObjet.type),
-                                     (int) (x + (float) offsetX), (int) (y + (float) offsetY),
-                                     getGame()->joueurs[i].angle,
-                                     ftofix((float) getCorrectCaseSize() / (float) getTextureByIngredientName(getGame()->joueurs[i].handIngredient.nom)->w));
+            rotate_scaled_sprite(getCorrectBuffer(),
+                                 getTextureByObjectName(getGame()->joueurs[i].handObjet.type),
+                                 (int) (x + (float) offsetX), (int) (y + (float) offsetY),
+                                 getGame()->joueurs[i].angle,
+                                 ftofix((float) getCorrectCaseSize() / (float) getTextureByObjectName(getGame()->joueurs[i].handObjet.type)->w));
+            if (getGame()->joueurs[i].handObjet.type != NONE
+                && getGame()->joueurs[i].handObjet.nbStockes > 0
+                && getGame()->joueurs[i].handObjet.stockageMax == 1) {
+                rotate_scaled_sprite(getCorrectBuffer(), getTextureByIngredientName(getGame()->joueurs[i].handObjet.nourriture[0].nom), (int)(x + (float) offsetX), (int)(y + (float) offsetY), getGame()->joueurs[i].angle, ftofix((float) getCorrectCaseSize() / (float) getTextureByIngredientName(getGame()->joueurs[i].handIngredient.nom)->w));
             }
         } else if (getGame()->joueurs[i].en_main == INGREDIENT) {
             if (getGame()->joueurs[i].handIngredient.nom != PAS_D_INGREDIENT) {

@@ -31,7 +31,11 @@ void loadRecipes() {
     }
 
     while (fgets(ligne, STRMAX, fp) != NULL && nbRecettes < NB_RECETTES_MAX) {
-        int nbIngredients = 0; //
+        if (ligne[0] == '#') {
+            continue;
+        }
+
+        int nbIngredients = 0;
 
         p = strtok(ligne, ";");
         game->recettes[nbRecettes].nom = strtol(p, NULL, 10);

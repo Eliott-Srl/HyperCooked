@@ -88,6 +88,9 @@ void coverBufferWithImage(BITMAP *buffer, BITMAP *image, int s_w, int s_h);
 // Supprime tous les boutons customs
 void clear_boutons();
 
+// Fait un cadrillage sur le buffer
+void cadrillage(BITMAP *bitmap, int color);
+
 // Prends une capture d'écran
 // Ne fonctionne pas
 void screenshot();

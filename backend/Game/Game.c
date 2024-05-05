@@ -28,6 +28,16 @@ void mouseActions(int flags) {
     }
 }
 
+// This is subtle, but if you pay attention you can notice it
+void afficherPause() {
+    if (!getGraphic()->debug) {
+        // cadrillage(screen, makecol(0, 0, 0));
+        clear(screen);
+    }
+    rectfill(screen, getCorrectWidth()/2 - 30, getCorrectHeight()/2 - 30, getCorrectWidth()/2 - 10, getCorrectHeight()/2 + 30, makecol(255, 255, 255));
+    rectfill(screen, getCorrectWidth()/2 + 10, getCorrectHeight()/2 - 30, getCorrectWidth()/2 + 30, getCorrectHeight()/2 + 30, makecol(255, 255, 255));
+}
+
 s_game *getGame() {
     static s_game *game;
 
@@ -75,6 +85,8 @@ void globalKeyboardActions() {
             allegro_exit();
             exit(EXIT_FAILURE);
         }
+
+        set_display_switch_callback(SWITCH_OUT, &afficherPause);
 
         /*if (get_refresh_rate() != FRAMERATE) {
             allegro_message("Pb de framerate");
@@ -225,7 +237,7 @@ void partie(int niveau) {
             executeFunctionForEveryBlockReachable(&game->joueurs[1], &interact);
             getGame()->joueurs[1].shift_pressed = 0;
         }
-    } while (counter <= 120000 && (game->etatJeu == PLAYING || game->etatJeu == DANS_MENU_JEU) && !game->quitting);
+    } while (counter <= getGame()->duration * 1000 && (game->etatJeu == PLAYING || game->etatJeu == DANS_MENU_JEU) && !game->quitting);
 
     remove_int(timer_handler);
 }

@@ -6,6 +6,7 @@
 
 s_game *getGame();
 int getTime();
+void afficherPause();
 void mouseActions(int flags);
 float getCorrectOffsetX();
 float getIncorrectOffsetX();
