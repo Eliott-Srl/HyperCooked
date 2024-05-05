@@ -44,8 +44,8 @@ void AfficherCommande() {
         LargeurRectangle = 90;
     }
 
-    stretch_sprite(getCorrectBuffer(), getGraphic()->textures.bar, 0, getCorrectHeight() - 100, getCorrectWidth(), 40);
-    stretch_sprite(getCorrectBuffer(), getGraphic()->textures.plancheH, 0, getCorrectHeight() - 70, getCorrectWidth(), 140);
+    stretch_sprite(getCorrectBuffer(), getGraphic()->textures.bar, 0, (int) (getGraphic()->fs ? getCorrectHeight() - 50 : (float) getCorrectHeight() - 100), getCorrectWidth(), 40);
+    stretch_sprite(getCorrectBuffer(), getGraphic()->textures.plancheH, 0, (int) (getGraphic()->fs ? getCorrectHeight() - 20 : (float) getCorrectHeight() - 70), getCorrectWidth(), (int) (getGraphic()->fs ? 240 : (float) 140));
 
     for (int i = 0; i < getGame()->nbCommandes; i++) {
         int xLogo = 10 + (i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle));
@@ -55,10 +55,11 @@ void AfficherCommande() {
                              getGame()->commandes[i].angle, ftofix((float) 110 / (float) getGraphic()->textures.ticket->w));
         set_clip_rect(getCorrectBuffer(), 0, 0, getCorrectWidth(), getCorrectHeight());
 
-        stretch_sprite(getCorrectBuffer(), getTextureByRecette(getGame()->commandes[i].recette.nom), 37 + xLogo, 408, 38, 38);
+        stretch_sprite(getCorrectBuffer(), getTextureByRecette(getGame()->commandes[i].recette.nom), 37 + xLogo, (int) (getGraphic()->fs ? 800 : (float) 408), 38, 38);
 
         int coosX[4] = {25, 90};
         int coosY[4] = {400, 435};
+        int coosY2[4] = {972, 1004};
 
         for (int j = 0; j < getGame()->commandes[i].recette.nbIngredients; j++) {
             BITMAP *ingredient = getTextureByIngredientName(getGame()->commandes[i].recette.ingredients[j].nom);
@@ -66,7 +67,7 @@ void AfficherCommande() {
             if (ingredient != NULL) {
                 stretch_sprite(getCorrectBuffer(),
                                getTextureByIngredientName(getGame()->commandes[i].recette.ingredients[j].nom),
-                               coosX[(int) j/2] + i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle), coosY[j%2], 18, 18);
+                               coosX[(int) j/2] + i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle), (int) (getGraphic()->fs ? coosY2[j%2]: (float) coosY[j%2]), 18, 18);
             }
         }
     }
