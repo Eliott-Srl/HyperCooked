@@ -105,7 +105,8 @@ typedef enum e_objet {                           // Indique le type de l'objet
 typedef enum e_stockage {                        // Inqique la taille du contenant
     SANS = 0,
     UN_SLOT = 1,
-    TROIS_SLOTS = 3
+    TROIS_SLOTS = 3,
+    RECETTE = 4
 } e_stockage;
 
 typedef struct s_objet {
@@ -273,5 +274,6 @@ typedef struct s_settings {
 #include "Son/song.h"
 #include "Commandes/Ingredients.h"
 #include "Game/Players.h"
+#include "Game/Objects.h"
 
 #endif //HYPERCOOKED_BACKEND_H

@@ -75,11 +75,21 @@ void planDeTravail(s_joueur* joueur, int i, int j) {
     if (joueur->en_main == OBJET && meuble->objet.type == NONE) {
         meuble->objet = joueur->handObjet;
         joueur->en_main = NOTHING;
-    } else if (joueur->en_main == INGREDIENT && meuble->objet.nbStockes == 0) {
+    } else if (joueur->en_main == OBJET
+            && meuble->objet.type == STOCKEUR
+            && joueur->handObjet.stockageMax > meuble->objet.nbStockes
+            && meuble->objet.nbStockes > 0) {
+        joueur->handObjet.nourriture[joueur->handObjet.nbStockes] = meuble->objet.nourriture[meuble->objet.nbStockes];
+        meuble->objet.nbStockes--;
+    } else if (joueur->en_main == INGREDIENT && meuble->objet.nbStockes == 0 && meuble->objet.type == NONE) {
         meuble->objet.type = STOCKEUR;
         meuble->objet.nourriture[0] = joueur->handIngredient;
         joueur->en_main = NOTHING;
         meuble->objet.nbStockes = 1;
+    } else if (joueur->en_main == INGREDIENT && meuble->objet.nbStockes < meuble->objet.stockageMax && meuble->objet.type != NONE) {
+        meuble->objet.nourriture[meuble->objet.nbStockes] = joueur->handIngredient;
+        joueur->en_main = NOTHING;
+        meuble->objet.nbStockes++;
     } else if (joueur->en_main == NOTHING) {
         if (meuble->objet.type == STOCKEUR) {
             joueur->handIngredient = meuble->objet.nourriture[0];
@@ -115,6 +125,20 @@ void plancheADecouper(s_joueur* joueur, int i, int j) {
         joueur->handIngredient.cuit = 0;
         joueur->handIngredient.cuisson = getCuissonByIngredient(joueur->handIngredient.nom);
         meuble->objet.nourriture[0].nom = PAS_D_INGREDIENT;
+        meuble->timer = -1;
+        meuble->objet.nbStockes = 0;
+    } else if (joueur->en_main == OBJET && joueur->handObjet.type == ASSIETTE
+            && getTime() - meuble->timer > getSupposedTimerByFurnitures(PLANCHE_A_DECOUPER)
+            && meuble->objet.nbStockes == 1
+            && joueur->handObjet.nbStockes < joueur->handObjet.stockageMax) {
+        meuble->objet.nourriture[0].nom = getIngredientAfterCutting(meuble->objet.nourriture[0].nom);
+        meuble->objet.nourriture[0].cuit = 0;
+        meuble->objet.nourriture[0].coupe = 1;
+        meuble->objet.nourriture[0].coupable = (getIngredientAfterCutting(meuble->objet.nourriture[0].nom) != PAS_D_INGREDIENT);
+        meuble->objet.nourriture[0].cuisson = getCuissonByIngredient(meuble->objet.nourriture[0].nom);
+        joueur->handObjet.nourriture[joueur->handObjet.nbStockes] = meuble->objet.nourriture[0];
+        joueur->handObjet.nbStockes++;
+        meuble->objet.type = NONE;
         meuble->timer = -1;
         meuble->objet.nbStockes = 0;
     }

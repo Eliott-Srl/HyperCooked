@@ -90,30 +90,28 @@ void deplacerPersonnage(s_joueur* joueur, double veloX, double veloY) {
 void afficherPersonnages() {
     for (int i = 0; i < 2; i++) {
         int dims = getCorrectCaseSize();
+        BITMAP *player = create_bitmap(dims, dims * 3);
+        clear_to_color(player, makecol(255, 0, 255));
+
         float x = getGame()->joueurs[i].x - (float) dims / 2;
         float y = getGame()->joueurs[i].y - (float) dims / 2;
-        float offsetX = (float) cos(fixtof(getGame()->joueurs[i].angle)) * (float) dims / 2;
-        float offsetY = (float) sin(fixtof(getGame()->joueurs[i].angle)) * (float) dims / 2;
+        float offsetYElements = (float) dims / 2;
+        float offsetXElements = (float) ((float) dims - ((float) 3 * (float) dims / 4)) / 2;
 
-
-        if (getGame()->joueurs[i].en_main == OBJET) {
-            rotate_scaled_sprite(getCorrectBuffer(),
-                                 getTextureByObjectName(getGame()->joueurs[i].handObjet.type),
-                                 (int) (x + (float) offsetX), (int) (y + (float) offsetY),
-                                 getGame()->joueurs[i].angle,
-                                 ftofix((float) getCorrectCaseSize() / (float) getTextureByObjectName(getGame()->joueurs[i].handObjet.type)->w));
-            if (getGame()->joueurs[i].handObjet.type != NONE
-                && getGame()->joueurs[i].handObjet.nbStockes > 0
-                && getGame()->joueurs[i].handObjet.stockageMax == 1) {
-                rotate_scaled_sprite(getCorrectBuffer(), getTextureByIngredientName(getGame()->joueurs[i].handObjet.nourriture[0].nom), (int)(x + (float) offsetX), (int)(y + (float) offsetY), getGame()->joueurs[i].angle, ftofix((float) getCorrectCaseSize() / (float) getTextureByIngredientName(getGame()->joueurs[i].handIngredient.nom)->w));
-            }
+        if (getGame()->joueurs[i].en_main == OBJET && getGame()->joueurs[i].handObjet.type == POELE) {
+            afficherPoeleInHands(player, getGame()->joueurs + i);
+        } else if (getGame()->joueurs[i].en_main == OBJET && getGame()->joueurs[i].handObjet.type == ASSIETTE) {
+            afficherAssietteInHands(player, getGame()->joueurs + i);
+        } else if (getGame()->joueurs[i].en_main == OBJET) {
+            stretch_sprite(player, getTextureByObjectName(getGame()->joueurs[i].handObjet.type), (int) offsetXElements, (int) offsetYElements, 3 * dims / 4, 3 * dims / 4);
         } else if (getGame()->joueurs[i].en_main == INGREDIENT) {
             if (getGame()->joueurs[i].handIngredient.nom != PAS_D_INGREDIENT) {
-                rotate_scaled_sprite(getCorrectBuffer(), getTextureByIngredientName(getGame()->joueurs[i].handIngredient.nom), (int)(x + (float) offsetX), (int)(y + (float) offsetY), getGame()->joueurs[i].angle, ftofix((float) getCorrectCaseSize() / (float) getTextureByIngredientName(getGame()->joueurs[i].handIngredient.nom)->w));
+                stretch_sprite(player, getTextureByIngredientName(getGame()->joueurs[i].handIngredient.nom), (int) offsetXElements, (int) offsetYElements, 3 * dims / 4, 3 * dims / 4);
             }
         }
 
-        rotate_scaled_sprite(getCorrectBuffer(), getGraphic()->textures.player, (int) x, (int) y, getGame()->joueurs[i].angle, ftofix((float) dims / (float) getGraphic()->textures.player->w));
+        stretch_sprite(player, getGraphic()->textures.player, 0, dims, dims, dims);
+        rotate_scaled_sprite(getCorrectBuffer(), player, (int) x, (int) y - dims, getGame()->joueurs[i].angle, ftofix((float) dims / (float) player->w));
         circlefill(getCorrectBuffer(), (int) getGame()->joueurs[i].x, (int) getGame()->joueurs[i].y, dims/5,
                    rgbToAllegroColor(getGame()->joueurs[i].couleur));
 

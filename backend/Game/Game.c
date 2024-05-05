@@ -32,7 +32,7 @@ void mouseActions(int flags) {
 void afficherPause() {
     if (!getGraphic()->debug) {
         // cadrillage(screen, makecol(0, 0, 0));
-        clear(screen);
+        // clear(screen);
     }
     rectfill(screen, getCorrectWidth()/2 - 30, getCorrectHeight()/2 - 30, getCorrectWidth()/2 - 10, getCorrectHeight()/2 + 30, makecol(255, 255, 255));
     rectfill(screen, getCorrectWidth()/2 + 10, getCorrectHeight()/2 - 30, getCorrectWidth()/2 + 30, getCorrectHeight()/2 + 30, makecol(255, 255, 255));

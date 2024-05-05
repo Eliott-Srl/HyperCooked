@@ -57,6 +57,8 @@ int getSupposedTimerByFurnitures(e_meubles meuble) {
 
 int getSlotsByObject(e_objet objet) {
     switch (objet) {
+        case ASSIETTE:
+            return RECETTE;
         case MARMITE:
             return TROIS_SLOTS;
         default:
@@ -77,6 +79,7 @@ void afficherProgression(int x, int y, int timer, int timerTotale, int color) {
         rectfill(getCorrectBuffer(), x + 2, y, x + (int) (progression * ((double) getCorrectCaseSize() - 2.0)), y + (int) (3 * getCorrectRatio()), color);
     }
 }
+
 
 void afficherMatrice() {
     for (int h = 0; h < HAUTEUR; h++) {
@@ -203,6 +206,18 @@ void initialiserMatrice(const char* file) {
     fclose(fichier);
 }
 
+void afficherPlancheDecouper(int h, int l) {
+    int x = (int) (getCorrectOffsetX() + (float) l * (float) getCorrectCaseSize());
+    int y = (int) (getCorrectOffsetY() + (float) h * (float) getCorrectCaseSize());
+    stretch_sprite(getCorrectBuffer(), getTextureByFurnitureName(getGame()->matrice[h][l].typeMeuble), x, y, getCorrectCaseSize(), getCorrectCaseSize());
+
+    if (getGame()->matrice[h][l].timer != -1 && getTime() - getGame()->matrice[h][l].timer < getSupposedTimerByFurnitures(getGame()->matrice[h][l].typeMeuble)) {
+        stretch_sprite(getCorrectBuffer(), getTextureByIngredientName(getGame()->matrice[h][l].objet.nourriture[0].nom), x, y, getCorrectCaseSize(), getCorrectCaseSize());
+    } else if (getGame()->matrice[h][l].timer != -1 && getGame()->matrice[h][l].objet.nbStockes > 0) {
+        stretch_sprite(getCorrectBuffer(), getTextureByIngredientName(getIngredientAfterCutting(getGame()->matrice[h][l].objet.nourriture[0].nom)), x, y, getCorrectCaseSize(), getCorrectCaseSize());
+    }
+}
+
 void hc_afficher_matrice() {
     BITMAP *plandetravail = getTextureByFurnitureName(PLAN_DE_TRAVAIL);
     if (!plandetravail) {
@@ -210,9 +225,6 @@ void hc_afficher_matrice() {
         allegro_exit();
         exit(EXIT_FAILURE);
     }
-
-    float coosX[3] = {(float) 1/2, (float) 3/4, (float) 1/4};
-    float coosY[3] = {(float) 1/4, (float) 3/4, (float) 3/4};
 
     for(int h = 0; h < HAUTEUR; h++) {
         for(int l = 0; l < LARGEUR; l++) {
@@ -225,46 +237,18 @@ void hc_afficher_matrice() {
 
             if (getGame()->matrice[h][l].typeMeuble == COFFRE) {
                 rectfill(getCorrectBuffer(), x, y, x + getCorrectCaseSize(), y + getCorrectCaseSize(), makecol(255, 255, 255));
+            } else if (getGame()->matrice[h][l].typeMeuble == PLANCHE_A_DECOUPER) {
+                afficherPlancheDecouper(h, l);
             } else {
                 stretch_sprite(getCorrectBuffer(), getTextureByFurnitureName(getGame()->matrice[h][l].typeMeuble), x, y, getCorrectCaseSize(), getCorrectCaseSize());
             }
 
             if (getGame()->matrice[h][l].objet.type == STOCKEUR) {
                 stretch_sprite(getCorrectBuffer(), getTextureByIngredientName(getGame()->matrice[h][l].objet.nourriture[0].nom), x, y, getCorrectCaseSize(), getCorrectCaseSize());
-            } else if (getGame()->matrice[h][l].typeMeuble == PLANCHE_A_DECOUPER) {
-                if (getGame()->matrice[h][l].timer != -1 && getTime() - getGame()->matrice[h][l].timer < getSupposedTimerByFurnitures(getGame()->matrice[h][l].typeMeuble)) {
-                    stretch_sprite(getCorrectBuffer(), getTextureByIngredientName(getGame()->matrice[h][l].objet.nourriture[0].nom), x, y, getCorrectCaseSize(), getCorrectCaseSize());
-                } else if (getGame()->matrice[h][l].timer != -1 && getGame()->matrice[h][l].objet.nbStockes > 0) {
-                    stretch_sprite(getCorrectBuffer(), getTextureByIngredientName(getIngredientAfterCutting(getGame()->matrice[h][l].objet.nourriture[0].nom)), x, y, getCorrectCaseSize(), getCorrectCaseSize());
-                }
-            } else if (getGame()->matrice[h][l].typeMeuble == PLAQUE_DE_CUISSON) {
-                if (getGame()->matrice[h][l].objet.type != NONE) {
-                    stretch_sprite(getCorrectBuffer(), getTextureByObjectName(getGame()->matrice[h][l].objet.type), x, y, getCorrectCaseSize(), getCorrectCaseSize());
-                }
-
-                if (getGame()->matrice[h][l].objet.type != NONE
-                 && getGame()->matrice[h][l].objet.nbStockes > 0
-                 && getGame()->matrice[h][l].objet.stockageMax == 1
-                 && (getGame()->matrice[h][l].timer == -1 || getTime() - getGame()->matrice[h][l].timer < getSupposedTimerByFurnitures(getGame()->matrice[h][l].typeMeuble))) {
-                    stretch_sprite(getCorrectBuffer(), getTextureByIngredientName(getGame()->matrice[h][l].objet.nourriture[0].nom), x, y, getCorrectCaseSize(), getCorrectCaseSize());
-                } else if (getGame()->matrice[h][l].objet.type != NONE
-                        && getGame()->matrice[h][l].objet.nbStockes > 0
-                        && getGame()->matrice[h][l].objet.stockageMax == 3
-                        && (getGame()->matrice[h][l].timer == -1 || getTime() - getGame()->matrice[h][l].timer < getSupposedTimerByFurnitures(getGame()->matrice[h][l].typeMeuble))) {
-                    for (int i = 0; i < getGame()->matrice[h][l].objet.nbStockes; i++) {
-                        stretch_sprite(getCorrectBuffer(), getTextureByIngredientName(getGame()->matrice[h][l].objet.nourriture[i].nom), x + (int) (coosX[i] * (float) getCorrectCaseSize()), y + (int) (coosY[i] * (float) getCorrectCaseSize()), getCorrectCaseSize() / 2, getCorrectCaseSize() / 2);
-                    }
-                } else if (getGame()->matrice[h][l].timer != -1 && getTime() - getGame()->matrice[h][l].timer > getSupposedTimerByFurnitures(getGame()->matrice[h][l].typeMeuble)) {
-                    stretch_sprite(getCorrectBuffer(), getTextureByIngredientName(getIngredientAfterCooking(getGame()->matrice[h][l].objet.nourriture[0].nom)), x, y, getCorrectCaseSize(), getCorrectCaseSize());
-                }
-            } else if (getGame()->matrice[h][l].objet.type != NONE) {
-                stretch_sprite(getCorrectBuffer(), getTextureByObjectName(getGame()->matrice[h][l].objet.type), x, y,
-                               getCorrectCaseSize(), getCorrectCaseSize());
-                if (getGame()->matrice[h][l].objet.type != NONE
-                    && getGame()->matrice[h][l].objet.nbStockes > 0
-                    && getGame()->matrice[h][l].objet.stockageMax == 1) {
-                    stretch_sprite(getCorrectBuffer(), getTextureByIngredientName(getGame()->matrice[h][l].objet.nourriture[0].nom), x, y, getCorrectCaseSize(), getCorrectCaseSize());
-                }
+            } else if (getGame()->matrice[h][l].objet.type == ASSIETTE) {
+                afficherAssietteOnFurniture(h, l);
+            } else if (getGame()->matrice[h][l].objet.type == POELE) {
+                afficherPoeleOnFurniture(h, l);
             }
 
             if (getGame()->matrice[h][l].timer != -1 && getTime() - getGame()->matrice[h][l].timer <
