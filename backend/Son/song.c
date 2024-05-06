@@ -2,7 +2,7 @@
 #include "allegro.h"
 
 // Fonction pour charger les échantillons sonores
-void chargeSound(s_leson *leson) {
+void chargeSound(s_game *game, s_leson *leson) {
     leson->sons[0].son = load_wav("Pas.wav");
     if (!leson->sons[0].son) {
         allegro_message("Erreur lors du chargement du son 0");
@@ -16,7 +16,7 @@ void chargeSound(s_leson *leson) {
 }
 
 // Fonction pour jouer un son spécifique
-void playSound(s_leson *leson, int index) {
+void playSound(s_game *game, s_leson *leson, int index) {
     if (index < 0 || index >= NUM_SONS) {
         // Gérer l'erreur si l'index est hors limites
         return;
@@ -26,14 +26,14 @@ void playSound(s_leson *leson, int index) {
 }
 
 // Fonction pour libérer la mémoire des échantillons sonores
-void freeSound(s_leson *leson) {
+void freeSound(s_game *game, s_leson *leson) {
     int i;
     for (i = 0; i < NUM_SONS; i++) {
         destroy_sample(leson->sons[i].son);
     }
 }
 
-int charge_Sound(int choix) {
+int charge_Sound(s_game *game, int choix) {
     // Initialisation Allegro
     if (allegro_init() != 0) {
         allegro_message("Erreur d'initialisation d'Allegro.");
@@ -43,10 +43,10 @@ int charge_Sound(int choix) {
     // Initialiser les échantillons sonores
     s_leson leson;
 
-    chargeSound(&leson);
+    chargeSound(game, &leson);
 
     // Jouer un exemple de son (le premier dans cet exemple)
-    playSound(&leson, 0);
+    playSound(game, &leson, 0);
 
     return 0;
 }

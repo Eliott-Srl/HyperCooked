@@ -1,41 +1,40 @@
 #include "Players.h"
 
-void initialisePlayers(s_color c_player1, const char *n_player1, s_color c_player2, const char *n_player2) {
+void initialisePlayers(s_game *game, s_color c_player1, const char *n_player1, s_color c_player2, const char *n_player2) {
     for (int i = 0; i < 2; i++) {
-        // getGame()->joueurs[i].x = (float) WIDTH / 2 + (float) ((i * 2 - 1) * getCorrectCaseSize());
-        // getGame()->joueurs[i].y = (float) HEIGHT / 2;
-        getGame()->joueurs[i].en_main = NOTHING;
-        getGame()->joueurs[i].score = 0;
+        // game->joueurs[i].x = (float) WIDTH / 2 + (float) ((i * 2 - 1) * getCorrectCaseSize());
+        // game->joueurs[i].y = (float) HEIGHT / 2;
+        game->joueurs[i].en_main = NOTHING;
+        game->joueurs[i].score = 0;
     }
 
-    getGame()->joueurs[0].couleur = c_player1;
-    strcpy(getGame()->joueurs[0].nom, n_player1);
+    game->joueurs[0].couleur = c_player1;
+    strcpy(game->joueurs[0].nom, n_player1);
 
-    getGame()->joueurs[1].couleur = c_player2;
-    strcpy(getGame()->joueurs[1].nom, n_player2);
+    game->joueurs[1].couleur = c_player2;
+    strcpy(game->joueurs[1].nom, n_player2);
 }
 
-void deplacerPersonnage(s_joueur* joueur, double veloX, double veloY) {
+void deplacerPersonnage(s_game *game, s_joueur* joueur, double veloX, double veloY) {
     if (veloX < 0.01 && veloX > -0.01 && veloY < 0.01 && veloY > -0.01) {
         return;
     }
 
-    s_game *game = getGame();
     // Nouvelles positions potentielles
-    float newX = joueur->x + (float) veloX * (float) getCorrectRatio() * (float) getCorrectRatio() * (float) SPEED;
-    float newY = joueur->y + (float) veloY * (float) getCorrectRatio() * (float) getCorrectRatio() * (float) SPEED;
+    float newX = joueur->x + (float) veloX * (float) getCorrectRatio(game) * (float) getCorrectRatio(game) * (float) SPEED;
+    float newY = joueur->y + (float) veloY * (float) getCorrectRatio(game) * (float) getCorrectRatio(game) * (float) SPEED;
 
-    if (newX < 0 || newX > (float) getCorrectWidth() || newY < 0 || newY > (float) getCorrectHeight()) {
+    if (newX < 0 || newX > (float) getCorrectWidth(game) || newY < 0 || newY > (float) getCorrectHeight(game)) {
         return;
     }
 
     // Vérifier les collisions avec les meubles
-    int i = (int) ((newX - getCorrectOffsetX()) / (float) getCorrectCaseSize());
-    int j = (int) ((newY - getCorrectOffsetY()) / (float) getCorrectCaseSize());
-    if (collisionsBtRectanglesAndCircles((int) (getCorrectOffsetX() + (float) i * (float) getCorrectCaseSize()),
-                                         (int) (getCorrectOffsetY() + (float) j * (float) getCorrectCaseSize()),
-                                         getCorrectCaseSize(), getCorrectCaseSize(), (int) newX, (int) newY,
-                                         getCorrectRayon())
+    int i = (int) ((newX - getCorrectOffsetX(game)) / (float) getCorrectCaseSize(game));
+    int j = (int) ((newY - getCorrectOffsetY(game)) / (float) getCorrectCaseSize(game));
+    if (collisionsBtRectanglesAndCircles((int) (getCorrectOffsetX(game) + (float) i * (float) getCorrectCaseSize(game)),
+                                         (int) (getCorrectOffsetY(game) + (float) j * (float) getCorrectCaseSize(game)),
+                                         getCorrectCaseSize(game), getCorrectCaseSize(game), (int) newX, (int) newY,
+                                         getCorrectRayon(game))
         && game->matrice[j][i].typeMeuble != SOL) {
         // Il y a une collision, ne pas bouger
         return;
@@ -51,8 +50,8 @@ void deplacerPersonnage(s_joueur* joueur, double veloX, double veloY) {
         autre_joueur = &game->joueurs[0];
     }
 
-    if (collisionsBtCircles((int) newX, (int) newY, getCorrectRayon(), (int) autre_joueur->x, (int) autre_joueur->y,
-                            getCorrectRayon())) {
+    if (collisionsBtCircles((int) newX, (int) newY, getCorrectRayon(game), (int) autre_joueur->x, (int) autre_joueur->y,
+                            getCorrectRayon(game))) {
         // Il y a une collision avec un autre personnage, ne pas bouger
         return;
     }
@@ -87,39 +86,39 @@ void deplacerPersonnage(s_joueur* joueur, double veloX, double veloY) {
 }
 
 
-void afficherPersonnages() {
+void afficherPersonnages(s_game *game) {
     for (int i = 0; i < 2; i++) {
-        int dims = getCorrectCaseSize();
+        int dims = getCorrectCaseSize(game);
         BITMAP *player = create_bitmap(dims, dims * 3);
         clear_to_color(player, makecol(255, 0, 255));
 
-        float x = getGame()->joueurs[i].x - (float) dims / 2;
-        float y = getGame()->joueurs[i].y - (float) dims / 2;
+        float x = game->joueurs[i].x - (float) dims / 2;
+        float y = game->joueurs[i].y - (float) dims / 2;
         float offsetYElements = (float) dims / 2;
         float offsetXElements = (float) ((float) dims - ((float) 3 * (float) dims / 4)) / 2;
 
-        if (getGame()->joueurs[i].en_main == OBJET && getGame()->joueurs[i].handObjet.type == POELE) {
-            afficherPoeleInHands(player, getGame()->joueurs + i);
-        } else if (getGame()->joueurs[i].en_main == OBJET && getGame()->joueurs[i].handObjet.type == ASSIETTE) {
-            afficherAssietteInHands(player, getGame()->joueurs + i);
-        } else if (getGame()->joueurs[i].en_main == OBJET) {
-            stretch_sprite(player, getTextureByObjectName(getGame()->joueurs[i].handObjet.type), (int) offsetXElements, (int) offsetYElements, 3 * dims / 4, 3 * dims / 4);
-        } else if (getGame()->joueurs[i].en_main == INGREDIENT) {
-            if (getGame()->joueurs[i].handIngredient.nom != PAS_D_INGREDIENT) {
-                stretch_sprite(player, getTextureByIngredientName(getGame()->joueurs[i].handIngredient.nom), (int) offsetXElements, (int) offsetYElements, 3 * dims / 4, 3 * dims / 4);
+        if (game->joueurs[i].en_main == OBJET && game->joueurs[i].handObjet.type == POELE) {
+            afficherPoeleInHands(game, player, game->joueurs + i);
+        } else if (game->joueurs[i].en_main == OBJET && game->joueurs[i].handObjet.type == ASSIETTE) {
+            afficherAssietteInHands(game, player, game->joueurs + i);
+        } else if (game->joueurs[i].en_main == OBJET) {
+            stretch_sprite(player, getTextureByObjectName(game, game->joueurs[i].handObjet.type), (int) offsetXElements, (int) offsetYElements, 3 * dims / 4, 3 * dims / 4);
+        } else if (game->joueurs[i].en_main == INGREDIENT) {
+            if (game->joueurs[i].handIngredient.nom != PAS_D_INGREDIENT) {
+                stretch_sprite(player, getTextureByIngredientName(game, game->joueurs[i].handIngredient.nom), (int) offsetXElements, (int) offsetYElements, 3 * dims / 4, 3 * dims / 4);
             }
         }
 
-        stretch_sprite(player, getGraphic()->textures.player, 0, dims, dims, dims);
-        rotate_scaled_sprite(getCorrectBuffer(), player, (int) x, (int) y - dims, getGame()->joueurs[i].angle, ftofix((float) dims / (float) player->w));
-        circlefill(getCorrectBuffer(), (int) getGame()->joueurs[i].x, (int) getGame()->joueurs[i].y, dims/5,
-                   rgbToAllegroColor(getGame()->joueurs[i].couleur));
+        stretch_sprite(player, game->graphic.textures.player, 0, dims, dims, dims);
+        rotate_scaled_sprite(getCorrectBuffer(game), player, (int) x, (int) y - dims, game->joueurs[i].angle, ftofix((float) dims / (float) player->w));
+        circlefill(getCorrectBuffer(game), (int) game->joueurs[i].x, (int) game->joueurs[i].y, dims/5,
+                   rgbToAllegroColor(game->joueurs[i].couleur));
 
-        executeFunctionForEveryBlockReachable(getGame()->joueurs + i, &showInteractions);
+        executeFunctionForEveryBlockReachable(game, game->joueurs + i, &showInteractions);
     }
 }
 
-void deplacerPersonnagesClavier() {
+void deplacerPersonnagesClavier(s_game *game) {
     s_coo velo_perso1 = {0, 0};
     s_coo velo_perso2 = {0, 0};
     /*
@@ -158,17 +157,17 @@ void deplacerPersonnagesClavier() {
         // playSound(sons, 0);
     }
 
-    deplacerPersonnage(&getGame()->joueurs[0], velo_perso1.x, velo_perso1.y);
-    deplacerPersonnage(&getGame()->joueurs[1], velo_perso2.x, velo_perso2.y);
+    deplacerPersonnage(game, &game->joueurs[0], velo_perso1.x, velo_perso1.y);
+    deplacerPersonnage(game, &game->joueurs[1], velo_perso2.x, velo_perso2.y);
 }
 
-void deplacerPersonnageJoystick() {
+void deplacerPersonnageJoystick(s_game *game) {
     for (int i = 0; i < 2; i++) {
         if (joy[i].flags & JOYFLAG_ANALOG && joy[i].flags & JOYFLAG_SIGNED) {
             double x = (double) joy[i].stick[0].axis[0].pos / 128.0;
             double y = (double) joy[i].stick[0].axis[1].pos / 128.0;
 
-            deplacerPersonnage(&getGame()->joueurs[i], x, y);
+            deplacerPersonnage(game, &game->joueurs[i], x, y);
         } else if (joy[i].flags & JOYFLAG_CALIB_DIGITAL) {
 
         } else {
@@ -187,14 +186,14 @@ void deplacerPersonnageJoystick() {
                 velo_perso.y++;
             }
 
-            deplacerPersonnage(&getGame()->joueurs[i], velo_perso.x, velo_perso.y);
+            deplacerPersonnage(game, &game->joueurs[i], velo_perso.x, velo_perso.y);
         }
     }
 }
 
-void deplacerPersonnages() {
-    deplacerPersonnagesClavier();
-    deplacerPersonnageJoystick();
+void deplacerPersonnages(s_game *game) {
+    deplacerPersonnagesClavier(game);
+    deplacerPersonnageJoystick(game);
 
-    afficherPersonnages();
+    afficherPersonnages(game);
 }

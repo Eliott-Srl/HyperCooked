@@ -3,10 +3,10 @@
 
 #include "../backend.h"
 
-void hc_init();
+void hc_init(s_game *game);
 
-int loadingMaps(char maps[NB_MAPS_MAX][STRMAX]);
-void reinitialiserPartie();
-void hc_finish();
+int loadingMaps(s_game *game, char maps[NB_MAPS_MAX][STRMAX]);
+void reinitialiserPartie(s_game *game);
+void hc_finish(s_game *game);
 
 #endif //HYPERCOOKED_ONCERS_H

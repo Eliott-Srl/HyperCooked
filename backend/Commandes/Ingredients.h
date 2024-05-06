@@ -3,7 +3,7 @@
 
 #include "../backend.h"
 
-BITMAP *getTextureByIngredientName(e_ingredients ingredients);
+BITMAP *getTextureByIngredientName(s_game *game, e_ingredients ingredients);
 int getCuissonByIngredient(e_ingredients ingredient);
 int getIngredientAfterCooking(e_ingredients ingredient);
 int getFurnitureByCooking(e_cuisson cuisson);

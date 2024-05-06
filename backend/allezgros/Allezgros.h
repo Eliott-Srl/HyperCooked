@@ -7,23 +7,20 @@
 // Retourne la structure globale qui contient toutes les infos pour l'affichage
 s_graphic *getGraphic();
 
-// Set l'adresse de la sutructure graphique sur new_graphic
-void set_graphic(s_graphic* new_graphic);
-
 // Transforme une couleur de la structure couleur en une couleur d'Allegro
 int rgbToAllegroColor(s_color color);
 
 // Affiche les informations de debug
-void menu_debug(BITMAP *source);
+void menu_debug(s_game *game, BITMAP *source);
 
 // Affiche le buffer adapté avec la bonne taille
-void hc_blit(BITMAP *source);
+void hc_blit(s_game *game, BITMAP *source);
 
 // Divise l'espace horizontale entre startX et endX en n parts égales
 void divideScreenVertically(int *coos, int n, int startX, int endX);
 
 // Retourne un booléen qui dit si la souris se trouve sur un des boutons customs
-int boutonsHovered();
+int boutonsHovered(s_game *game);
 
 /* Crée un rectangle dont:
  * - x et y sont les coordonées du centre
@@ -37,62 +34,62 @@ s_rectangle hc_rectfill_center(BITMAP *bmp, int x, int y, int w, int h, int colo
  * - callback sera la fonction appelé quand on clique dessus
  * - color sera la couleur du texte
  * - background sera la couleur du bouton*/
-s_bouton *hc_boutonfill_center(BITMAP *bmp,const FONT *f, int x, int y, int w, int h, const char *text_contained,
+s_bouton *hc_boutonfill_center(s_game *game, BITMAP *bmp,const FONT *f, int x, int y, int w, int h, const char *text_contained,
                                void (*callback)(), int color, int background);
 
 // Crée un bouton custom virtuel
-s_bouton *hc_bouton_virtual(BITMAP *bmp, int x, int y, int w, int h, void (*callback)());
+s_bouton *hc_bouton_virtual(s_game *game, BITMAP *bmp, int x, int y, int w, int h, void (*callback)());
 
 // Crée un texte aligné sur l'axe horizontale et dont y est la distance depuis le haut de l'écran
-void hc_textprintf_centre_h(BITMAP *bmp, int y, const FONT *f, int color, int bg, const char *format, ...);
+void hc_textprintf_centre_h(s_game *game, BITMAP *bmp, int y, const FONT *f, int color, int bg, const char *format, ...);
 
 // Crée un texte aligné sur l'axe verticale et dont x est la distance depuis la gauche de l'écran
-void hc_textprintf_centre_v(BITMAP *bmp, int x, const FONT *f, int color, int bg, const char *format, ...);
+void hc_textprintf_centre_v(s_game *game, BITMAP *bmp, int x, const FONT *f, int color, int bg, const char *format, ...);
 
 // Crée un texte aligné sur l'axe horizontale et verticale
-void hc_textprintf_centre_hv(BITMAP *bmp, const FONT *f, int color, int bg, const char *format, ...);
+void hc_textprintf_centre_hv(s_game *game, BITMAP *bmp, const FONT *f, int color, int bg, const char *format, ...);
 
 // En appelant cette fonction on clear le bon buffer en fonction de l'état du jeu et du mode plein écran
-void hc_clear_buffers();
+void hc_clear_buffers(s_game *game);
 
 // Retourne la hauteur appropriée en fonction du mode plein écran
-int getCorrectHeight();
+int getCorrectHeight(s_game *game);
 
 // Retourne la hauteur inappropriée en fonction du mode plein écran
-int getIncorrectHeight();
+int getIncorrectHeight(s_game *game);
 
 // Retourne la largeur appropriée en fonction du mode plein écran
-int getCorrectWidth();
+int getCorrectWidth(s_game *game);
 
 // Retourne la largeur inappropriée en fonction du mode plein écran
-int getIncorrectWidth();
+int getIncorrectWidth(s_game *game);
 
 // Retourne la taille d'une case appropriée en fonction du mode plein écran
-int getCorrectCaseSize();
+int getCorrectCaseSize(s_game *game);
 
 // Retourne la taille d'une case inappropriée en fonction du mode plein écran
-int getIncorrectCaseSize();
+int getIncorrectCaseSize(s_game *game);
 
 // Retourne le rayon approprié en fonction du mode plein écran
-int getCorrectRayon();
+int getCorrectRayon(s_game *game);
 
 // Retourne le ratio correct en fonction du mode plein écran
-float getCorrectRatio();
+float getCorrectRatio(s_game *game);
 
 // Retourne le buffer correct en fonction du mode plein écran et de l'état du jeu
-BITMAP *getCorrectBuffer();
+BITMAP *getCorrectBuffer(s_game *game);
 
 // Couvre buffer avec image en répétant verticalement et horizontalement
-void coverBufferWithImage(BITMAP *buffer, BITMAP *image, int s_w, int s_h);
+void coverBufferWithImage(s_game *game, BITMAP *buffer, BITMAP *image, int s_w, int s_h);
 
 // Supprime tous les boutons customs
-void clear_boutons();
+void clear_boutons(s_game *game);
 
 // Fait un cadrillage sur le buffer
 void cadrillage(BITMAP *bitmap, int color);
 
 // Prends une capture d'écran
 // Ne fonctionne pas
-void screenshot();
+void screenshot(s_game *game);
 
 #endif //HYPERCOOKED_ALLEZGROS_H

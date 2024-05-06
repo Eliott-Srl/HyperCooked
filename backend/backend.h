@@ -16,6 +16,8 @@
 
 #include "allegro.h"
 
+typedef struct s_game s_game;
+
 /*############### UTILS ###############*/
 typedef struct s_coo {                           // Structure pour des vecteurs, des coordonnées
     int x;
@@ -27,6 +29,98 @@ typedef struct s_color {
     int g;                                       // Vert
     int b;                                       // Bleu
 } s_color;
+
+
+/*############### ALLEZGROS ###############*/
+typedef struct s_rectangle_virtual {
+    int h;                                       // Hauteur
+    int w;                                       // Largeur
+    int x;                                       // Position X du centre
+    int y;                                       // Position Y du centre
+} s_rectangle_virtual;
+
+typedef struct s_rectangle {
+    s_rectangle_virtual virtual;                 // Instance de s_rectangle_virtual
+    int color;                                   // Couleur ( utilise makecol() )
+    int fill;                                    // Si le rectangle est rempli ou non
+} s_rectangle;
+
+typedef struct s_bouton {
+    BITMAP *bmp;                                 // Image sur laquelle on dessine
+    int virtual;                                 // Booléen qui indique si le bouton est virtuel
+    s_rectangle rectangle;                       // Instance de s_rectangle
+    void (*callback)(s_game*);                    // Pointeur de fonction qui sera appelée
+    char *text;                                  // Texte affiché sur l'écran
+    int textColor;                               // Couleur du texte affiché
+} s_bouton;
+
+typedef struct s_ressources {
+    BITMAP *loadingScreen;                       // BITMAP qui contient le loading screen
+    BITMAP *fsLoadingScreen;                     // BITMAP qui contient le loading screen en plein écran
+    BITMAP *buffer;                              // BITMAP pour le jeu
+    BITMAP *fsBuffer;                            // BITMAP pour le jeu en plein écran
+    BITMAP *mainMenuBuffer;                      // BITMAP pour le menu
+    BITMAP *fsMainMenuBuffer;                    // BITMAP pour le menu en plein écran
+    BITMAP *menuBuffer;                          // BITMAP pour le menu pendant la partie
+    BITMAP *fsMenuBuffer;                        // BITMAP pour le menu pendant la partie en plein écran
+    BITMAP *settings;                            // BITMAP qui contient les paramètres
+    BITMAP *fsSettings;                          // BITMAP qui contient les paramètres en plein écran
+} s_ressources;
+
+typedef struct s_textures {
+    BITMAP *invalidTexture;                      // Texture par défaut
+    BITMAP *cursor;                              // Texture du curseur
+    BITMAP *pointer;                             // Texture du pointeur
+    BITMAP *player;                              // Texture du joueur
+    BITMAP *menuBackground;                      // Texture du fond du menu
+    BITMAP *credit;                              // Texture du crédit
+    BITMAP *background;                          // Texture du fond du jeu
+    BITMAP *sol;                                 // Texture du sol
+    BITMAP *comptoir;                            // Texture du comptoir
+    BITMAP *coffre;                              // Texture du coffre
+    BITMAP *poubelle;                            // Texture de la poubelle
+    BITMAP *plancheADecouper;                    // Texture de la planche à découper
+    BITMAP *planDeTravail;                       // Texture du plan de travail
+    BITMAP *plaqueDeCuisson;                     // Texture de la plaque de cuisson
+    BITMAP *poele;                               // Texture de la poêle
+    BITMAP *marmite;                             // Texture de la marmite
+    BITMAP *assiette;                            // Texture de l'assiette
+    BITMAP *extincteur;                          // Texture de l'extincteur
+    BITMAP *ticket;                              // Texture du ticket
+    BITMAP *bar;                                 // Texture du bar
+    BITMAP *plancheH;                            // Texture de la planche horizontale
+    BITMAP *laitue;                              // Texture de la laitue
+    BITMAP *laitueCoupee;                        // Texture de la laitue coupée
+    BITMAP *oeuf;                                // Texture de l'oeuf
+    BITMAP *pain;                                // Texture du pain
+    BITMAP *pommeDeTerre;                        // Texture de la pomme de terre
+    BITMAP *steak;                               // Texture du steak
+    BITMAP *steakCuit;                           // Texture du steak cuit
+    BITMAP *tomate;                              // Texture de la tomate
+    BITMAP *tomateCoupee;                        // Texture de la tomate coupée
+    BITMAP *burger;                              // Texture du burger
+    BITMAP *salade;                              // Texture de la salade
+    BITMAP *fromage;                             // Texture du fromage
+    BITMAP *pizza;                               // Texture de la pizza
+    BITMAP *piece;                               // Texture de la pièce
+} s_textures;
+
+typedef struct s_graphic {
+    int debug;                                   // Booléen qui indique si on affiche les informations de debug
+    int debug_button;                            // Booléen qui permet d'éviter le rebond du menu
+    int fs;                                      // Booléen qui indique si le jeu est en plein écran
+    int fs_width;                                // Largeur de l'écran
+    int fs_height;                               // Hauteur de l'écran
+    float ratio;                                 // Ratio de la matrice
+    int tailleCase;                              // Taille d'une case de la matrice
+    int fsTailleCase;                            // Taille d'une case de la matrice en fullscreen
+    int rayon;                                   // Rayon du joueur
+    int fsRayon;                                 // Rayon du joueur en fullscreen
+    s_bouton *boutons;                           // Liste des boutons customs
+    int nombreBoutons;                           // Nombre de boutons customs
+    s_ressources ressources;                     // Structure qui contient les pointeurs de toutes les ressources
+    s_textures textures;
+} s_graphic;
 
 /*############### JEU ###############*/
 typedef enum e_etat_jeu {                        // Indique l'état du jeu
@@ -77,7 +171,8 @@ typedef struct s_recette {
 } s_recette;
 
 typedef struct s_commande {
-    int timer;                                   // Temps pour réaliser la commande
+    int duration;                                   // Temps pour réaliser la commande
+    int debut;                                   // Temps de début de la commande
     s_recette recette;                           // La recette a réalisé
     fixed angle;                                 // Angle de la carte de la commande
 } s_commande;
@@ -90,6 +185,7 @@ typedef enum e_meubles {                         // Indique le type du meuble
     COFFRE,
     PLAQUE_DE_CUISSON,
     POUBELLE,
+    GENERATEUR_ASSIETTE,
     POSITION_JOUEUR = 10
 } e_meubles;
 
@@ -138,7 +234,7 @@ typedef struct s_joueur {
 typedef struct s_meuble {
     e_meubles typeMeuble;                        // Type du meuble
     s_objet objet;                               // L'objet sur le meuble ( objet ou null )
-    void (*action)(s_joueur*, int, int);         // Fonction appelée quand on interagit avec le meuble
+    void (*action)(s_game*, s_joueur*, int, int);         // Fonction appelée quand on interagit avec le meuble
     int timer;                                   // Timer pour les actions
 } s_meuble;
 
@@ -150,100 +246,15 @@ typedef struct s_game {
     int nbRecettes;                              // Nombre de recettes disponibles
     int nbRecettesAvailable;                     // Nombre de recettes disponibles
     int duration;                                // Durée de la partie
+    int timeBtCommandes;                         // Temps écoulé
     e_etat_jeu etatJeu;                          // L'état du jeu: LOADING, PLAYING, MENU
-    int quitting;                                // Booléen qui indique si on quitte le jeu
     s_commande commandes[NB_COMMANDES_MAX + 1];  // Tableau de commande qui contient les commandes en cours
     int nbCommandes;                             // Nombre de commandes en cours
     int score;                                   // Le score jusqu'ici
+    int recettes_ratees;                         // Nombre de recettes ratées
+    int recettes_reussi;                         // Nombre de recettes créées
+    s_graphic graphic;                           // Structure qui contient les paramètres graphiques
 } s_game;
-
-/*############### ALLEZGROS ###############*/
-typedef struct s_rectangle_virtual {
-    int h;                                       // Hauteur
-    int w;                                       // Largeur
-    int x;                                       // Position X du centre
-    int y;                                       // Position Y du centre
-} s_rectangle_virtual;
-
-typedef struct s_rectangle {
-    s_rectangle_virtual virtual;                 // Instance de s_rectangle_virtual
-    int color;                                   // Couleur ( utilise makecol() )
-    int fill;                                    // Si le rectangle est rempli ou non
-} s_rectangle;
-
-typedef struct s_bouton {
-    BITMAP *bmp;                                 // Image sur laquelle on dessine
-    int virtual;                                 // Booléen qui indique si le bouton est virtuel
-    s_rectangle rectangle;                       // Instance de s_rectangle
-    void (*callback)();                          // Pointeur de fonction qui sera appelée
-    char *text;                                  // Texte affiché sur l'écran
-    int textColor;                               // Couleur du texte affiché
-} s_bouton;
-
-typedef struct s_ressources {
-    BITMAP *loadingScreen;                       // BITMAP qui contient le loading screen
-    BITMAP *fsLoadingScreen;                     // BITMAP qui contient le loading screen en plein écran
-    BITMAP *buffer;                              // BITMAP pour le jeu
-    BITMAP *fsBuffer;                            // BITMAP pour le jeu en plein écran
-    BITMAP *mainMenuBuffer;                      // BITMAP pour le menu
-    BITMAP *fsMainMenuBuffer;                    // BITMAP pour le menu en plein écran
-    BITMAP *menuBuffer;                          // BITMAP pour le menu pendant la partie
-    BITMAP *fsMenuBuffer;                        // BITMAP pour le menu pendant la partie en plein écran
-} s_ressources;
-
-typedef struct s_textures {
-    BITMAP *invalidTexture;                      // Texture par défaut
-    BITMAP *cursor;                              // Texture du curseur
-    BITMAP *pointer;                             // Texture du pointeur
-    BITMAP *player;                              // Texture du joueur
-    BITMAP *menuBackground;                      // Texture du fond du menu
-    BITMAP *credit;                              // Texture du crédit
-    BITMAP *background;                          // Texture du fond du jeu
-    BITMAP *sol;                                 // Texture du sol
-    BITMAP *comptoir;                            // Texture du comptoir
-    BITMAP *coffre;                              // Texture du coffre
-    BITMAP *poubelle;                            // Texture de la poubelle
-    BITMAP *plancheADecouper;                    // Texture de la planche à découper
-    BITMAP *planDeTravail;                       // Texture du plan de travail
-    BITMAP *plaqueDeCuisson;                     // Texture de la plaque de cuisson
-    BITMAP *poele;                               // Texture de la poêle
-    BITMAP *marmite;                             // Texture de la marmite
-    BITMAP *assiette;                            // Texture de l'assiette
-    BITMAP *extincteur;                          // Texture de l'extincteur
-    BITMAP *ticket;                              // Texture du ticket
-    BITMAP *bar;                                 // Texture du bar
-    BITMAP *plancheH;                            // Texture de la planche horizontale
-    BITMAP *laitue;                              // Texture de la laitue
-    BITMAP *laitueCoupee;                        // Texture de la laitue coupée
-    BITMAP *oeuf;                                // Texture de l'oeuf
-    BITMAP *pain;                                // Texture du pain
-    BITMAP *pommeDeTerre;                        // Texture de la pomme de terre
-    BITMAP *steak;                               // Texture du steak
-    BITMAP *steakCuit;                           // Texture du steak cuit
-    BITMAP *tomate;                              // Texture de la tomate
-    BITMAP *tomateCoupee;                        // Texture de la tomate coupée
-    BITMAP *burger;                              // Texture du burger
-    BITMAP *salade; // Texture de la salade
-    BITMAP *fromage;
-    BITMAP *pizza;
-} s_textures;
-
-typedef struct s_graphic {
-    int debug;                                   // Booléen qui indique si on affiche les informations de debug
-    int debug_button;                            // Booléen qui permet d'éviter le rebond du menu
-    int fs;                                      // Booléen qui indique si le jeu est en plein écran
-    int fs_width;                                // Largeur de l'écran
-    int fs_height;                               // Hauteur de l'écran
-    float ratio;                                 // Ratio de la matrice
-    int tailleCase;                              // Taille d'une case de la matrice
-    int fsTailleCase;                            // Taille d'une case de la matrice en fullscreen
-    int rayon;                                   // Rayon du joueur
-    int fsRayon;                                 // Rayon du joueur en fullscreen
-    s_bouton *boutons;                           // Liste des boutons customs
-    int nombreBoutons;                           // Nombre de boutons customs
-    s_ressources ressources;                     // Structure qui contient les pointeurs de toutes les ressources
-    s_textures textures;
-} s_graphic;
 
 /*############### SETTINGS ###############*/
 typedef struct s_sound {

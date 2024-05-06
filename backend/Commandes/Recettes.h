@@ -7,8 +7,8 @@
 #include <time.h>
 #include "../backend.h"
 
-BITMAP *getTextureByRecette(e_recettes recette);
-void loadRecipes();
-int verificationDeLaRecette(s_objet *plat, s_commande *commandeFind);
+BITMAP *getTextureByRecette(s_game *game, e_recettes recette);
+void loadRecipes(s_game *game);
+int verificationDeLaRecette(s_game *game, s_objet *plat, s_commande *commandeFind);
 
 #endif //HYPERCOOKED_RECETTES_H
