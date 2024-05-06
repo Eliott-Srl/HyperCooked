@@ -53,13 +53,13 @@ void AfficherCommande() {
         set_clip_rect(getCorrectBuffer(), 0, (int) (getGraphic()->fs ? 1005 : (float) 375), getCorrectWidth(),getCorrectHeight());
         rotate_scaled_sprite(getCorrectBuffer(), getGraphic()->textures.ticket, xLogo,(int) (getGraphic()->fs ? 980 : (float) 340),
                              getGame()->commandes[i].angle,ftofix((float) 110 / (float) getGraphic()->textures.ticket->w));
-        set_clip_rect(getCorrectBuffer(), 0, 0, getCorrectWidth(), getCorrectHeight());
+        set_clip_rect(getCorrectBuffer(), 0, 0, (int) ((float)getCorrectWidth() * getCorrectRatio()), (int)((float)getCorrectHeight() * getCorrectRatio()));
 
-        stretch_sprite(getCorrectBuffer(), getTextureByRecette(getGame()->commandes[i].recette.nom), 37 + xLogo, (int) (getGraphic()->fs ? 870 : (float) 408), (int) (getGraphic()->fs ? 38 * getCorrectRatio() : (float) 38), (int) (getGraphic()->fs ? 38 * getCorrectRatio() : (float) 38));
+        stretch_sprite(getCorrectBuffer(), getTextureByRecette(getGame()->commandes[i].recette.nom), 37 + xLogo, (int) (getGraphic()->fs ? 900 : (float) 408), (int) (getGraphic()->fs ? 38 * getCorrectRatio() : (float) 38), (int) (getGraphic()->fs ? 38 * getCorrectRatio() : (float) 38));
 
         int coosX[4] = {25, 90};
         int coosY[4] = {400, 435};
-        int coosY2[4] = {972, 1004};
+        int coosY2[4] = {972, 1104};
 
         for (int j = 0; j < getGame()->commandes[i].recette.nbIngredients; j++) {
             BITMAP *ingredient = getTextureByIngredientName(getGame()->commandes[i].recette.ingredients[j].nom);
