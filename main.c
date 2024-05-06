@@ -1,7 +1,7 @@
 #include "backend/backend.h"
 
 int main() {
-    s_game *game = malloc(sizeof(s_game));
+    s_game *game = calloc(1, sizeof(s_game));
     hc_init(game);
 
     game->etatJeu = DANS_MENU;

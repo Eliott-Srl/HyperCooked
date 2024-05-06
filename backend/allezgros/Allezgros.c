@@ -63,15 +63,17 @@ void divideScreenVertically(int *coos, int n, int startX, int endX) {
 }
 
 s_rectangle hc_rectfill_center(BITMAP *bmp, int x, int y, int w, int h, int color) {
-    rectfill(bmp, x - w/2, y - h/2, x + w/2, y + h/2, color);
+    if (color != -1) {
+        rectfill(bmp, x - w/2, y - h/2, x + w/2, y + h/2, color);
+    }
 
     s_rectangle rectangle;
-    rectangle.virtual.x = x;
-    rectangle.virtual.y = y;
+    rectangle.virtual.x = x - w/2;
+    rectangle.virtual.y = y - h/2;
     rectangle.virtual.h = h;
     rectangle.virtual.w = w;
-    rectangle.color = color;
-    rectangle.fill = 1;
+    rectangle.color = (color != -1) * color;
+    rectangle.fill = color != -1;
 
     return rectangle;
 }

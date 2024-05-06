@@ -258,7 +258,7 @@ void hc_afficher_matrice(s_game *game) {
                 stretch_sprite(getCorrectBuffer(game), getTextureByFurnitureName(game, game->matrice[h][l].typeMeuble), x, y, getCorrectCaseSize(game), getCorrectCaseSize(game));
             }
 
-            if (game->matrice[h][l].objet.type == STOCKEUR && game->matrice[h][l].typeMeuble != GENERATEUR_ASSIETTE) {
+            if (game->matrice[h][l].objet.type == STOCKEUR && game->matrice[h][l].typeMeuble != GENERATEUR_ASSIETTE && game->matrice[h][l].objet.nbStockes > 0) {
                 stretch_sprite(getCorrectBuffer(game),
                                getTextureByIngredientName(game, game->matrice[h][l].objet.nourriture[0].nom), x, y,
                                getCorrectCaseSize(game), getCorrectCaseSize(game));

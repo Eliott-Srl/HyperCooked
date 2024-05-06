@@ -34,6 +34,14 @@ void mouseActions(s_game *game) {
     }
 }
 
+void reinitialiserProgression(s_game *game) {
+    // TODO: Reinitialiser la progression
+}
+
+void calibrerManettes(s_game *game) {
+    // TODO: Calibrer les manettes
+}
+
 float getCorrectOffsetX(s_game *game) {
     return ((float) getCorrectWidth(game) - LARGEUR * getCorrectCaseSize(game)) / (float) 2;
 }
@@ -115,7 +123,7 @@ void toSetting(s_game *game) {
 }
 
 void menu(s_game *game) {
-    while ((game->etatJeu == DANS_MENU || game->etatJeu == LOADING) && !credit && !quit) {
+    while ((game->etatJeu == DANS_MENU || game->etatJeu == LOADING) && !credit && !quit && !settings) {
         game->etatJeu = DANS_MENU;
         hc_clear_buffers(game);
         clear_boutons(game);
@@ -139,7 +147,7 @@ void menu(s_game *game) {
         globalKeyboardActions(game);
     }
 
-    while (game->etatJeu == DANS_MENU && credit && !quit) {
+    while (game->etatJeu == DANS_MENU && credit && !settings && !quit) {
         hc_clear_buffers(game);
         clear_boutons(game);
         float ratio = (float) getCorrectWidth(game) / (float) game->graphic.textures.credit->w;
@@ -170,10 +178,57 @@ void menu(s_game *game) {
         globalKeyboardActions(game);
     }
 
-    while (game->etatJeu == DANS_MENU && settings && !quit) {
+    rest(200);
+
+    while (game->etatJeu == DANS_MENU && !credit && settings && !quit) {
         hc_clear_buffers(game);
         clear_boutons(game);
+
+        char player[STRMAX];
+        float ratio = (float) getCorrectWidth(game) / (float) game->graphic.textures.settings->w;
+        int offsetY = (int) ((float) getCorrectHeight(game) - ((float) game->graphic.textures.settings->h * ratio)) / 2;
+        int offsetX = 10;
+
+        stretch_sprite(getCorrectBuffer(game), game->graphic.textures.settings, 0, offsetY, (int) ((float) game->graphic.textures.settings->w * ratio), (int) ((float) game->graphic.textures.settings->h * ratio));
+
+        int a = 8, b = (int) 7 * getCorrectHeight(game) / 16 + 15, c = getCorrectHeight(game) - getCorrectHeight(game) / 5, i = 0;
+        int divisions[a];
+        divideScreenVertically(divisions, a, b, c);
+
+        for (int j = 0; j < 2; j++) {
+            sprintf(player, "Joueur %d", j + 1);
+
+            textprintf_centre_ex(getCorrectBuffer(game), font, getCorrectWidth(game)/2 + offsetX, divisions[i], makecol(0, 0, 0), -1, "%s", player);
+            i++;
+
+            sprintf(player, "Nom: %s", game->joueurs[j].nom);
+
+            hc_boutonfill_center(game, getCorrectBuffer(game), font, getCorrectWidth(game)/2 + offsetX, divisions[i],  getCorrectWidth(game)/5,  divisions[0] / 8, player, (j == 0 ? &changeNomJ1 : &changeNomJ2),
+                                 makecol(0, 0, 0), -1);
+            i++;
+
+            sprintf(player, "Couleur: %d %d %d", game->joueurs[j].couleur.r, game->joueurs[j].couleur.g, game->joueurs[j].couleur.b);
+
+            hc_boutonfill_center(game, getCorrectBuffer(game), font, getCorrectWidth(game)/2 + offsetX, divisions[i],  getCorrectWidth(game)/5,  divisions[0] / 8, player, (j == 0 ? &changeColorJ1 : &changeColorJ2),
+                                 makecol(game->joueurs[j].couleur.r, game->joueurs[j].couleur.g, game->joueurs[j].couleur.b), -1);
+            i++;
+        }
+
+        hc_boutonfill_center(game, getCorrectBuffer(game), font, getCorrectWidth(game)/2 + offsetX, divisions[i],  getCorrectWidth(game)/5,  divisions[0] / 8, "Réinitialiser progression", &reinitialiserProgression,
+                             makecol(0, 0, 0), -1);
+        i++;
+        hc_boutonfill_center(game, getCorrectBuffer(game), font, getCorrectWidth(game)/2 + offsetX, divisions[i],  getCorrectWidth(game)/5,  divisions[0] / 8, "Calibrer les manettes", &calibrerManettes,
+                             makecol(0, 0, 0), -1);
+
+        textprintf_centre_ex(getCorrectBuffer(game), font, getCorrectWidth(game)/2 + offsetX, getCorrectHeight(game) - (int) getCorrectHeight(game)/15, makecol(255, 255, 255), -1, "Press [SPACE] to save and quit.");
+
+        if (key[KEY_SPACE]) {
+            settings = 0;
+        }
+
+        hc_blit(game, getCorrectBuffer(game));
         mouseActions(game);
+        globalKeyboardActions(game);
     }
 }
 
@@ -236,7 +291,7 @@ void jeu(s_game *game) {
     game->etatJeu = LOADING;
     hc_blit(game, getCorrectBuffer(game));
     char maps[NB_MAPS_MAX][STRMAX];
-    int nbMaps = loadingMaps(game, maps);
+    int nbMaps = loadingMaps(maps);
 
     for (int i = 0; i < nbMaps; i++) {
         if (quit) {
@@ -253,8 +308,7 @@ void jeu(s_game *game) {
         game->etatJeu = PLAYING;
 
         // Fin de l'écran de chargement
-        s_color j1 = {255, 0, 0}, j2 = {0,0, 255};
-        initialisePlayers(game, j1, "Stephane", j2, "Bernard");
+        reinitialiserPlayers(game);
 
         partie(game, i + 1);
 

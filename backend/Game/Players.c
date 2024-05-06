@@ -1,18 +1,46 @@
 #include "Players.h"
 
-void initialisePlayers(s_game *game, s_color c_player1, const char *n_player1, s_color c_player2, const char *n_player2) {
+char noms[NB_PRENOMS][STRMAX] = {"Stéphane", "Eliott", "Jean-Kevin", "Bernard", "Michel", "Pierre-Alexandre", "Papou"};
+
+void changeNomJ1(s_game *game) {
+    strcpy(game->joueurs[0].nom, noms[rand() % NB_PRENOMS]);
+}
+
+void changeColorJ1(s_game *game) {
+    game->joueurs[0].couleur.r = rand() % 256;
+    game->joueurs[0].couleur.g = rand() % 256;
+    game->joueurs[0].couleur.b = rand() % 256;
+}
+
+void changeNomJ2(s_game *game) {
+    strcpy(game->joueurs[1].nom, noms[rand() % NB_PRENOMS]);
+}
+
+void changeColorJ2(s_game *game) {
+    game->joueurs[1].couleur.r = rand() % 256;
+    game->joueurs[1].couleur.g = rand() % 256;
+    game->joueurs[1].couleur.b = rand() % 256;
+}
+
+void reinitialiserPlayers(s_game *game) {
     for (int i = 0; i < 2; i++) {
         // game->joueurs[i].x = (float) WIDTH / 2 + (float) ((i * 2 - 1) * getCorrectCaseSize());
         // game->joueurs[i].y = (float) HEIGHT / 2;
         game->joueurs[i].en_main = NOTHING;
         game->joueurs[i].score = 0;
     }
+}
 
-    game->joueurs[0].couleur = c_player1;
-    strcpy(game->joueurs[0].nom, n_player1);
-
-    game->joueurs[1].couleur = c_player2;
-    strcpy(game->joueurs[1].nom, n_player2);
+void initialisePlayers(s_game *game) {
+    reinitialiserPlayers(game);
+    changeNomJ1(game);
+    game->joueurs[0].couleur.r = 255;
+    game->joueurs[0].couleur.g = 0;
+    game->joueurs[0].couleur.b = 0;
+    changeNomJ2(game);
+    game->joueurs[1].couleur.r = 0;
+    game->joueurs[1].couleur.g = 0;
+    game->joueurs[1].couleur.b = 255;
 }
 
 void deplacerPersonnage(s_game *game, s_joueur* joueur, double veloX, double veloY) {
@@ -111,8 +139,12 @@ void afficherPersonnages(s_game *game) {
 
         stretch_sprite(player, game->graphic.textures.player, 0, dims, dims, dims);
         rotate_scaled_sprite(getCorrectBuffer(game), player, (int) x, (int) y - dims, game->joueurs[i].angle, ftofix((float) dims / (float) player->w));
+        destroy_bitmap(player);
+
         circlefill(getCorrectBuffer(game), (int) game->joueurs[i].x, (int) game->joueurs[i].y, dims/5,
                    rgbToAllegroColor(game->joueurs[i].couleur));
+
+        textprintf_centre_ex(getCorrectBuffer(game), font, (int) game->joueurs[i].x, (int) game->joueurs[i].y, makecol(255, 255, 255), -1, "%s", game->joueurs[i].nom);
 
         executeFunctionForEveryBlockReachable(game, game->joueurs + i, &showInteractions);
     }

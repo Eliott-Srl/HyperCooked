@@ -35,10 +35,10 @@ s_rectangle hc_rectfill_center(BITMAP *bmp, int x, int y, int w, int h, int colo
  * - color sera la couleur du texte
  * - background sera la couleur du bouton*/
 s_bouton *hc_boutonfill_center(s_game *game, BITMAP *bmp,const FONT *f, int x, int y, int w, int h, const char *text_contained,
-                               void (*callback)(), int color, int background);
+                               void (*callback)(s_game*), int color, int background);
 
 // Crée un bouton custom virtuel
-s_bouton *hc_bouton_virtual(s_game *game, BITMAP *bmp, int x, int y, int w, int h, void (*callback)());
+s_bouton *hc_bouton_virtual(s_game *game, BITMAP *bmp, int x, int y, int w, int h, void (*callback)(s_game*));
 
 // Crée un texte aligné sur l'axe horizontale et dont y est la distance depuis le haut de l'écran
 void hc_textprintf_centre_h(s_game *game, BITMAP *bmp, int y, const FONT *f, int color, int bg, const char *format, ...);
