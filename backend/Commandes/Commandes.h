@@ -6,7 +6,9 @@
 #include <stdio.h>
 #include "time.h"
 
-void newCommande();
-void AfficherCommande();
+void newCommande(s_game *game);
+void AfficherCommande(s_game *game);
+void actualiserCommandes(s_game *game);
+void enleverCommande(s_game *game, s_commande *commande);
 
 #endif //HYPERCOOKED_COMMANDES_H

@@ -1,18 +1,19 @@
 #include "backend/backend.h"
 
 int main() {
-    hc_init();
+    s_game *game = malloc(sizeof(s_game));
+    hc_init(game);
 
-    getGame()->etatJeu = DANS_MENU;
+    game->etatJeu = DANS_MENU;
 
-    while (!getGame()->quitting) {
-        if (getGame()->etatJeu == DANS_MENU || getGame()->etatJeu == LOADING) {
-            menu();
-        } else if (getGame()->etatJeu == PLAYING) {
-            jeu();
+    while (!getQuitting()) {
+        if (game->etatJeu == DANS_MENU || game->etatJeu == LOADING) {
+            menu(game);
+        } else if (game->etatJeu == PLAYING) {
+            jeu(game);
         }
     }
 
-    hc_finish();
+    hc_finish(game);
     return 0;
 } END_OF_MAIN()

@@ -1,27 +1,22 @@
 #include "Recettes.h"
 
-BITMAP *getTextureByRecette(e_recettes recette) {
+BITMAP *getTextureByRecette(s_game *game, e_recettes recette) {
     switch (recette) {
         case BURGER:
-            return getGraphic()->textures.burger;
+            return game->graphic.textures.burger;
         case P_SALADE:
-            return getGraphic()->textures.salade;
+            return game->graphic.textures.salade;
         case PIZZA:
-            return getGraphic()->textures.pizza;
+            return game->graphic.textures.pizza;
         default:
-            return getGraphic()->textures.invalidTexture;
+            return game->graphic.textures.invalidTexture;
     }
 }
 
-void loadRecipes() {
-    s_game *game = getGame();
-
+void loadRecipes(s_game *game) {
     int nbRecettes = 0;
     char ligne[STRMAX], *p, *d, *g, *end;
     FILE *fp = NULL;
-
-    char *base = "0123456789";
-    char nombre[128] = "";
 
     fp = fopen("recettes.txt", "r");
 
@@ -53,30 +48,39 @@ void loadRecipes() {
             nbIngredients++;
             d = strtok_r(NULL, ",", &end);
         }
-        game->recettes[nbRecettes].nbIngredients = nbIngredients; //
+        game->recettes[nbRecettes].nbIngredients = nbIngredients;
         nbRecettes++;
     }
-    getGame()->nbRecettes = nbRecettes;
+    game->nbRecettes = nbRecettes;
     fclose(fp);
 }
 
-int verificationDeLaRecette(s_objet* plat, s_commande* commandeFind) {
-    int a;
-    for (int i = 0; i < getGame()->nbCommandes; i++) {
-        *commandeFind = getGame()->commandes[i];
+int verificationIngredient(s_ingredient ingredient, s_commande *commande) {
+    for (int i = 0; i < commande->recette.nbIngredients; i++) {
+        if (ingredient.nom == commande->recette.ingredients[i].nom) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int verificationDeLaRecette(s_game *game, s_objet* plat, s_commande* commandeFind) {
+    int ingredientCorresponds;
+    if (plat->type != ASSIETTE) {
+        return 0;
+    }
+
+    for (int commande = 0; commande < game->nbCommandes; commande++) {
+        *commandeFind = game->commandes[commande];
         if (commandeFind->recette.nbIngredients == plat->nbStockes) {
-            a = 0;
-            for (int j = 0; j < plat->nbStockes; j++) {
-                if(plat->nourriture[j].nom == commandeFind->recette.ingredients[a].nom
-                   && plat->nourriture[j].coupe == commandeFind->recette.ingredients[a].coupe
-                   && plat->nourriture[j].cuit == commandeFind->recette.ingredients[a].cuit) {
-                    a++;
-                } else {
-                    break;
+            ingredientCorresponds = 0;
+            for (int ingredient = 0; ingredient < plat->nbStockes; ingredient++) {
+                if (verificationIngredient(plat->nourriture[ingredient], commandeFind)) {
+                    ingredientCorresponds++;
                 }
             }
 
-            if (a == plat->nbStockes) {
+            if (ingredientCorresponds == plat->nbStockes) {
                 return 1;
             }
         }

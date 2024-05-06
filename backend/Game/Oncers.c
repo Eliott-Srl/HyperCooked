@@ -1,6 +1,6 @@
 #include "Oncers.h"
 
-void hc_init() {
+void hc_init(s_game *game) {
     allegro_init();
     set_window_title("HyperCooked");
 
@@ -19,7 +19,7 @@ void hc_init() {
     }*/
 
     // écran de chargement ici
-    s_graphic *graphic = getGraphic();
+    s_graphic *graphic = &game->graphic;
 
     graphic->ressources.loadingScreen = create_bitmap(WIDTH, HEIGHT);
 
@@ -38,7 +38,7 @@ void hc_init() {
         exit(EXIT_FAILURE);
     }
 
-    coverBufferWithImage(graphic->ressources.loadingScreen, background, 32, 32);
+    coverBufferWithImage(game, graphic->ressources.loadingScreen, background, 32, 32);
 
     int fs_width, fs_height;
 
@@ -61,7 +61,7 @@ void hc_init() {
     graphic->boutons = malloc(sizeof(s_bouton *));
     graphic->nombreBoutons = 0;
 
-    hc_textprintf_centre_hv(graphic->ressources.loadingScreen, font, makecol(255, 255, 255), -1, "Loading...");
+    hc_textprintf_centre_hv(game, graphic->ressources.loadingScreen, font, makecol(255, 255, 255), -1, "Loading...");
     blit(graphic->ressources.loadingScreen, screen, 0, 0, 0, 0, WIDTH, HEIGHT);
 
     install_timer();
@@ -88,7 +88,7 @@ void hc_init() {
         exit(EXIT_FAILURE);
     }
 
-    coverBufferWithImage(graphic->ressources.fsLoadingScreen, background, 32, 32);
+    coverBufferWithImage(game, graphic->ressources.fsLoadingScreen, background, 32, 32);
 
     graphic->ressources.buffer = create_bitmap(WIDTH, HEIGHT);
 
@@ -114,7 +114,7 @@ void hc_init() {
         exit(EXIT_FAILURE);
     }
 
-    graphic->ressources.fsMainMenuBuffer = create_bitmap(getGraphic()->fs_width, getGraphic()->fs_height);
+    graphic->ressources.fsMainMenuBuffer = create_bitmap(game->graphic.fs_width, game->graphic.fs_height);
 
     if (!graphic->ressources.fsMainMenuBuffer) {
         allegro_message("Erreur de création du buffer");
@@ -233,6 +233,15 @@ void hc_init() {
         allegro_exit();
         exit(EXIT_FAILURE);
     }
+
+    graphic->textures.piece = load_bitmap("./res/img/piece.bmp", NULL);
+
+    if (!graphic->textures.piece) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
     graphic->textures.laitue = load_bitmap("./res/img/laitue.bmp", NULL);
 
     if (!graphic->textures.laitue) {
@@ -367,8 +376,6 @@ void hc_init() {
         exit(EXIT_FAILURE);
     }
 
-    s_game *game = getGame();
-
     if (!game) {
         allegro_message("Erreur d'allocation");
         allegro_exit();
@@ -377,18 +384,15 @@ void hc_init() {
 
     game->nbRecettes = 0;
     game->etatJeu = LOADING;
-    game->quitting = 0;
 
     srand(time(NULL));
 
-    mouse_callback = &mouseActions;
     set_close_button_callback(&toQuit);
-    set_display_switch_callback(SWITCH_OUT, &afficherPause);
     set_mouse_speed(10, 10);
-    loadRecipes();
+    loadRecipes(game);
 }
 
-int loadingMaps(char maps[NB_MAPS_MAX][STRMAX]) {
+int loadingMaps(s_game *game, char maps[NB_MAPS_MAX][STRMAX]) {
     int map_index = 0;
 
     // Récupération des maps
@@ -408,18 +412,18 @@ int loadingMaps(char maps[NB_MAPS_MAX][STRMAX]) {
     return map_index;
 }
 
-void reinitialiserPartie() {
+void reinitialiserPartie(s_game *game) {
     for (int i = 0; i < NB_COMMANDES_MAX; i++) {
-        getGame()->commandes[i].recette.nbIngredients = 0;
-        getGame()->commandes[i].timer = 0;
+        game->commandes[i].recette.nbIngredients = 0;
+        game->commandes[i].duration = 0;
+        game->commandes[i].debut = 0;
     }
-    getGame()->nbCommandes = 0;
-    getGame()->score = 0;
+    game->nbCommandes = 0;
+    game->score = 0;
 }
 
-void hc_finish() {
-    free(getGame());
-    free(getGraphic());
+void hc_finish(s_game *game) {
+    free(game);
     allegro_exit();
     exit(EXIT_SUCCESS);
 }

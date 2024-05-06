@@ -1,25 +1,16 @@
 #include "Allezgros.h"
 
-s_graphic* getGraphic() {
-    static s_graphic *graphic;
-    if (!graphic) {
-        graphic = (s_graphic*) malloc(sizeof(s_graphic));
-    }
-
-    return graphic;
-}
-
 int rgbToAllegroColor(s_color color) {
     return makecol(color.r, color.g, color.b);
 }
 
-void menu_debug(BITMAP *source) {
+void menu_debug(s_game *game, BITMAP *source) {
     int lines = 0;
     textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "fps: %d", get_refresh_rate());
     lines++;
 
-    if (getGame()->etatJeu == PLAYING) {
-        textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "time: %.03f", (double) getTime() / 1000);
+    if (game->etatJeu == PLAYING) {
+        textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "time: %.03f", (double) getTime(game) / 1000);
         lines++;
     }
 
@@ -29,34 +20,34 @@ void menu_debug(BITMAP *source) {
     lines++;
     textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "Joystick Y: %f", (double) joy[0].stick[0].axis[1].pos / 128.0);
     lines++;
-    textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "j1: x: %03d, y: %03d", (int) getGame()->joueurs[0].x, (int) getGame()->joueurs[0].y);
+    textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "j1: x: %03d, y: %03d", (int) game->joueurs[0].x, (int) game->joueurs[0].y);
     lines++;
-    textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "j2: x: %03d, y: %03d", (int) getGame()->joueurs[1].x, (int) getGame()->joueurs[1].y);
+    textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "j2: x: %03d, y: %03d", (int) game->joueurs[1].x, (int) game->joueurs[1].y);
     lines++;
-    textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "Ratio normal/fullscreen: %.02f", getGraphic()->ratio);
+    textprintf_ex(source, font, 10, lines * 20 + 10, makecol(255, 255, 255), -1, "Ratio normal/fullscreen: %.02f", game->graphic.ratio);
 }
 
-void hc_blit(BITMAP *source) {
-    if (getGame()->etatJeu != LOADING) {
-        showCustomCursor();
+void hc_blit(s_game *game, BITMAP *source) {
+    if (game->etatJeu != LOADING) {
+        showCustomCursor(game);
     }
 
-    if (getGraphic()->debug) {
-        menu_debug(source);
+    if (game->graphic.debug) {
+        menu_debug(game, source);
     }
 
-    globalKeyboardActions();
+    globalKeyboardActions(game);
 
-    blit(source, screen, 0, 0, 0, 0, getCorrectWidth(), getCorrectHeight());
+    blit(source, screen, 0, 0, 0, 0, getCorrectWidth(game), getCorrectHeight(game));
 }
 
-int boutonsHovered() {
-    int count = getGraphic()->nombreBoutons;
+int boutonsHovered(s_game *game) {
+    int count = game->graphic.nombreBoutons;
     for (int i = 0; i < count; i++) {
-        if (mouse_x > getGraphic()->boutons[i].rectangle.virtual.x
-         && mouse_x < getGraphic()->boutons[i].rectangle.virtual.x + getGraphic()->boutons[i].rectangle.virtual.w
-         && mouse_y > getGraphic()->boutons[i].rectangle.virtual.y
-         && mouse_y < getGraphic()->boutons[i].rectangle.virtual.y + getGraphic()->boutons[i].rectangle.virtual.h) {
+        if (mouse_x > game->graphic.boutons[i].rectangle.virtual.x
+         && mouse_x < game->graphic.boutons[i].rectangle.virtual.x + game->graphic.boutons[i].rectangle.virtual.w
+         && mouse_y > game->graphic.boutons[i].rectangle.virtual.y
+         && mouse_y < game->graphic.boutons[i].rectangle.virtual.y + game->graphic.boutons[i].rectangle.virtual.h) {
             return 1;
         }
     }
@@ -85,8 +76,8 @@ s_rectangle hc_rectfill_center(BITMAP *bmp, int x, int y, int w, int h, int colo
     return rectangle;
 }
 
-s_bouton *hc_boutonfill_center(BITMAP *bmp, const FONT *f, int x, int y, int w, int h, const char *text_contained, void (*callback)(), int color, int background) {
-    s_bouton *boutons = (s_bouton *) realloc(getGraphic()->boutons, (getGraphic()->nombreBoutons + 1) * sizeof(s_bouton));
+s_bouton *hc_boutonfill_center(s_game *game, BITMAP *bmp, const FONT *f, int x, int y, int w, int h, const char *text_contained, void (*callback)(s_game*), int color, int background) {
+    s_bouton *boutons = (s_bouton *) realloc(game->graphic.boutons, (game->graphic.nombreBoutons + 1) * sizeof(s_bouton));
 
     if (boutons == NULL) {
         allegro_message("Erreur de reallocation de la mémoire");
@@ -94,25 +85,25 @@ s_bouton *hc_boutonfill_center(BITMAP *bmp, const FONT *f, int x, int y, int w, 
         exit(EXIT_FAILURE);
     }
 
-    boutons[getGraphic()->nombreBoutons].bmp = bmp;
-    boutons[getGraphic()->nombreBoutons].virtual = 0;
-    boutons[getGraphic()->nombreBoutons].rectangle = hc_rectfill_center(bmp, x, y, h, w, background);
-    boutons[getGraphic()->nombreBoutons].callback = callback;
-    boutons[getGraphic()->nombreBoutons].text = (char *) text_contained;
-    boutons[getGraphic()->nombreBoutons].textColor = color;
+    boutons[game->graphic.nombreBoutons].bmp = bmp;
+    boutons[game->graphic.nombreBoutons].virtual = 0;
+    boutons[game->graphic.nombreBoutons].rectangle = hc_rectfill_center(bmp, x, y, w, h, background);
+    boutons[game->graphic.nombreBoutons].callback = callback;
+    boutons[game->graphic.nombreBoutons].text = (char *) text_contained;
+    boutons[game->graphic.nombreBoutons].textColor = color;
 
     textout_centre_ex(bmp, f, text_contained, x, y, color, -1);
 
-    getGraphic()->nombreBoutons++;
-    getGraphic()->boutons = boutons;
-    return &getGraphic()->boutons[getGraphic()->nombreBoutons];
+    game->graphic.nombreBoutons++;
+    game->graphic.boutons = boutons;
+    return &game->graphic.boutons[game->graphic.nombreBoutons];
 }
 
-s_bouton *hc_bouton_virtual(BITMAP *bmp, int x, int y, int w, int h, void (*callback)()) {
-    if (getGame()->quitting) {
+s_bouton *hc_bouton_virtual(s_game *game, BITMAP *bmp, int x, int y, int w, int h, void (*callback)(s_game*)) {
+    if (getQuitting()) {
         return NULL;
     }
-    s_bouton *boutons = (s_bouton *) realloc(getGraphic()->boutons, (getGraphic()->nombreBoutons + 1) * sizeof(s_bouton));
+    s_bouton *boutons = (s_bouton *) realloc(game->graphic.boutons, (game->graphic.nombreBoutons + 1) * sizeof(s_bouton));
 
     if (boutons == NULL) {
         allegro_message("Erreur de reallocation de la mémoire");
@@ -121,126 +112,126 @@ s_bouton *hc_bouton_virtual(BITMAP *bmp, int x, int y, int w, int h, void (*call
     }
 
     rectfill(bmp, x, y, x + w, y + h, makecol(255, 255, 255));
-    boutons[getGraphic()->nombreBoutons].bmp = bmp;
-    boutons[getGraphic()->nombreBoutons].virtual = 1;
-    boutons[getGraphic()->nombreBoutons].rectangle.virtual.x = x;
-    boutons[getGraphic()->nombreBoutons].rectangle.virtual.y = y;
-    boutons[getGraphic()->nombreBoutons].rectangle.virtual.h = h;
-    boutons[getGraphic()->nombreBoutons].rectangle.virtual.w = w;
-    boutons[getGraphic()->nombreBoutons].callback = callback;
-    boutons[getGraphic()->nombreBoutons].text = NULL;
-    boutons[getGraphic()->nombreBoutons].textColor = -1;
+    boutons[game->graphic.nombreBoutons].bmp = bmp;
+    boutons[game->graphic.nombreBoutons].virtual = 1;
+    boutons[game->graphic.nombreBoutons].rectangle.virtual.x = x;
+    boutons[game->graphic.nombreBoutons].rectangle.virtual.y = y;
+    boutons[game->graphic.nombreBoutons].rectangle.virtual.h = h;
+    boutons[game->graphic.nombreBoutons].rectangle.virtual.w = w;
+    boutons[game->graphic.nombreBoutons].callback = callback;
+    boutons[game->graphic.nombreBoutons].text = NULL;
+    boutons[game->graphic.nombreBoutons].textColor = -1;
 
-    getGraphic()->nombreBoutons++;
-    getGraphic()->boutons = boutons;
-    return &getGraphic()->boutons[getGraphic()->nombreBoutons];
+    game->graphic.nombreBoutons++;
+    game->graphic.boutons = boutons;
+    return &game->graphic.boutons[game->graphic.nombreBoutons];
 }
 
 // https://www.yaronet.com/topics/165128-c-retransmission-dune-liste-darguments-variables
-void hc_textprintf_centre_h(BITMAP *bmp, int y, const FONT *f, int color, int bg, const char *format, ...) {
+void hc_textprintf_centre_h(s_game *game, BITMAP *bmp, int y, const FONT *f, int color, int bg, const char *format, ...) {
     va_list ap;
     char s_format[STRMAX];
     va_start(ap, format);
     vsprintf(s_format, format, ap);
     va_end(ap);
 
-    textprintf_centre_ex(bmp, f, getCorrectWidth() / 2, y, color, bg, "%s", s_format);
+    textprintf_centre_ex(bmp, f, getCorrectWidth(game) / 2, y, color, bg, "%s", s_format);
 }
 
-void hc_textprintf_centre_v(BITMAP *bmp, int x, const FONT *f, int color, int bg, const char *format, ...) {
+void hc_textprintf_centre_v(s_game *game, BITMAP *bmp, int x, const FONT *f, int color, int bg, const char *format, ...) {
     va_list ap;
     char s_format[STRMAX];
     va_start(ap, format);
     vsprintf(s_format, format, ap);
     va_end(ap);
 
-    textprintf_centre_ex(bmp, f, x,  getCorrectHeight() / 2, color, bg, "%s", s_format);
+    textprintf_centre_ex(bmp, f, x,  getCorrectHeight(game) / 2, color, bg, "%s", s_format);
 }
 
-void hc_textprintf_centre_hv(BITMAP *bmp, const FONT *f, int color, int bg, const char *format, ...) {
+void hc_textprintf_centre_hv(s_game *game, BITMAP *bmp, const FONT *f, int color, int bg, const char *format, ...) {
     va_list ap;
     char s_format[STRMAX];
     va_start(ap, format);
     vsprintf(s_format, format, ap);
     va_end(ap);
 
-    textprintf_centre_ex(bmp, f, getCorrectWidth() / 2, getCorrectHeight() / 2, color, bg, "%s", s_format);
+    textprintf_centre_ex(bmp, f, getCorrectWidth(game) / 2, getCorrectHeight(game) / 2, color, bg, "%s", s_format);
 }
 
-void hc_clear_buffers() {
-    switch (getGame()->etatJeu) {
+void hc_clear_buffers(s_game *game) {
+    switch (game->etatJeu) {
         case LOADING:
             break;
         case PLAYING:
-            if (getGraphic()->fs) {
-                clear(getGraphic()->ressources.fsBuffer);
+            if (game->graphic.fs) {
+                clear(game->graphic.ressources.fsBuffer);
             } else {
-                clear(getGraphic()->ressources.buffer);
+                clear(game->graphic.ressources.buffer);
             }
             break;
         case DANS_MENU:
-            if (getGraphic()->fs) {
-                clear(getGraphic()->ressources.fsMainMenuBuffer);
+            if (game->graphic.fs) {
+                clear(game->graphic.ressources.fsMainMenuBuffer);
             } else {
-                clear(getGraphic()->ressources.mainMenuBuffer);
+                clear(game->graphic.ressources.mainMenuBuffer);
             }
             break;
         case DANS_MENU_JEU:
-            if (getGraphic()->fs) {
-                clear(getGraphic()->ressources.fsMenuBuffer);
+            if (game->graphic.fs) {
+                clear(game->graphic.ressources.fsMenuBuffer);
             } else {
-                clear(getGraphic()->ressources.menuBuffer);
+                clear(game->graphic.ressources.menuBuffer);
             }
             break;
     }
 }
 
-int getCorrectHeight() {
-    return (getGraphic()->fs ? getGraphic()->fs_height : HEIGHT);
+int getCorrectHeight(s_game *game) {
+    return (game->graphic.fs ? game->graphic.fs_height : HEIGHT);
 }
 
-int getIncorrectHeight() {
-    return (getGraphic()->fs ? HEIGHT : getGraphic()->fs_height);
+int getIncorrectHeight(s_game *game) {
+    return (game->graphic.fs ? HEIGHT : game->graphic.fs_height);
 }
 
-int getCorrectWidth() {
-    return (getGraphic()->fs ? getGraphic()->fs_width : WIDTH);
+int getCorrectWidth(s_game *game) {
+    return (game->graphic.fs ? game->graphic.fs_width : WIDTH);
 }
 
-int getIncorrectWidth() {
-    return (getGraphic()->fs ? WIDTH : getGraphic()->fs_width);
+int getIncorrectWidth(s_game *game) {
+    return (game->graphic.fs ? WIDTH : game->graphic.fs_width);
 }
 
-int getCorrectCaseSize() {
-    return (getGraphic()->fs ? getGraphic()->fsTailleCase : getGraphic()->tailleCase);
+int getCorrectCaseSize(s_game *game) {
+    return (game->graphic.fs ? game->graphic.fsTailleCase : game->graphic.tailleCase);
 }
 
-int getIncorrectCaseSize() {
-    return (getGraphic()->fs ? getGraphic()->tailleCase : getGraphic()->fsTailleCase);
+int getIncorrectCaseSize(s_game *game) {
+    return (game->graphic.fs ? game->graphic.tailleCase : game->graphic.fsTailleCase);
 }
 
-int getCorrectRayon() {
-    return (getGraphic()->fs ? getGraphic()->fsRayon : getGraphic()->rayon);
+int getCorrectRayon(s_game *game) {
+    return (game->graphic.fs ? game->graphic.fsRayon : game->graphic.rayon);
 }
 
-float getCorrectRatio() {
-    return (getGraphic()->fs ? getGraphic()->ratio : (float) 1.0);
+float getCorrectRatio(s_game *game) {
+    return (game->graphic.fs ? game->graphic.ratio : (float) 1.0);
 }
 
-BITMAP *getCorrectBuffer() {
-    switch (getGame()->etatJeu) {
+BITMAP *getCorrectBuffer(s_game *game) {
+    switch (game->etatJeu) {
         case LOADING:
-            return (getGraphic()->fs ? getGraphic()->ressources.fsLoadingScreen : getGraphic()->ressources.loadingScreen);
+            return (game->graphic.fs ? game->graphic.ressources.fsLoadingScreen : game->graphic.ressources.loadingScreen);
         case PLAYING:
-            return (getGraphic()->fs ? getGraphic()->ressources.fsBuffer : getGraphic()->ressources.buffer);
+            return (game->graphic.fs ? game->graphic.ressources.fsBuffer : game->graphic.ressources.buffer);
         case DANS_MENU:
-            return (getGraphic()->fs ? getGraphic()->ressources.fsMainMenuBuffer : getGraphic()->ressources.mainMenuBuffer);
+            return (game->graphic.fs ? game->graphic.ressources.fsMainMenuBuffer : game->graphic.ressources.mainMenuBuffer);
         case DANS_MENU_JEU:
-            return (getGraphic()->fs ? getGraphic()->ressources.fsMenuBuffer : getGraphic()->ressources.menuBuffer);
+            return (game->graphic.fs ? game->graphic.ressources.fsMenuBuffer : game->graphic.ressources.menuBuffer);
     }
 }
 
-void coverBufferWithImage(BITMAP *buffer, BITMAP *image, int s_w, int s_h) {
+void coverBufferWithImage(s_game *game, BITMAP *buffer, BITMAP *image, int s_w, int s_h) {
     int tailleEntierX = buffer->w / s_w;
     int offsetX = (s_w - (buffer->w - tailleEntierX * s_w)) / 2;
 
@@ -254,9 +245,9 @@ void coverBufferWithImage(BITMAP *buffer, BITMAP *image, int s_w, int s_h) {
     }
 }
 
-void clear_boutons() {
-    getGraphic()->nombreBoutons = 0;
-    free(getGraphic()->boutons);
+void clear_boutons(s_game *game) {
+    game->graphic.nombreBoutons = 0;
+    free(game->graphic.boutons);
 
     s_bouton *boutons = calloc(1, sizeof(s_bouton));
 
@@ -266,7 +257,7 @@ void clear_boutons() {
         exit(EXIT_FAILURE);
     }
 
-    getGraphic()->boutons = boutons;
+    game->graphic.boutons = boutons;
 }
 
 // It's slow, I love it
@@ -283,7 +274,7 @@ void cadrillage(BITMAP *bitmap, int color) {
     }
 }
 
-void screenshot() {
+void screenshot(s_game *game) {
     char buffer[FILENAME_MAX];
 
     time_t t = time(NULL);

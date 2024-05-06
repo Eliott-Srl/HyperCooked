@@ -1,25 +1,25 @@
 #include "meubles.h"
 
-BITMAP * getTextureByFurnitureName(e_meubles meuble) {
+BITMAP *getTextureByFurnitureName(s_game *game, e_meubles meuble) {
     switch (meuble) {
         case SOL:
-            return getGraphic()->textures.sol;
+            return game->graphic.textures.sol;
         case PLAN_DE_TRAVAIL:
-            return getGraphic()->textures.planDeTravail;
+            return game->graphic.textures.planDeTravail;
         case PLANCHE_A_DECOUPER:
-            return getGraphic()->textures.plancheADecouper;
+            return game->graphic.textures.plancheADecouper;
             case COMPTOIR:
-                return getGraphic()->textures.comptoir;
+                return game->graphic.textures.comptoir;
             /*
             case COFFRE:
-                return getGraphic()->textures.coffre;
+                return game->graphic.textures.coffre;
             */
         case PLAQUE_DE_CUISSON:
-            return getGraphic()->textures.plaqueDeCuisson;
+            return game->graphic.textures.plaqueDeCuisson;
         case POUBELLE:
-            return getGraphic()->textures.poubelle;
+            return game->graphic.textures.poubelle;
         default:
-            return getGraphic()->textures.invalidTexture;
+            return game->graphic.textures.invalidTexture;
     }
 }
 
@@ -39,6 +39,8 @@ void *getActionByFurnitureName(e_meubles meuble) {
             return &plaqueDeCuisson;
         case POUBELLE:
             return &poubelle;
+        case GENERATEUR_ASSIETTE:
+            return &generateurAssiette;
         default:
             return &neFaitRien;
     }
@@ -66,34 +68,34 @@ int getSlotsByObject(e_objet objet) {
     }
 }
 
-void afficherProgression(int x, int y, int timer, int timerTotale, int color) {
-    int time = getTime();
+void afficherProgression(s_game *game, int x, int y, int timer, int timerTotale, int color) {
+    int time = getTime(game);
     int dTime = time - timer;
 
     double progression = ((double) dTime / (double) timerTotale);
     if (progression > 1) {
         progression = 1;
     }
-    rect(getCorrectBuffer(), x, y - 2, x + getCorrectCaseSize(), y + (int) (3 * getCorrectRatio()) + 2, color);
+
+    rect(getCorrectBuffer(game), x, y - 2, x + getCorrectCaseSize(game), y + (int) (3 * getCorrectRatio(game)) + 2, color);
     if (progression > 0) {
-        rectfill(getCorrectBuffer(), x + 2, y, x + (int) (progression * ((double) getCorrectCaseSize() - 2.0)), y + (int) (3 * getCorrectRatio()), color);
+        rectfill(getCorrectBuffer(game), x + 2, y, x + (int) (progression * ((double) getCorrectCaseSize(game) - 2.0)), y + (int) (3 * getCorrectRatio(game)), color);
     }
 }
 
 
-void afficherMatrice() {
+void afficherMatrice(s_game *game) {
     for (int h = 0; h < HAUTEUR; h++) {
         for (int l = 0; l < LARGEUR; l++) {
-            printf("%d ", getGame()->matrice[h][l].typeMeuble);
+            printf("%d ", game->matrice[h][l].typeMeuble);
         }
         printf("\n");
     }
 }
 
-void initialiserMatrice(const char* file) {
+void initialiserMatrice(s_game *game, const char* file) {
     FILE *fichier;
     char ligne[128];
-    s_game *game = getGame();
     int joueur = 0;
     int ligneActuelle = 0;
 
@@ -127,7 +129,10 @@ void initialiserMatrice(const char* file) {
             game->nbRecettesAvailable = i + 1;
             ligneActuelle++;
         } else if (ligneActuelle == 1) {
-            game->duration = strtol(ligne, NULL, 10);
+            char *a = strtok(ligne, ";");
+            game->duration = strtol(a, NULL, 10);
+            a = strtok(NULL, ";");
+            game->timeBtCommandes = strtol(a, NULL, 10);
             ligneActuelle++;
         } else {
             char *p = ligne;
@@ -156,25 +161,32 @@ void initialiserMatrice(const char* file) {
                             game->matrice[y][x].typeMeuble = SOL;
                             game->matrice[y][x].objet.type = NONE;
                             if (joueur < 2) {
-                                game->joueurs[joueur].x = (float) x * (float) getCorrectCaseSize() + getCorrectOffsetX();
-                                game->joueurs[joueur].y = (float) y * (float) getCorrectCaseSize() + getCorrectOffsetY();
+                                game->joueurs[joueur].x = (float) x * (float) getCorrectCaseSize(game) + getCorrectOffsetX(game);
+                                game->joueurs[joueur].y = (float) y * (float) getCorrectCaseSize(game) + getCorrectOffsetY(game);
                                 joueur++;
                             }
                         } else {
                             game->matrice[y][x].typeMeuble = strtol(nombre, NULL, 10);
                             game->matrice[y][x].objet.type = NONE;
                         }
+
+                        if (game->matrice[y][x].typeMeuble == GENERATEUR_ASSIETTE) {
+                            game->matrice[y][x].objet.type = ASSIETTE;
+                            game->matrice[y][x].objet.nbStockes = 0;
+                            game->matrice[y][x].objet.stockageMax = RECETTE;
+                        }
                     } else {
                         int elm = strtol(nombre, NULL, 10);
                         if (game->matrice[y][x].typeMeuble == COFFRE) {
                             game->matrice[y][x].objet.type = STOCKEUR;
                             game->matrice[y][x].objet.nbStockes = 1;
-                            game->matrice[y][x].objet.stockageMax = 0;
+                            game->matrice[y][x].objet.stockageMax = SANS;
                             game->matrice[y][x].objet.nourriture[0].nom = elm;
                             /* ça peut être dérangeant de mettre
                              * le nom de l'ingrédient dans le nom de l'objet mais ça simplifie le bazar
                              */
-                            game->matrice[y][x].objet.nourriture[0].coupable = (getIngredientAfterCutting(elm) != PAS_D_INGREDIENT);
+                            game->matrice[y][x].objet.nourriture[0].coupable = (getIngredientAfterCutting(elm) !=
+                                                                                PAS_D_INGREDIENT);
                             game->matrice[y][x].objet.nourriture[0].cuisson = getCuissonByIngredient(elm);
                         } else {
                             game->matrice[y][x].objet.type = elm;
@@ -206,22 +218,22 @@ void initialiserMatrice(const char* file) {
     fclose(fichier);
 }
 
-void afficherPlancheDecouper(int h, int l) {
-    int x = (int) (getCorrectOffsetX() + (float) l * (float) getCorrectCaseSize());
-    int y = (int) (getCorrectOffsetY() + (float) h * (float) getCorrectCaseSize());
-    int offSetIngredient = (int) ((float) getCorrectCaseSize() / 4);
+void afficherPlancheDecouper(s_game *game, int h, int l) {
+    int x = (int) (getCorrectOffsetX(game) + (float) l * (float) getCorrectCaseSize(game));
+    int y = (int) (getCorrectOffsetY(game) + (float) h * (float) getCorrectCaseSize(game));
+    int offSetIngredient = (int) ((float) getCorrectCaseSize(game) / 4);
 
-    stretch_sprite(getCorrectBuffer(), getTextureByFurnitureName(getGame()->matrice[h][l].typeMeuble), x, y, getCorrectCaseSize(), getCorrectCaseSize());
+    stretch_sprite(getCorrectBuffer(game), getTextureByFurnitureName(game, game->matrice[h][l].typeMeuble), x, y, getCorrectCaseSize(game), getCorrectCaseSize(game));
 
-    if (getGame()->matrice[h][l].timer != -1 && getTime() - getGame()->matrice[h][l].timer < getSupposedTimerByFurnitures(getGame()->matrice[h][l].typeMeuble)) {
-        stretch_sprite(getCorrectBuffer(), getTextureByIngredientName(getGame()->matrice[h][l].objet.nourriture[0].nom), x + offSetIngredient, y + offSetIngredient, (int) ((float) getCorrectCaseSize() / 2), (int) ((float) getCorrectCaseSize() / 2));
-    } else if (getGame()->matrice[h][l].timer != -1 && getGame()->matrice[h][l].objet.nbStockes > 0) {
-        stretch_sprite(getCorrectBuffer(), getTextureByIngredientName(getIngredientAfterCutting(getGame()->matrice[h][l].objet.nourriture[0].nom)), x + offSetIngredient, y + offSetIngredient, (int) ((float) getCorrectCaseSize() / 2), (int) ((float) getCorrectCaseSize() / 2));
+    if (game->matrice[h][l].timer != -1 && getTime(game) - game->matrice[h][l].timer < getSupposedTimerByFurnitures(game->matrice[h][l].typeMeuble)) {
+        stretch_sprite(getCorrectBuffer(game), getTextureByIngredientName(game, game->matrice[h][l].objet.nourriture[0].nom), x + offSetIngredient, y + offSetIngredient, (int) ((float) getCorrectCaseSize(game) / 2), (int) ((float) getCorrectCaseSize(game) / 2));
+    } else if (game->matrice[h][l].timer != -1 && game->matrice[h][l].objet.nbStockes > 0) {
+        stretch_sprite(getCorrectBuffer(game), getTextureByIngredientName(game, getIngredientAfterCutting(game->matrice[h][l].objet.nourriture[0].nom)), x + offSetIngredient, y + offSetIngredient, (int) ((float) getCorrectCaseSize(game) / 2), (int) ((float) getCorrectCaseSize(game) / 2));
     }
 }
 
-void hc_afficher_matrice() {
-    BITMAP *plandetravail = getTextureByFurnitureName(PLAN_DE_TRAVAIL);
+void hc_afficher_matrice(s_game *game) {
+    BITMAP *plandetravail = getTextureByFurnitureName(game, PLAN_DE_TRAVAIL);
     if (!plandetravail) {
         allegro_message("Erreur lors du chargement de la texture du sol");
         allegro_exit();
@@ -230,34 +242,43 @@ void hc_afficher_matrice() {
 
     for(int h = 0; h < HAUTEUR; h++) {
         for(int l = 0; l < LARGEUR; l++) {
-            int x = (int) (getCorrectOffsetX() + (float) l * (float) getCorrectCaseSize());
-            int y = (int) (getCorrectOffsetY() + (float) h * (float) getCorrectCaseSize());
+            int x = (int) (getCorrectOffsetX(game) + (float) l * (float) getCorrectCaseSize(game));
+            int y = (int) (getCorrectOffsetY(game) + (float) h * (float) getCorrectCaseSize(game));
 
-            if (getGame()->matrice[h][l].typeMeuble != SOL && getGame()->matrice[h][l].typeMeuble != COFFRE && getGame()->matrice[h][l].typeMeuble != COMPTOIR && getGame()->matrice[h][l].typeMeuble != POUBELLE) {
-                stretch_sprite(getCorrectBuffer(), plandetravail, x, y, getCorrectCaseSize(), getCorrectCaseSize());
+            if (game->matrice[h][l].typeMeuble != SOL && game->matrice[h][l].typeMeuble != COFFRE && game->matrice[h][l].typeMeuble != COMPTOIR && game->matrice[h][l].typeMeuble != POUBELLE) {
+                stretch_sprite(getCorrectBuffer(game), plandetravail, x, y, getCorrectCaseSize(game), getCorrectCaseSize(game));
             }
 
-            if (getGame()->matrice[h][l].typeMeuble == COFFRE) {
-                rectfill(getCorrectBuffer(), x, y, x + getCorrectCaseSize(), y + getCorrectCaseSize(), makecol(255, 255, 255));
-            } else if (getGame()->matrice[h][l].typeMeuble == PLANCHE_A_DECOUPER) {
-                afficherPlancheDecouper(h, l);
+            if (game->matrice[h][l].typeMeuble == COFFRE || game->matrice[h][l].typeMeuble == GENERATEUR_ASSIETTE) {
+                rectfill(getCorrectBuffer(game), x, y, x + getCorrectCaseSize(game), y + getCorrectCaseSize(game),
+                         makecol(255, 255, 255));
+            } else if (game->matrice[h][l].typeMeuble == PLANCHE_A_DECOUPER) {
+                afficherPlancheDecouper(game, h, l);
             } else {
-                stretch_sprite(getCorrectBuffer(), getTextureByFurnitureName(getGame()->matrice[h][l].typeMeuble), x, y, getCorrectCaseSize(), getCorrectCaseSize());
+                stretch_sprite(getCorrectBuffer(game), getTextureByFurnitureName(game, game->matrice[h][l].typeMeuble), x, y, getCorrectCaseSize(game), getCorrectCaseSize(game));
             }
 
-            if (getGame()->matrice[h][l].objet.type == STOCKEUR) {
-                stretch_sprite(getCorrectBuffer(), getTextureByIngredientName(getGame()->matrice[h][l].objet.nourriture[0].nom), x, y, getCorrectCaseSize(), getCorrectCaseSize());
-            } else if (getGame()->matrice[h][l].objet.type == ASSIETTE) {
-                afficherAssietteOnFurniture(h, l);
-            } else if (getGame()->matrice[h][l].objet.type == POELE) {
-                afficherPoeleOnFurniture(h, l);
+            if (game->matrice[h][l].objet.type == STOCKEUR && game->matrice[h][l].typeMeuble != GENERATEUR_ASSIETTE) {
+                stretch_sprite(getCorrectBuffer(game),
+                               getTextureByIngredientName(game, game->matrice[h][l].objet.nourriture[0].nom), x, y,
+                               getCorrectCaseSize(game), getCorrectCaseSize(game));
+            } else if (game->matrice[h][l].typeMeuble == GENERATEUR_ASSIETTE) {
+                stretch_sprite(getCorrectBuffer(game), getTextureByObjectName(game, ASSIETTE), x, y, getCorrectCaseSize(game), getCorrectCaseSize(game));
+            } else if (game->matrice[h][l].objet.type == ASSIETTE && game->matrice[h][l].typeMeuble != GENERATEUR_ASSIETTE) {
+                afficherAssietteOnFurniture(game, h, l);
+            } else if (game->matrice[h][l].objet.type == POELE) {
+                afficherPoeleOnFurniture(game, h, l);
             }
 
-            if (getGame()->matrice[h][l].timer != -1 && getTime() - getGame()->matrice[h][l].timer <
-                                                                getSupposedTimerByFurnitures(getGame()->matrice[h][l].typeMeuble)) {
-                afficherProgression(x, y + (int) (4 * getCorrectRatio()), getGame()->matrice[h][l].timer,
-                         getSupposedTimerByFurnitures(getGame()->matrice[h][l].typeMeuble),
+            if (game->matrice[h][l].timer != -1 && getTime(game) - game->matrice[h][l].timer <
+                                                                getSupposedTimerByFurnitures(game->matrice[h][l].typeMeuble)) {
+                afficherProgression(game, x, y + (int) (4 * getCorrectRatio(game)), game->matrice[h][l].timer,
+                         getSupposedTimerByFurnitures(game->matrice[h][l].typeMeuble),
                               makecol(255, 0, 0));
+            }
+
+            if (game->matrice[h][l].objet.nbStockes > 0 && game->graphic.debug) {
+                circlefill(getCorrectBuffer(game), x + 5, y + 5, 5, makecol(255, 0, 0));
             }
         }
     }

@@ -1,29 +1,29 @@
 #include "Ingredients.h"
 
-BITMAP *getTextureByIngredientName(e_ingredients ingredients) {
+BITMAP *getTextureByIngredientName(s_game *game, e_ingredients ingredients) {
     switch (ingredients) {
         case SALADE:
-            return getGraphic()->textures.laitue;
+            return game->graphic.textures.laitue;
         case SALADE_COUPEE:
-            return getGraphic()->textures.laitueCoupee;
+            return game->graphic.textures.laitueCoupee;
         case TOMATE:
-            return getGraphic()->textures.tomate;
+            return game->graphic.textures.tomate;
         case TOMATES_COUPEES:
-            return getGraphic()->textures.tomateCoupee;
+            return game->graphic.textures.tomateCoupee;
         case PAIN:
-            return getGraphic()->textures.pain;
+            return game->graphic.textures.pain;
         case STEAK:
-            return getGraphic()->textures.steak;
+            return game->graphic.textures.steak;
         case STEAK_CUIT:
-            return getGraphic()->textures.steakCuit;
+            return game->graphic.textures.steakCuit;
         case POTATO:
-            return getGraphic()->textures.pommeDeTerre;
+            return game->graphic.textures.pommeDeTerre;
         case OEUF:
-            return getGraphic()->textures.oeuf;
+            return game->graphic.textures.oeuf;
         case FROMAGE:
-            return getGraphic()->textures.fromage;
+            return game->graphic.textures.fromage;
         default:
-            return getGraphic()->textures.invalidTexture;
+            return game->graphic.textures.invalidTexture;
     }
 }
 
