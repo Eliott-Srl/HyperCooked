@@ -9,7 +9,8 @@
 #define NB_INGREDIENTS_MAX 10
 #define NB_COMMANDES_MAX 6
 #define NB_MAPS_MAX 10
-#define SPEED ((get_refresh_rate() * 0.05) / 60)
+#define NB_PRENOMS 7
+#define SPEED (sqrt(get_refresh_rate()) / 70.0)
 #define WIDTH 800
 #define HEIGHT 450
 #define NUM_SONS 8
@@ -74,6 +75,7 @@ typedef struct s_textures {
     BITMAP *player;                              // Texture du joueur
     BITMAP *menuBackground;                      // Texture du fond du menu
     BITMAP *credit;                              // Texture du crédit
+    BITMAP *settings;                            // Texture des settings
     BITMAP *background;                          // Texture du fond du jeu
     BITMAP *sol;                                 // Texture du sol
     BITMAP *comptoir;                            // Texture du comptoir
@@ -171,7 +173,7 @@ typedef struct s_recette {
 } s_recette;
 
 typedef struct s_commande {
-    int duration;                                   // Temps pour réaliser la commande
+    int duration;                                // Temps pour réaliser la commande
     int debut;                                   // Temps de début de la commande
     s_recette recette;                           // La recette a réalisé
     fixed angle;                                 // Angle de la carte de la commande

@@ -162,6 +162,14 @@ void hc_init(s_game *game) {
         exit(EXIT_FAILURE);
     }
 
+    graphic->textures.settings = load_bitmap("./res/img/fond_menu_settings.bmp", NULL);
+
+    if (!graphic->textures.settings) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
     graphic->textures.menuBackground = load_bitmap("./res/img/fond_menu.bmp", NULL);
 
     if (!graphic->textures.menuBackground) {
@@ -242,7 +250,7 @@ void hc_init(s_game *game) {
         exit(EXIT_FAILURE);
     }
 
-    graphic->textures.laitue = load_bitmap("./res/img/laitue.bmp", NULL);
+    graphic->textures.laitue = load_bitmap("./res/img/Laitue.bmp", NULL);
 
     if (!graphic->textures.laitue) {
         allegro_message("Erreur de chargement de l'image");
@@ -258,7 +266,7 @@ void hc_init(s_game *game) {
         exit(EXIT_FAILURE);
     }
 
-    graphic->textures.oeuf = load_bitmap("./res/img/oeuf.bmp", NULL);
+    graphic->textures.oeuf = load_bitmap("./res/img/Oeuf.bmp", NULL);
 
     if (!graphic->textures.oeuf) {
         allegro_message("Erreur de chargement de l'image");
@@ -266,7 +274,7 @@ void hc_init(s_game *game) {
         exit(EXIT_FAILURE);
     }
 
-    graphic->textures.pain = load_bitmap("./res/img/pain.bmp", NULL);
+    graphic->textures.pain = load_bitmap("./res/img/Pain.bmp", NULL);
 
     if (!graphic->textures.pain) {
         allegro_message("Erreur de chargement de l'image");
@@ -322,7 +330,7 @@ void hc_init(s_game *game) {
         exit(EXIT_FAILURE);
     }
 
-    graphic->textures.steakCuit = load_bitmap("./res/img/steak.bmp", NULL);
+    graphic->textures.steakCuit = load_bitmap("./res/img/Steak.bmp", NULL);
 
     if (!graphic->textures.steakCuit) {
         allegro_message("Erreur de chargement de l'image");
@@ -354,7 +362,7 @@ void hc_init(s_game *game) {
         exit(EXIT_FAILURE);
     }
 
-    graphic->textures.salade = load_bitmap("./res/img/salade.bmp", NULL);
+    graphic->textures.salade = load_bitmap("./res/img/Salade.bmp", NULL);
 
     if (!graphic->textures.salade) {
         allegro_message("Erreur de chargement de l'image");
@@ -376,23 +384,19 @@ void hc_init(s_game *game) {
         exit(EXIT_FAILURE);
     }
 
-    if (!game) {
-        allegro_message("Erreur d'allocation");
-        allegro_exit();
-        exit(EXIT_FAILURE);
-    }
-
     game->nbRecettes = 0;
     game->etatJeu = LOADING;
 
     srand(time(NULL));
 
+    initialisePlayers(game);
+
     set_close_button_callback(&toQuit);
-    set_mouse_speed(10, 10);
+    set_mouse_speed(20, 20);
     loadRecipes(game);
 }
 
-int loadingMaps(s_game *game, char maps[NB_MAPS_MAX][STRMAX]) {
+int loadingMaps(char maps[NB_MAPS_MAX][STRMAX]) {
     int map_index = 0;
 
     // Récupération des maps

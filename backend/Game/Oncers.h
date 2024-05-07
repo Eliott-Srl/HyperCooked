@@ -5,7 +5,7 @@
 
 void hc_init(s_game *game);
 
-int loadingMaps(s_game *game, char maps[NB_MAPS_MAX][STRMAX]);
+int loadingMaps(char maps[NB_MAPS_MAX][STRMAX]);
 void reinitialiserPartie(s_game *game);
 void hc_finish(s_game *game);
 

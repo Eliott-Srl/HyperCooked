@@ -10,6 +10,11 @@ int recetteAvailable(s_game *game, int choix) {
 }
 
 void afficherTimer(s_game *game, s_commande *commande, int i) {
+    int EspaceHorizontalEntreLesRectangle = (int) (30.0 * getCorrectRatio(game));
+    int LargeurRectangle = (int) (90.0 * getCorrectRatio(game));
+
+    int xLogo = 10 + (i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle));
+
     int time = getTime(game);
     int dTime = time - commande->debut;
 
@@ -18,20 +23,18 @@ void afficherTimer(s_game *game, s_commande *commande, int i) {
         progression = 1;
     }
 
-    int offsetX = (i + 1) * getCorrectCaseSize(game)/4 + i * (getCorrectCaseSize(game) * 3);
-
     rect(getCorrectBuffer(game),
-           offsetX,
-          getCorrectHeight(game) - (getCorrectCaseSize(game) * 3) - 10,
-           (int) ((float) offsetX + (float) getCorrectCaseSize(game) * 3),
-           getCorrectHeight(game) - (getCorrectCaseSize(game) * 3) + 10,
+         xLogo,
+         (int) ((float) getCorrectHeight(game) - (float) (getCorrectCaseSize(game) * 3.75) - (float) 6.0 * getCorrectRatio(game)),
+           (int) ((float) xLogo + (float) getCorrectCaseSize(game) * 3.2),
+         (int) ((float) getCorrectHeight(game) - (float) (getCorrectCaseSize(game) * 3.75) + (float) 6.0 * getCorrectRatio(game)),
          (progression < 0.8 ? makecol(0, 255, 0) : makecol(255, 0, 0)));
     if (progression > 0) {
         rectfill(getCorrectBuffer(game),
-                   offsetX + 2,
-                  getCorrectHeight(game) - (getCorrectCaseSize(game) * 3) - 8,
-                   (int) ((float) offsetX + progression * ((float) getCorrectCaseSize(game) * 3 - 2.0)),
-                   getCorrectHeight(game) - (getCorrectCaseSize(game) * 3) + 8,
+                 xLogo + 2,
+                 (int) ((float) getCorrectHeight(game) - (float) (getCorrectCaseSize(game) * 3.75) - (float) 4.0 * getCorrectRatio(game)),
+                   (int) ((float) xLogo + progression * ((float) getCorrectCaseSize(game) * 3.2 - 2.0)),
+                 (int) ((float) getCorrectHeight(game) - (float) (getCorrectCaseSize(game) * 3.75) + (float) 4.0 * getCorrectRatio(game)),
                  (progression < 0.8 ? makecol(0, 255, 0) : makecol(255, 0, 0)));
     }
 }
@@ -55,7 +58,7 @@ void newCommande(s_game *game) {
     game->commandes[game->nbCommandes].duration = ((rand() % 2) + 1) * 5 + 45;
     game->commandes[game->nbCommandes].debut = getTime(game);
     game->nbCommandes++;
-    game->commandes[game->nbCommandes].angle = ftofix((float) (rand() % 200 - 100) / 10);
+    game->commandes[game->nbCommandes].angle = ftofix((float) ((rand() % 20) - 10));
 }
 
 void AfficherCommande(s_game *game) {
@@ -68,44 +71,47 @@ void AfficherCommande(s_game *game) {
     stretch_sprite(getCorrectBuffer(game), game->graphic.textures.piece, getCorrectWidth(game) / 2 - width / 2, 0, width, getCorrectCaseSize(game));
     textprintf_centre_ex(getCorrectBuffer(game), font, getCorrectWidth(game) / 2, (getCorrectCaseSize(game) * game->graphic.textures.piece->h / game->graphic.textures.piece->w) / 2, makecol(255, 255, 255), -1, "%d", game->score);
 
-    int EspaceHorizontalEntreLesRectangle = 30;
-    int LargeurRectangle;
+    int EspaceHorizontalEntreLesRectangle = (int) (30.0 * getCorrectRatio(game));
+    int LargeurRectangle = (int) (90.0 * getCorrectRatio(game));
 
-    if (game->graphic.fs) {
-        LargeurRectangle = 150;
-    } else {
-        LargeurRectangle = 90;
-    }
+    stretch_sprite(getCorrectBuffer(game), game->graphic.textures.bar, 0,(int) ((float) getCorrectHeight(game) - (float) getCorrectCaseSize(game) * 4.2),getCorrectWidth(game), (int) ((float)40 *
+                                                                                                                                                                                       (float) getCorrectRatio(game)));
+    stretch_sprite(getCorrectBuffer(game), game->graphic.textures.plancheH, 0,(int) ((float) getCorrectHeight(game) - (float) getCorrectCaseSize(game) * 2.9),getCorrectWidth(game), (int) ((float)140 *
+            (float) getCorrectRatio(game)));
 
-    stretch_sprite(getCorrectBuffer(game), game->graphic.textures.bar, 0,(int) (game->graphic.fs ? (float) getCorrectHeight(game) - 205 : (float) getCorrectHeight(game) - 100),getCorrectWidth(game), 40);
-    stretch_sprite(getCorrectBuffer(game), game->graphic.textures.plancheH, 0,(int) (game->graphic.fs ? (float) getCorrectHeight(game) - 173 : (float) getCorrectHeight(game) - 70),getCorrectWidth(game),   (int) (game->graphic.fs ? 140 * getCorrectRatio(game) : (float) 140));
-
+    BITMAP *card = create_bitmap(game->graphic.textures.ticket->w, game->graphic.textures.ticket->h);
     for (int i = 0; i < game->nbCommandes; i++) {
+        clear_to_color(card, makecol(255, 0, 255));
+
         int xLogo = 10 + (i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle));
 
-        set_clip_rect(getCorrectBuffer(game), 0, (int) (game->graphic.fs ? 1005 : (float) 375), getCorrectWidth(game),getCorrectHeight(game));
-        rotate_scaled_sprite(getCorrectBuffer(game), game->graphic.textures.ticket, xLogo,(int) (game->graphic.fs ? 980 : (float) 340),
-                             game->commandes[i].angle,ftofix((float) 110 / (float) game->graphic.textures.ticket->w));
-        set_clip_rect(getCorrectBuffer(game), 0, 0, getCorrectWidth(game), getCorrectHeight(game));
+        draw_sprite(card, game->graphic.textures.ticket, 0,0);
 
-        stretch_sprite(getCorrectBuffer(game), getTextureByRecette(game, game->commandes[i].recette.nom), 37 + xLogo, (int) (game->graphic.fs ? 870 : (float) 408), (int) (game->graphic.fs ? 38 * getCorrectRatio(game) : (float) 38), (int) (game->graphic.fs ? 38 * getCorrectRatio(game) : (float) 38));
+        int widthA  = game->graphic.textures.ticket->w / 2;
+        int offset = 150;
+        BITMAP *recette = getTextureByRecette(game, game->commandes[i].recette.nom);
+        stretch_sprite(card, getTextureByRecette(game, game->commandes[i].recette.nom),
+                       widthA - widthA/2,
+                       ((recette->h * widthA) / recette->w) - ((recette->h * widthA) / recette->w)/2 + offset,
+                       widthA, ((recette->h * widthA) / recette->w));
 
-        int coosX[4] = {25, 90};
-        int coosY[4] = {400, 435};
-        int coosY2[4] = {972, 1004};
+        float coos[2] = {(float) 1 / 8, (float) 5 / 8};
 
         for (int j = 0; j < game->commandes[i].recette.nbIngredients; j++) {
-            BITMAP *ingredient = getTextureByIngredientName(game, game->commandes[i].recette.ingredients[j].nom);
-
-            if (ingredient != NULL) {
-                stretch_sprite(getCorrectBuffer(game),
-                               getTextureByIngredientName(game, game->commandes[i].recette.ingredients[j].nom),
-                               coosX[(int) j/2] + i * (LargeurRectangle + EspaceHorizontalEntreLesRectangle), (int) (game->graphic.fs ? (float) coosY2[j%2]: (float) coosY[j%2]), (int) ((float)18 * (float) getCorrectRatio(game)), (int) ((float)18 * (float) getCorrectRatio(game)));
-            }
+            stretch_sprite(card,
+                           getTextureByIngredientName(game, game->commandes[i].recette.ingredients[j].nom),
+                           (int) (coos[j % 2] * (float) widthA * 2.0), (int) ((float) offset + coos[(int) j/2] * (float) widthA * 2.0),
+                           90, 90);
         }
+
+        set_clip_rect(getCorrectBuffer(game), 0, (int) ((float) getCorrectHeight(game) - (float) getCorrectCaseSize(game) * 3.15), getCorrectWidth(game), getCorrectHeight(game));
+        rotate_scaled_sprite(getCorrectBuffer(game), card, xLogo, (int) ((float) getCorrectCaseSize(game) * 14.5),
+                             game->commandes[i].angle, ftofix((float) getCorrectCaseSize(game) / 110.0));
+        set_clip_rect(getCorrectBuffer(game), 0, 0,getCorrectWidth(game), getCorrectHeight(game));
 
         afficherTimer(game, &game->commandes[i], i);
     }
+    destroy_bitmap(card);
 }
 
 void actualiserCommandes(s_game *game) {

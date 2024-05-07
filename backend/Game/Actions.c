@@ -191,7 +191,7 @@ void plaqueDeCuisson(s_game *game, s_joueur* joueur, int i, int j) {
      && meuble->objet.type != NONE
      && meuble->objet.type == getFurnitureByCooking(joueur->handIngredient.cuisson)
      && meuble->timer == -1
-     && meuble->objet.nourriture[0].cuit == 0) {
+     && joueur->handObjet.nourriture[0].cuit == 0) {
         meuble->objet.nourriture[meuble->objet.nbStockes] = joueur->handIngredient;
         joueur->en_main = NOTHING;
         meuble->objet.nbStockes++;
