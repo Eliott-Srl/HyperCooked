@@ -250,7 +250,7 @@ void hc_init(s_game *game) {
         exit(EXIT_FAILURE);
     }
 
-    graphic->textures.laitue = load_bitmap("./res/img/laitue.bmp", NULL);
+    graphic->textures.laitue = load_bitmap("./res/img/Laitue.bmp", NULL);
 
     if (!graphic->textures.laitue) {
         allegro_message("Erreur de chargement de l'image");
@@ -266,7 +266,7 @@ void hc_init(s_game *game) {
         exit(EXIT_FAILURE);
     }
 
-    graphic->textures.oeuf = load_bitmap("./res/img/oeuf.bmp", NULL);
+    graphic->textures.oeuf = load_bitmap("./res/img/Oeuf.bmp", NULL);
 
     if (!graphic->textures.oeuf) {
         allegro_message("Erreur de chargement de l'image");
@@ -274,7 +274,7 @@ void hc_init(s_game *game) {
         exit(EXIT_FAILURE);
     }
 
-    graphic->textures.pain = load_bitmap("./res/img/pain.bmp", NULL);
+    graphic->textures.pain = load_bitmap("./res/img/Pain.bmp", NULL);
 
     if (!graphic->textures.pain) {
         allegro_message("Erreur de chargement de l'image");
@@ -330,7 +330,7 @@ void hc_init(s_game *game) {
         exit(EXIT_FAILURE);
     }
 
-    graphic->textures.steakCuit = load_bitmap("./res/img/steak.bmp", NULL);
+    graphic->textures.steakCuit = load_bitmap("./res/img/Steak.bmp", NULL);
 
     if (!graphic->textures.steakCuit) {
         allegro_message("Erreur de chargement de l'image");
@@ -362,7 +362,7 @@ void hc_init(s_game *game) {
         exit(EXIT_FAILURE);
     }
 
-    graphic->textures.salade = load_bitmap("./res/img/salade.bmp", NULL);
+    graphic->textures.salade = load_bitmap("./res/img/Salade.bmp", NULL);
 
     if (!graphic->textures.salade) {
         allegro_message("Erreur de chargement de l'image");

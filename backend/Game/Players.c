@@ -153,24 +153,24 @@ void afficherPersonnages(s_game *game) {
 void deplacerPersonnagesClavier(s_game *game) {
     s_coo velo_perso1 = {0, 0};
     s_coo velo_perso2 = {0, 0};
-    /*
-    int nb=0;
+
     s_leson leson;
-    */
 
     if (key[KEY_W]) {
         velo_perso1.y--;
-
+        playScream();
     }
     if (key[KEY_S]) {
         velo_perso1.y++;
+        playScream();
     }
     if (key[KEY_A]) {
         velo_perso1.x--;
+        playScream();
     }
     if (key[KEY_D]) {
         velo_perso1.x++;
-        // charge_Sound(nb);
+        playScream();
     }
     if (key[KEY_UP]) {
         velo_perso2.y--;

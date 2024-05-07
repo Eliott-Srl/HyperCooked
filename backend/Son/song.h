@@ -7,5 +7,7 @@ int charge_Sound(s_game *game, int choix);
 void chargeSound(s_game *game, s_leson *leson);
 void playSound(s_game *game, s_leson *leson, int index);
 void freeSound(s_game *game, s_leson *leson);
+void playScream();
+SAMPLE *JouerLintro();
 
 #endif //HYPERCOOKED_SONG_H

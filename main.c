@@ -5,6 +5,7 @@ int main() {
     hc_init(game);
 
     game->etatJeu = DANS_MENU;
+    JouerLintro();
 
     while (!getQuitting()) {
         if (game->etatJeu == DANS_MENU || game->etatJeu == LOADING) {
