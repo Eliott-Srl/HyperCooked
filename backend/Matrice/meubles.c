@@ -10,10 +10,12 @@ BITMAP *getTextureByFurnitureName(s_game *game, e_meubles meuble) {
             return game->graphic.textures.plancheADecouper;
             case COMPTOIR:
                 return game->graphic.textures.comptoir;
-            /*
-            case COFFRE:
-                return game->graphic.textures.coffre;
-            */
+        /*
+        case COFFRE:
+            return game->graphic.textures.coffre;
+        */
+        case VOID:
+            return game->graphic.textures.void_texture;
         case PLAQUE_DE_CUISSON:
             return game->graphic.textures.plaqueDeCuisson;
         case POUBELLE:
@@ -119,6 +121,10 @@ void initialiserMatrice(s_game *game, const char* file) {
         }
 
         if (ligneActuelle == 0) {
+            for (int i = 0; i < NB_RECETTES_MAX; i++) {
+                game->recetteAvailable[i] = -1;
+            }
+
             int i = 0;
             char *a = strtok(ligne, ";");
             while (a != NULL) {
@@ -161,8 +167,8 @@ void initialiserMatrice(s_game *game, const char* file) {
                             game->matrice[y][x].typeMeuble = SOL;
                             game->matrice[y][x].objet.type = NONE;
                             if (joueur < 2) {
-                                game->joueurs[joueur].x = (float) x * (float) getCorrectCaseSize(game) + getCorrectOffsetX(game);
-                                game->joueurs[joueur].y = (float) y * (float) getCorrectCaseSize(game) + getCorrectOffsetY(game);
+                                game->joueurs[joueur].x = (float) x * (float) getCorrectCaseSize(game) + getCorrectOffsetX(game) + (float) getCorrectCaseSize(game) / 2;
+                                game->joueurs[joueur].y = (float) y * (float) getCorrectCaseSize(game) + getCorrectOffsetY(game) + (float) getCorrectCaseSize(game) / 2;
                                 joueur++;
                             }
                         } else {
@@ -245,7 +251,11 @@ void hc_afficher_matrice(s_game *game) {
             int x = (int) (getCorrectOffsetX(game) + (float) l * (float) getCorrectCaseSize(game));
             int y = (int) (getCorrectOffsetY(game) + (float) h * (float) getCorrectCaseSize(game));
 
-            if (game->matrice[h][l].typeMeuble != SOL && game->matrice[h][l].typeMeuble != COFFRE && game->matrice[h][l].typeMeuble != COMPTOIR && game->matrice[h][l].typeMeuble != POUBELLE) {
+            if (game->matrice[h][l].typeMeuble != SOL
+             && game->matrice[h][l].typeMeuble != COFFRE
+             && game->matrice[h][l].typeMeuble != COMPTOIR
+             && game->matrice[h][l].typeMeuble != POUBELLE
+             && game->matrice[h][l].typeMeuble != VOID) {
                 stretch_sprite(getCorrectBuffer(game), plandetravail, x, y, getCorrectCaseSize(game), getCorrectCaseSize(game));
             }
 

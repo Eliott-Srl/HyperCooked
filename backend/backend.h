@@ -10,7 +10,7 @@
 #define NB_COMMANDES_MAX 6
 #define NB_MAPS_MAX 10
 #define NB_PRENOMS 7
-#define SPEED (sqrt(get_refresh_rate()) / 70.0)
+#define SPEED (20.0 / get_refresh_rate())
 #define WIDTH 800
 #define HEIGHT 450
 #define NUM_SONS 8
@@ -127,6 +127,7 @@ typedef struct s_textures {
     BITMAP *fromage;                             // Texture du fromage
     BITMAP *pizza;                               // Texture de la pizza
     BITMAP *piece;                               // Texture de la pièce
+    BITMAP *void_texture;
 } s_textures;
 
 typedef struct s_graphic {
@@ -215,7 +216,8 @@ typedef enum e_meubles {                         // Indique le type du meuble
     PLAQUE_DE_CUISSON,
     POUBELLE,
     GENERATEUR_ASSIETTE,
-    POSITION_JOUEUR = 10
+    POSITION_JOUEUR = 10,
+    VOID = 99
 } e_meubles;
 
 typedef enum e_objet {                           // Indique le type de l'objet
