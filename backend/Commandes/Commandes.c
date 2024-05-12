@@ -59,6 +59,8 @@ void newCommande(s_game *game) {
     game->commandes[game->nbCommandes].debut = getTime(game);
     game->nbCommandes++;
     game->commandes[game->nbCommandes].angle = ftofix((float) ((rand() % 20) - 10));
+
+    playBruitage(game, SON_COMMANDE);
 }
 
 void AfficherCommande(s_game *game) {
@@ -119,6 +121,7 @@ void actualiserCommandes(s_game *game) {
         if (game->commandes[i].duration * 1000 < getTime(game) - game->commandes[i].debut) {
             enleverCommande(game, &game->commandes[i]);
             game->score -= 10;
+            playBruitage(game, SON_DEFAITE);
         }
     }
 }

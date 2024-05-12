@@ -6,6 +6,7 @@ volatile int counter = 0;
 volatile int credit = 0;
 volatile int settings = 0;
 volatile int quit = 0;
+volatile int son = 0;
 
 void timer_handler() {
     counter++;
@@ -34,8 +35,14 @@ void mouseActions(s_game *game) {
     }
 }
 
-void reinitialiserProgression(s_game *game) {
-    // TODO: Reinitialiser la progression
+void changeMusic(s_game *game) {
+    if (game->etatJeu == LOADING) {
+        return;
+    }
+
+    if (mouse_b & 1) {
+        game->sound_button = 1;
+    }
 }
 
 void calibrerManettes(s_game *game) {
@@ -103,6 +110,12 @@ void globalKeyboardActions(s_game *game) {
             game->graphic.debug = !game->graphic.debug;
             game->graphic.debug_button = 0;
         }
+    }
+
+    if (!(mouse_b & 1) && game->sound_button) {
+        game->settings.music = !game->settings.music;
+        stopPlayingEverything(game);
+        game->sound_button = 0;
     }
 }
 
@@ -214,7 +227,7 @@ void menu(s_game *game) {
             i++;
         }
 
-        hc_boutonfill_center(game, getCorrectBuffer(game), font, getCorrectWidth(game)/2 + offsetX, divisions[i],  getCorrectWidth(game)/5,  divisions[0] / 8, "Réinitialiser progression", &reinitialiserProgression,
+        hc_boutonfill_center(game, getCorrectBuffer(game), font, getCorrectWidth(game)/2 + offsetX, divisions[i],  getCorrectWidth(game)/5,  divisions[0] / 8, (game->settings.music ? "Désactiver la musique" : "Activer la musique"), &changeMusic,
                              makecol(0, 0, 0), -1);
         i++;
         hc_boutonfill_center(game, getCorrectBuffer(game), font, getCorrectWidth(game)/2 + offsetX, divisions[i],  getCorrectWidth(game)/5,  divisions[0] / 8, "Calibrer les manettes", &calibrerManettes,
@@ -282,6 +295,7 @@ void partie(s_game *game, int niveau) {
             executeFunctionForEveryBlockReachable(game, &game->joueurs[1], &interact);
             game->joueurs[1].shift_pressed = 0;
         }
+
     } while (counter <= game->duration * 1000 && (game->etatJeu == PLAYING || game->etatJeu == DANS_MENU_JEU) && !quit);
 
     remove_int(timer_handler);

@@ -109,6 +109,8 @@ void deplacerPersonnage(s_game *game, s_joueur* joueur, double veloX, double vel
     joueur->angle = angle;
      */
 
+
+    playBruitage(game, PAS);
     joueur->x = newX;
     joueur->y = newY;
 }
@@ -154,39 +156,32 @@ void deplacerPersonnagesClavier(s_game *game) {
     s_coo velo_perso1 = {0, 0};
     s_coo velo_perso2 = {0, 0};
 
-    s_leson leson;
-
     if (key[KEY_W]) {
         velo_perso1.y--;
-        playScream();
+        //playBruitage();
     }
     if (key[KEY_S]) {
         velo_perso1.y++;
-        playScream();
+        //playBruitage();
     }
     if (key[KEY_A]) {
         velo_perso1.x--;
-        playScream();
+        //playBruitage();
     }
     if (key[KEY_D]) {
         velo_perso1.x++;
-        playScream();
     }
     if (key[KEY_UP]) {
         velo_perso2.y--;
-        // charge_Sound(nb);
     }
     if (key[KEY_DOWN]) {
         velo_perso2.y++;
-        // playSound(sons, 0);
     }
     if (key[KEY_LEFT]) {
         velo_perso2.x--;
-        // playSound(sons, 0);
     }
     if (key[KEY_RIGHT]) {
         velo_perso2.x++;
-        // playSound(sons, 0);
     }
 
     deplacerPersonnage(game, &game->joueurs[0], velo_perso1.x, velo_perso1.y);

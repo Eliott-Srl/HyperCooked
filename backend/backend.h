@@ -31,6 +31,28 @@ typedef struct s_color {
     int b;                                       // Bleu
 } s_color;
 
+/*############### SOUND ################*/
+typedef enum e_sound {
+    NO_SOUND = -1,
+    INTRO = 0,
+    PAS,
+    SON_ASSIETTE,
+    SON_DEFAITE,
+    SON_POUBELLE,
+    SON_COMMANDE,
+    SON_CUISSON,
+    SON_DECOUPE
+} e_sound;
+
+typedef struct s_sound {
+    SAMPLE* son;                                // Pointeur vers l'échantillon sonore
+    int volume;                                 // Volume du son
+    int pan;                                    // Position stéréo du son
+    int pitch;                                  // Hauteur du son
+    int loop;                                   // Booléen qui indique si le son doit être joué en boucle
+    int voice;
+    int playing;
+} s_sound;
 
 /*############### ALLEZGROS ###############*/
 typedef struct s_rectangle_virtual {
@@ -123,6 +145,11 @@ typedef struct s_graphic {
     s_ressources ressources;                     // Structure qui contient les pointeurs de toutes les ressources
     s_textures textures;
 } s_graphic;
+
+/*############### SETTINGS ###############*/
+typedef struct s_settings {
+    int music;                                   // Booléen qui indique si le son est activé
+} s_settings;
 
 /*############### JEU ###############*/
 typedef enum e_etat_jeu {                        // Indique l'état du jeu
@@ -256,25 +283,10 @@ typedef struct s_game {
     int recettes_ratees;                         // Nombre de recettes ratées
     int recettes_reussi;                         // Nombre de recettes créées
     s_graphic graphic;                           // Structure qui contient les paramètres graphiques
+    s_sound sons[NUM_SONS];                      //
+    s_settings settings;                         //
+    int sound_button;                            //
 } s_game;
-
-/*############### SETTINGS ###############*/
-typedef struct s_sound {
-    SAMPLE* son;                                // Pointeur vers l'échantillon sonore
-    int volume;                                 // Volume du son
-    int pan;                                    // Position stéréo du son
-    int pitch;                                  // Hauteur du son
-    int loop;                                   // Booléen qui indique si le son doit être joué en boucle
-} s_sound;
-
-typedef struct leson{
-    s_sound sons[NUM_SONS];
-}s_leson;
-
-/*############### SETTINGS ###############*/
-typedef struct s_settings {
-    int volume;                                  // Volume de la musique
-} s_settings;
 
 #include "Utils/Utils.h"
 #include "Matrice/meubles.h"

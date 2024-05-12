@@ -369,6 +369,7 @@ void hc_init(s_game *game) {
         allegro_exit();
         exit(EXIT_FAILURE);
     }
+
     graphic->textures.pizza = load_bitmap("./res/img/pizza.bmp", NULL);
 
     if (!graphic->textures.pizza) {
@@ -376,6 +377,7 @@ void hc_init(s_game *game) {
         allegro_exit();
         exit(EXIT_FAILURE);
     }
+
     graphic->textures.fromage = load_bitmap("./res/img/fromage.bmp", NULL);
 
     if (!graphic->textures.fromage) {
@@ -384,13 +386,132 @@ void hc_init(s_game *game) {
         exit(EXIT_FAILURE);
     }
 
+    graphic->textures.void_texture = create_bitmap(getCorrectCaseSize(game), getCorrectCaseSize(game));
+
+    if (!graphic->textures.void_texture) {
+        allegro_message("Erreur de chargement de l'image");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    clear_to_color(graphic->textures.void_texture, makecol(255, 0, 255));
+
+    game->sons[INTRO].son = load_sample("./res/song/intro.wav");
+
+    if (!game->sons[INTRO].son) {
+        allegro_message("Erreur de chargement du son");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    game->sons[INTRO].volume = 75;
+    game->sons[INTRO].pan = 100;
+    game->sons[INTRO].pitch = 1000;
+    game->sons[INTRO].loop = 1;
+
+    game->sons[PAS].son = load_sample("./res/song/Pas1.wav");
+
+    if (!game->sons[PAS].son) {
+        allegro_message("Erreur de chargement du son");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    game->sons[PAS].volume = 100;
+    game->sons[PAS].pan = 100;
+    game->sons[PAS].pitch = 1000;
+    game->sons[PAS].loop = 0;
+
+    game->sons[SON_ASSIETTE].son = load_sample("./res/song/Assiette.wav");
+
+    if (!game->sons[SON_ASSIETTE].son) {
+        allegro_message("Erreur de chargement du son");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    game->sons[SON_ASSIETTE].volume = 100;
+    game->sons[SON_ASSIETTE].pan = 100;
+    game->sons[SON_ASSIETTE].pitch = 1000;
+    game->sons[SON_ASSIETTE].loop = 0;
+
+    game->sons[SON_DEFAITE].son = load_sample("./res/song/Wihlem.wav");
+
+    if (!game->sons[SON_DEFAITE].son) {
+        allegro_message("Erreur de chargement du son");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    game->sons[SON_DEFAITE].volume = 100;
+    game->sons[SON_DEFAITE].pan = 100;
+    game->sons[SON_DEFAITE].pitch = 1000;
+    game->sons[SON_DEFAITE].loop = 0;
+
+    game->sons[SON_POUBELLE].son = load_sample("./res/song/Poubelle.wav");
+
+    if (!game->sons[SON_POUBELLE].son) {
+        allegro_message("Erreur de chargement du son");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    game->sons[SON_POUBELLE].volume = 100;
+    game->sons[SON_POUBELLE].pan = 100;
+    game->sons[SON_POUBELLE].pitch = 1000;
+    game->sons[SON_POUBELLE].loop = 0;
+
+    game->sons[SON_COMMANDE].son = load_sample("./res/song/Sonnette.wav");
+
+    if (!game->sons[SON_COMMANDE].son) {
+        allegro_message("Erreur de chargement du son");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    game->sons[SON_COMMANDE].volume = 100;
+    game->sons[SON_COMMANDE].pan = 100;
+    game->sons[SON_COMMANDE].pitch = 1000;
+    game->sons[SON_COMMANDE].loop = 0;
+
+    game->sons[SON_CUISSON].son = load_sample("./res/song/Cuisson.wav");
+
+    if (!game->sons[SON_CUISSON].son) {
+        allegro_message("Erreur de chargement du son");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    game->sons[SON_CUISSON].volume = 100;
+    game->sons[SON_CUISSON].pan = 100;
+    game->sons[SON_CUISSON].pitch = 1000;
+    game->sons[SON_CUISSON].loop = 0;
+
+    game->sons[SON_DECOUPE].son = load_sample("./res/song/Decoupage.wav");
+
+    if (!game->sons[SON_DECOUPE].son) {
+        allegro_message("Erreur de chargement du son");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    game->sons[SON_DECOUPE].volume = 100;
+    game->sons[SON_DECOUPE].pan = 100;
+    game->sons[SON_DECOUPE].pitch = 1000;
+    game->sons[SON_DECOUPE].loop = 0;
+
+    for (int i = 0; i < NUM_SONS; i++) {
+        game->sons[i].voice = -1;
+    }
+
+    game->settings.music = 1;
+
     game->nbRecettes = 0;
     game->etatJeu = LOADING;
 
     srand(time(NULL));
 
     initialisePlayers(game);
-
     set_close_button_callback(&toQuit);
     set_mouse_speed(20, 20);
     loadRecipes(game);
