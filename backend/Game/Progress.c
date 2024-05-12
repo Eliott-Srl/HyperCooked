@@ -21,15 +21,22 @@ int getBestScoreByNiveau(int niveau) {
     if (niveauLu == niveau) {
         return scoreLu;
     } else {
-        return -1;
+        return 0;
     }
 }
 
 // à revoir pas sûr que ça marche
 void writeBestScoreByNiveau(int niveau, int score) {
-    char ligne[128];
+    int scores[NB_MAPS_MAX];
+    for (int i = 0; i < NB_MAPS_MAX; i++) {
+        if (i + 1 == niveau) {
+            scores[i] = score;
+        } else {
+            scores[i] = getBestScoreByNiveau(i + 1);
+        }
+    }
+
     FILE *fichier = fopen("data/score.txt", "w");
-    int niveauLu = 0, scoreLu;
 
     if (fichier == NULL) {
         allegro_message("Erreur lors de l'ouverture du fichier\n");
@@ -37,23 +44,13 @@ void writeBestScoreByNiveau(int niveau, int score) {
         exit(EXIT_FAILURE);
     }
 
-    while (fgets(ligne, 128, fichier) != NULL && niveauLu < niveau) {
-        niveauLu++;
-    }
-
-    if (niveauLu == niveau) {
-        fprintf(fichier, "%d\n", score);
-    } else {
-        for (int i = 0; i < niveau - niveauLu; i++) {
-            fprintf(fichier, "\n");
+    for (int i = 0; i < NB_MAPS_MAX; i++) {
+        if (scores[i] != 0) {
+            fprintf(fichier, (i + 1 == NB_MAPS_MAX ? "%d" : "%d\n"), scores[i]);
+        } else {
+            fprintf(fichier, (i + 1 == NB_MAPS_MAX ? "" : "\n"));
         }
-        fprintf(fichier, "%d\n", score);
     }
 
-    fclose(fichier);
-}
-
-void resetProgression(s_game *game) {
-    FILE *fichier = fopen("data/score.txt", "w");
     fclose(fichier);
 }

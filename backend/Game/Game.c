@@ -301,6 +301,48 @@ void partie(s_game *game, int niveau) {
     remove_int(timer_handler);
 }
 
+void score(s_game *game, int niveau) {
+    while (game->etatJeu == SCORE && !key[KEY_SPACE] && !quit) {
+        hc_clear_buffers(game);
+        clear_boutons(game);
+
+        float ratio = (float) getCorrectWidth(game) / (float) game->graphic.textures.settings->w;
+        int offsetY = (int) ((float) getCorrectHeight(game) - ((float) game->graphic.textures.settings->h * ratio)) / 2;
+        int offsetX = 10;
+
+        stretch_sprite(getCorrectBuffer(game), game->graphic.textures.settings, 0, offsetY, (int) ((float) game->graphic.textures.settings->w * ratio), (int) ((float) game->graphic.textures.settings->h * ratio));
+
+        int a = 8, b = (int) 7 * getCorrectHeight(game) / 16 + 15, c = getCorrectHeight(game) - getCorrectHeight(game) / 5, i = 0;
+        int divisions[a];
+        divideScreenVertically(divisions, a, b, c);
+
+        textprintf_centre_ex(getCorrectBuffer(game), font, getCorrectWidth(game)/2 + offsetX, divisions[i], makecol(0, 0, 0), -1, "Score Global: %d", game->score);
+        i++;
+        int bestscore = getBestScoreByNiveau(niveau);
+        if (bestscore < game->score) {
+            writeBestScoreByNiveau(niveau, game->score);
+            textprintf_centre_ex(getCorrectBuffer(game), font, getCorrectWidth(game)/2 + offsetX, divisions[i], makecol(0, 0, 0), -1, "Nouveau meilleur score: %d", game->score);
+        } else {
+            textprintf_centre_ex(getCorrectBuffer(game), font, getCorrectWidth(game)/2 + offsetX, divisions[i], makecol(0, 0, 0), -1, "Meilleur score: %d", bestscore);
+        }
+        i += 2;
+
+        for (int j = 0; j < 2; j++) {
+            textprintf_centre_ex(getCorrectBuffer(game), font, getCorrectWidth(game)/2 + offsetX, divisions[i],
+                                 rgbToAllegroColor(game->joueurs[j].couleur), -1, "Joueur %d (%s)", j + 1, game->joueurs[j].nom);
+            i++;
+            textprintf_centre_ex(getCorrectBuffer(game), font, getCorrectWidth(game)/2 + offsetX, divisions[i], makecol(0, 0, 0), -1, "Score: %d", game->joueurs[j].score);
+            i += 2;
+        }
+
+
+        textprintf_centre_ex(getCorrectBuffer(game), font, getCorrectWidth(game)/2 + offsetX, getCorrectHeight(game) - (int) getCorrectHeight(game)/15, makecol(255, 255, 255), -1, "Press [SPACE] to save and quit.");
+
+        hc_blit(game, getCorrectBuffer(game));
+        globalKeyboardActions(game);
+    }
+}
+
 void jeu(s_game *game) {
     game->etatJeu = LOADING;
     hc_blit(game, getCorrectBuffer(game));
@@ -325,6 +367,10 @@ void jeu(s_game *game) {
         reinitialiserPlayers(game);
 
         partie(game, i + 1);
+
+        game->etatJeu = SCORE;
+
+        score(game, i + 1);
 
         game->etatJeu = LOADING;
         hc_blit(game, getCorrectBuffer(game));

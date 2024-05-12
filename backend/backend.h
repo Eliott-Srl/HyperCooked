@@ -84,8 +84,8 @@ typedef struct s_ressources {
     BITMAP *fsBuffer;                            // BITMAP pour le jeu en plein écran
     BITMAP *mainMenuBuffer;                      // BITMAP pour le menu
     BITMAP *fsMainMenuBuffer;                    // BITMAP pour le menu en plein écran
-    BITMAP *menuBuffer;                          // BITMAP pour le menu pendant la partie
-    BITMAP *fsMenuBuffer;                        // BITMAP pour le menu pendant la partie en plein écran
+    BITMAP *scoreBuffer;                         // BITMAP pour le score
+    BITMAP *fsScoreBuffer;                       // BITMAP pour le score en plein écran
     BITMAP *settings;                            // BITMAP qui contient les paramètres
     BITMAP *fsSettings;                          // BITMAP qui contient les paramètres en plein écran
 } s_ressources;
@@ -157,7 +157,7 @@ typedef enum e_etat_jeu {                        // Indique l'état du jeu
     LOADING,
     PLAYING,
     DANS_MENU,
-    DANS_MENU_JEU
+    SCORE
 } e_etat_jeu;
 
 typedef enum e_ingredients {                     // Indique le type de l'ingrédient
@@ -302,5 +302,6 @@ typedef struct s_game {
 #include "Commandes/Ingredients.h"
 #include "Game/Players.h"
 #include "Game/Objects.h"
+#include "Game/Progress.h"
 
 #endif //HYPERCOOKED_BACKEND_H

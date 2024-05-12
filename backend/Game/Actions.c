@@ -166,8 +166,7 @@ void comptoir(s_game *game, s_joueur* joueur, int i, int j) {
             enleverCommande(game, &commandFind);
             game->score += (commandFind.debut / 1000 + commandFind.duration) - getTime(game) / 1000;
         } else {
-            joueur->score -= 10;
-            allegro_message("La commande n'était pas bonne !");
+            joueur->score -= 20;
         }
     }
 }

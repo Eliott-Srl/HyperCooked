@@ -19,5 +19,6 @@ void globalKeyboardActions(s_game *game);
 void menu(s_game *game);
 void partie(s_game *game, int niveau);
 void jeu(s_game *game);
+void score(s_game *game, int niveau);
 
 #endif //HYPERCOOKED_GAME_H

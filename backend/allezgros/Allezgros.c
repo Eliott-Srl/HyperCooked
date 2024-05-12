@@ -228,8 +228,10 @@ BITMAP *getCorrectBuffer(s_game *game) {
             return (game->graphic.fs ? game->graphic.ressources.fsBuffer : game->graphic.ressources.buffer);
         case DANS_MENU:
             return (game->graphic.fs ? game->graphic.ressources.fsMainMenuBuffer : game->graphic.ressources.mainMenuBuffer);
-        case DANS_MENU_JEU:
-            return (game->graphic.fs ? game->graphic.ressources.fsMenuBuffer : game->graphic.ressources.menuBuffer);
+        case SCORE:
+            return (game->graphic.fs ? game->graphic.ressources.fsScoreBuffer : game->graphic.ressources.scoreBuffer);
+        default:
+            return NULL;
     }
 }
 

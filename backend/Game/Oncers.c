@@ -122,6 +122,22 @@ void hc_init(s_game *game) {
         exit(EXIT_FAILURE);
     }
 
+    graphic->ressources.scoreBuffer = create_bitmap(WIDTH, HEIGHT);
+
+    if (!graphic->ressources.scoreBuffer) {
+        allegro_message("Erreur de création du buffer");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
+    graphic->ressources.fsScoreBuffer = create_bitmap(game->graphic.fs_width, game->graphic.fs_height);
+
+    if (!graphic->ressources.fsScoreBuffer) {
+        allegro_message("Erreur de création du buffer");
+        allegro_exit();
+        exit(EXIT_FAILURE);
+    }
+
     graphic->textures.invalidTexture = load_bitmap("./res/img/invalid_texture.bmp", NULL);
 
     if (!graphic->textures.invalidTexture) {

@@ -5,6 +5,5 @@
 
 int getBestScoreByNiveau(int niveau);
 void writeBestScoreByNiveau(int niveau, int score);
-void resetProgression(s_game *game);
 
 #endif //HYPERCOOKED_PROGRESS_H
