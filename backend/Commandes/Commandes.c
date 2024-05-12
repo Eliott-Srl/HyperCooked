@@ -1,7 +1,7 @@
 #include "Commandes.h"
 
 int recetteAvailable(s_game *game, int choix) {
-    for (int i = 0; i < game->nbRecettes; i++) {
+    for (int i = 0; i < game->nbRecettesAvailable; i++) {
         if (game->recetteAvailable[i] == choix) {
             return 1;
         }
@@ -45,6 +45,7 @@ void newCommande(s_game *game) {
     }
 
     int choix;
+
     do {
         choix = (rand() % (game->nbRecettesAvailable));
     } while (!recetteAvailable(game, choix));

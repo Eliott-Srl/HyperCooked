@@ -46,7 +46,18 @@ void changeMusic(s_game *game) {
 }
 
 void calibrerManettes(s_game *game) {
-    // TODO: Calibrer les manettes
+    for (int i = 0; i < 2; i++) {
+        while (joy[i].flags & JOYFLAG_CALIBRATE) {
+            char *msg = calibrate_joystick_name(i);
+            allegro_message("%s, and press a key\n", msg);
+            readkey();
+            if (calibrate_joystick(i) != 0) {
+                allegro_message("oops!\n");
+                readkey();
+                exit(1);
+            }
+        }
+    }
 }
 
 float getCorrectOffsetX(s_game *game) {
@@ -133,6 +144,22 @@ void toCredit(s_game *game) {
 
 void toSetting(s_game *game) {
     settings = 1;
+}
+
+void afficherTimerGlobal(s_game *game) {
+    float progression = (float) getTime(game) / ((float) game->duration * 1000);
+
+    rect(getCorrectBuffer(game), (int) getCorrectOffsetX(game), getCorrectCaseSize(game), (int) ((float) LARGEUR * (float) getCorrectCaseSize(game) +
+            getCorrectOffsetX(game)), 3 * getCorrectCaseSize(game) / 2, makecol(0, 0, 0));
+    if (progression > 0) {
+        rectfill(getCorrectBuffer(game), (int) getCorrectOffsetX(game) + 3, getCorrectCaseSize(game) + 3,
+                 (int) (progression * ((float) LARGEUR * (float) getCorrectCaseSize(game) - 6) + getCorrectOffsetX(game) + 3),
+                 3 * getCorrectCaseSize(game) / 2 - 3, makecol(0, 0, 0));
+        textprintf_right_ex(getCorrectBuffer(game), font,
+                            (int) (progression * ((float) LARGEUR * (float) getCorrectCaseSize(game) - 6) + getCorrectOffsetX(game) + 3),
+                            getCorrectCaseSize(game) + getCorrectCaseSize(game) / 4 - text_height(font) / 2,
+                            makecol(255, 255, 255), -1, "%d", (int) ((float) getTime(game) / 1000.0));
+    }
 }
 
 void menu(s_game *game) {
@@ -260,43 +287,40 @@ void partie(s_game *game, int niveau) {
         int offsetX = (int) ((float) getCorrectWidth(game) - ((float) game->graphic.textures.background->w * ratio)) / 2;
         stretch_sprite(getCorrectBuffer(game), game->graphic.textures.background, -offsetX, 0, (int) ((float) game->graphic.textures.background->w * ratio), (int) ((float) game->graphic.textures.background->h * ratio));
 
-        if (game->etatJeu == DANS_MENU_JEU) {
-            // TODO: Menu Jeu
-        } else if (game->etatJeu == PLAYING) {
-            hc_afficher_matrice(game);
-            deplacerPersonnages(game);
+        hc_afficher_matrice(game);
+        deplacerPersonnages(game);
 
-            // Toutes les 40 secondes, il y a une nouvelle recette qui est rendu disponible
-            if (counter >= 1000 + recettes_crees * game->timeBtCommandes * 1000) {
-                newCommande(game);
-                recettes_crees++;
-            }
-            actualiserCommandes(game);
-            AfficherCommande(game);
+        // Toutes les 40 secondes, il y a une nouvelle recette qui est rendu disponible
+        if (counter >= 1000 + recettes_crees * game->timeBtCommandes * 1000) {
+            newCommande(game);
+            recettes_crees++;
         }
+        actualiserCommandes(game);
+        AfficherCommande(game);
 
+        afficherTimerGlobal(game);
         hc_blit(game, getCorrectBuffer(game));
         globalKeyboardActions(game);
 
-        if (key[KEY_LSHIFT]) {
+        if (key[KEY_LSHIFT] || joy[0].button[0].b) {
             game->joueurs[0].shift_pressed = 1;
         }
 
-        if (!key[KEY_LSHIFT] && game->joueurs[0].shift_pressed) {
+        if (!key[KEY_LSHIFT] && !joy[0].button[0].b && game->joueurs[0].shift_pressed) {
             executeFunctionForEveryBlockReachable(game, &game->joueurs[0], &interact);
             game->joueurs[0].shift_pressed = 0;
         }
 
-        if (key[KEY_RSHIFT]) {
+        if (key[KEY_RSHIFT] || joy[1].button[0].b) {
             game->joueurs[1].shift_pressed = 1;
         }
 
-        if (!key[KEY_RSHIFT] && game->joueurs[1].shift_pressed) {
+        if (!key[KEY_RSHIFT] && !joy[1].button[0].b && game->joueurs[1].shift_pressed) {
             executeFunctionForEveryBlockReachable(game, &game->joueurs[1], &interact);
             game->joueurs[1].shift_pressed = 0;
         }
 
-    } while (counter <= game->duration * 1000 && (game->etatJeu == PLAYING || game->etatJeu == DANS_MENU_JEU) && !quit);
+    } while (counter <= game->duration * 1000 && game->etatJeu == PLAYING && !quit);
 
     remove_int(timer_handler);
 }

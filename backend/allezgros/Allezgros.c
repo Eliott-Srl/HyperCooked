@@ -178,13 +178,6 @@ void hc_clear_buffers(s_game *game) {
                 clear(game->graphic.ressources.mainMenuBuffer);
             }
             break;
-        case DANS_MENU_JEU:
-            if (game->graphic.fs) {
-                clear(game->graphic.ressources.fsMenuBuffer);
-            } else {
-                clear(game->graphic.ressources.menuBuffer);
-            }
-            break;
     }
 }
 
