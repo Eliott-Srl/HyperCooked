@@ -459,7 +459,7 @@ void hc_init(s_game *game) {
         exit(EXIT_FAILURE);
     }
 
-    game->sons[SON_DEFAITE].volume = 100;
+    game->sons[SON_DEFAITE].volume = 50;
     game->sons[SON_DEFAITE].pan = 100;
     game->sons[SON_DEFAITE].pitch = 1000;
     game->sons[SON_DEFAITE].loop = 0;

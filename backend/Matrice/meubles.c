@@ -285,6 +285,7 @@ void hc_afficher_matrice(s_game *game) {
                 afficherProgression(game, x, y + (int) (4 * getCorrectRatio(game)), game->matrice[h][l].timer,
                          getSupposedTimerByFurnitures(game->matrice[h][l].typeMeuble),
                               makecol(255, 0, 0));
+                playBruitage(game, getSoundByFurniture(game, game->matrice[h][l].typeMeuble));
             }
 
             if (game->matrice[h][l].objet.nbStockes > 0 && game->graphic.debug) {

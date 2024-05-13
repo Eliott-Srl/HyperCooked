@@ -125,7 +125,11 @@ void globalKeyboardActions(s_game *game) {
 
     if (!(mouse_b & 1) && game->sound_button) {
         game->settings.music = !game->settings.music;
-        stopPlayingEverything(game);
+        if (game->settings.music) {
+            JouerLintro(game);
+        } else {
+            stopPlayingEverything(game);
+        }
         game->sound_button = 0;
     }
 }
@@ -320,7 +324,7 @@ void partie(s_game *game, int niveau) {
             game->joueurs[1].shift_pressed = 0;
         }
 
-    } while (counter <= game->duration * 1000 && game->etatJeu == PLAYING && !quit);
+    } while (counter <= game->duration * 1000 && game->etatJeu == PLAYING && !quit && !key[KEY_ESC]);
 
     remove_int(timer_handler);
 }

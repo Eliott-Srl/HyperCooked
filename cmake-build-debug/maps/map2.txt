@@ -2,7 +2,7 @@
 # The first line of this file is the recipes of the game
 1;2;
 # The second line is the duration of the game and the time between new recipes in seconds
-120;10;
+120;30;
 # The following lines are the matrix of the game
 99;99;99;99;99;99;99;1;1;1;1;1;1;1;1;2;1;2;1;1;
 99;99;99;99;99;99;99;1;0;0;0;0;0;0;0;0;0;0;0;1;

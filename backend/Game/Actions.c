@@ -165,14 +165,17 @@ void comptoir(s_game *game, s_joueur* joueur, int i, int j) {
         if (good) {
             enleverCommande(game, &commandFind);
             game->score += (commandFind.debut / 1000 + commandFind.duration) - getTime(game) / 1000;
+            playBruitage(game, SON_COMMANDE);
         } else {
             joueur->score -= 20;
+            playBruitage(game, SON_DEFAITE);
         }
     }
 }
 
 void coffre(s_game *game, s_joueur* joueur, int i, int j) {
     if (joueur->en_main == NOTHING) {
+        playBruitage(game, SON_ASSIETTE);
         joueur->en_main = INGREDIENT;
         joueur->handIngredient.cuit = NON;
         joueur->handIngredient.coupe = 0;
@@ -248,12 +251,17 @@ void poubelle(s_game *game, s_joueur* joueur, int i, int j) {
     } else if (joueur->en_main == OBJET) {
         joueur->handObjet.nbStockes = 0;
         joueur->en_main = OBJET;
+    } else {
+        return;
     }
+
+    playBruitage(game, SON_POUBELLE);
     joueur->score -= 10;
 }
 
 void generateurAssiette(s_game *game, s_joueur *joueur, int i, int j) {
     if (joueur->en_main == NOTHING) {
+        playBruitage(game, SON_ASSIETTE);
         joueur->en_main = OBJET;
         joueur->handObjet = game->matrice[i][j].objet;
         joueur->handObjet.nbStockes = 0;
