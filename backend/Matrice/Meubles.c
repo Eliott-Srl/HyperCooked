@@ -1,4 +1,4 @@
-#include "meubles.h"
+#include "Meubles.h"
 
 BITMAP *getTextureByFurnitureName(s_game *game, e_meubles meuble) {
     switch (meuble) {

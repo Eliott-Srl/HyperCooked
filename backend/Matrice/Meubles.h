@@ -2,7 +2,7 @@
 #define HYPERCOOKED_MEUBLES_H
 
 #include "../backend.h"
-#include "meubles.h"
+#include "Meubles.h"
 #include "../Commandes/Recettes.h"
 #include <stdio.h>
 #include <stdlib.h>

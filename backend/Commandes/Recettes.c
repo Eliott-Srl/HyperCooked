@@ -18,10 +18,10 @@ void loadRecipes(s_game *game) {
     char ligne[STRMAX], *p, *d, *g, *end;
     FILE *fp = NULL;
 
-    fp = fopen("data/recettes.txt", "r");
+    fp = fopen("data/Recettes.txt", "r");
 
     if (!fp) {
-        perror("data/recettes.txt");
+        perror("data/Recettes.txt");
         abort();
     }
 

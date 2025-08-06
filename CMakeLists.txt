@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.27)
+cmake_minimum_required(VERSION 3.21)
 project(HyperCooked C)
 
 set(CMAKE_C_STANDARD 11)
@@ -22,8 +22,8 @@ add_executable(HyperCooked main.c
         backend/Game/Actions.h
         backend/Game/Oncers.c
         backend/Game/Oncers.h
-        backend/Son/song.c
-        backend/Son/song.h
+        backend/Son/Song.c
+        backend/Son/Song.h
         backend/Commandes/Ingredients.c
         backend/Commandes/Ingredients.h
         backend/Game/Players.c

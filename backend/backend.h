@@ -10,7 +10,7 @@
 #define NB_COMMANDES_MAX 6
 #define NB_MAPS_MAX 10
 #define NB_PRENOMS 7
-#define SPEED (20.0 / get_refresh_rate())
+#define SPEED (35.0 / get_refresh_rate())
 #define WIDTH 800
 #define HEIGHT 450
 #define NUM_SONS 8
@@ -291,14 +291,14 @@ typedef struct s_game {
 } s_game;
 
 #include "Utils/Utils.h"
-#include "Matrice/meubles.h"
+#include "Matrice/Meubles.h"
 #include "Commandes/Recettes.h"
 #include "Commandes/Commandes.h"
 #include "Game/Game.h"
 #include "Game/Actions.h"
 #include "Game/Oncers.h"
 #include "allezgros/Allezgros.h"
-#include "Son/song.h"
+#include "Son/Song.h"
 #include "Commandes/Ingredients.h"
 #include "Game/Players.h"
 #include "Game/Objects.h"

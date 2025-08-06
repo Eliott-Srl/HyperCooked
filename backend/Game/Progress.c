@@ -2,7 +2,7 @@
 
 int getBestScoreByNiveau(int niveau) {
     char ligne[128];
-    FILE *fichier = fopen("data/score.txt", "r");
+    FILE *fichier = fopen("data/Score.txt", "r");
     int niveauLu = 0, scoreLu;
 
     if (fichier == NULL) {
@@ -36,7 +36,7 @@ void writeBestScoreByNiveau(int niveau, int score) {
         }
     }
 
-    FILE *fichier = fopen("data/score.txt", "w");
+    FILE *fichier = fopen("data/Score.txt", "w");
 
     if (fichier == NULL) {
         allegro_message("Erreur lors de l'ouverture du fichier\n");

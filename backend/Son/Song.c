@@ -1,4 +1,4 @@
-#include "song.h"
+#include "Song.h"
 #include "allegro.h"
 
 e_sound getSoundByFurniture(s_game *game, e_meubles meuble) {
