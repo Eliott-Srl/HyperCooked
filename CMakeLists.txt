@@ -4,7 +4,6 @@ project(HyperCooked C)
 set(CMAKE_C_STANDARD 11)
 
 add_executable(HyperCooked main.c
-        resource.rc
         backend/Commandes/Recettes.c
         backend/Commandes/Recettes.h
         backend/Game/Game.c
@@ -33,4 +32,23 @@ add_executable(HyperCooked main.c
         backend/Game/Progress.c
         backend/Game/Progress.h)
 
-target_link_libraries(${PROJECT_NAME} -lalleg44)
+if(WIN32)
+    # Icône / ressources Windows
+    target_sources(HyperCooked PRIVATE resource.rc)
+    target_link_libraries(HyperCooked PRIVATE alleg44)
+else()
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(ALLEGRO4 REQUIRED allegro)
+    target_include_directories(HyperCooked PRIVATE ${ALLEGRO4_INCLUDE_DIRS})
+    target_link_libraries(HyperCooked PRIVATE ${ALLEGRO4_LIBRARIES} m)
+endif()
+
+# Ressources chargées en chemins relatifs : on les place à côté de l'exécutable
+add_custom_command(TARGET HyperCooked POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/res $<TARGET_FILE_DIR:HyperCooked>/res
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/maps $<TARGET_FILE_DIR:HyperCooked>/maps)
+
+# data/ contient les scores : copié une seule fois pour ne pas les écraser
+if(NOT EXISTS ${CMAKE_BINARY_DIR}/data)
+    file(COPY ${CMAKE_SOURCE_DIR}/data DESTINATION ${CMAKE_BINARY_DIR})
+endif()

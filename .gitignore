@@ -1,0 +1,13 @@
+# Dossiers de build
+build/
+cmake-build-*/
+
+# Exécutables générés
+/HyperCooked
+*.exe
+
+# Captures d'écran du jeu
+screenshot-*.bmp
+
+# IDE
+.idea/

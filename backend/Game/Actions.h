@@ -2,7 +2,7 @@
 #define HYPERCOOKED_ACTIONS_H
 
 #include "../backend.h"
-#include <Math.h>
+#include <math.h>
 
 void executeFunctionForEveryBlockReachable(s_game *game, s_joueur *joueur, void (*fonction)(s_game*, s_joueur*, int, int));
 void showInteractions(s_game *game, s_joueur *joueur, int k, int s);
